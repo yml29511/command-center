@@ -1,0 +1,7 @@
+interface:
+  display_name: "auto-dev-team"
+  short_description: "Structured coding workflow with modes, verification, and rollback guardrails"
+  default_prompt: "Use $auto-dev-team for coding, debugging, refactoring, testing, project survey, and safe write workflows with verification and rollback guardrails."
+
+policy:
+  allow_implicit_invocation: true

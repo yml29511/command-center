@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "auto-dev-team": {
+      "source": "git@gitlab.alibaba-inc.com:cainiao-ai-skills/AutoDevTeam.git",
+      "sourceType": "git",
+      "computedHash": "b632e28db61da928888350dcf42e65bc0100ad57353477b33a945520867be467"
+    },
+    "skill-creator": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "b122f4d1e91aa1d83027e050b5b37c3156203ee85458d7b1360bc48167c9e02a"
+    }
+  }
+}

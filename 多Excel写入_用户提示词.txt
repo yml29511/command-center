@@ -1,0 +1,112 @@
+请执行多Excel文件钉钉表格写入操作。
+
+## 输入数据
+
+上游Agent会提供附件信息，格式为JSON数组。支持三种模式，脚本会自动识别：
+
+### 模式1：全量JSON模式（含sheetData字段）
+```json
+[
+  {
+    "fileName": "report1.xlsx",
+    "sheetData": [
+      ["Name", "Age", "City"],
+      ["Alice", "25", "Beijing"],
+      ["Bob", "30", "Shanghai"]
+    ]
+  },
+  {
+    "fileName": "report2.xlsx",
+    "sheetData": [
+      ["Name", "Age", "City"],
+      ["Charlie", "28", "Guangzhou"]
+    ]
+  }
+]
+```
+
+### 模式2：URL模式（含fileUrl字段）
+```json
+[
+  {
+    "fileName": "report1.xlsx",
+    "fileUrl": "https://example.com/report1.xlsx"
+  },
+  {
+    "fileName": "report2.xlsx",
+    "fileUrl": "https://example.com/report2.xlsx"
+  }
+]
+```
+
+### 模式3：fileContent模式（含fileContent字段，TSV格式）
+```json
+[
+  {
+    "fileName": "report1.xlsx",
+    "fileContent": "Name\tAge\tCity\nAlice\t25\tBeijing\nBob\t30\tShanghai"
+  }
+]
+```
+- 使用Tab分隔的文本格式，无需下载文件
+- 适合中等数据量（最多25,000行）
+- 每行数据用 `\n` 分隔，每列用 `\t` 分隔
+
+**实际输入数据：**
+```json
+${上游Agent输出的JSON数据}
+```
+
+## 执行方式
+
+直接执行Python脚本，所有MCP配置已内置：
+
+```bash
+python3 skill_write_excel_to_table.py --input-json '${上游Agent输出的JSON数据}'
+```
+
+## 脚本功能说明
+
+脚本会自动完成以下操作：
+1. 解析输入数据（自动识别三种模式：sheetData/fileUrl/fileContent）
+2. 下载并解析Excel文件（URL模式）或解析TSV文本（fileContent模式）
+3. 多文件合并与数据清洗
+4. MCP连接预热
+5. 分批清空表格旧数据
+6. 分批写入新数据（动态批次大小，目标5000单元格/批）
+7. 验证写入结果
+
+## 期望输出
+
+脚本执行后会自动打印执行结果：
+
+**成功示例：**
+```
+============================================================
+处理完成
+============================================================
+总数据行数: XXX
+成功写入: XXX
+失败: 0
+✅ 全部成功
+```
+
+**失败示例：**
+```
+============================================================
+处理完成
+============================================================
+总数据行数: XXX
+成功写入: XXX
+失败: XXX
+⚠️ 部分失败
+```
+
+## 注意事项
+
+1. **全量覆盖模式**：每次执行都会清空旧数据，不保留历史
+2. **URL模式依赖**：需要openpyxl库，沙箱不支持时请使用全量JSON模式或fileContent模式
+3. **fileContent模式优势**：仅需Python标准库，无需额外依赖
+4. **无需手动配置**：MCP URL、nodeId、sheetId等已硬编码在脚本中
+5. **自动分批**：动态计算批次大小（目标5000单元格/批），自动优化写入性能
+6. **自动重试**：MCP调用失败时自动重试2次，提高可靠性
