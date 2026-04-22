@@ -1217,13 +1217,30 @@
             margin-bottom: auto;
         }
 
+        /* 操作日志内嵌显示区域 */
+        .debug-operation-log {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            gap: 16px;
+            background-color: #FAFAFA;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .debug-operation-log.show {
+            display: flex;
+        }
+
         /* 未调试时占位区域 */
         .debug-placeholder {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 300px;
+            min-height: 400px;
             gap: 16px;
         }
 
@@ -1245,9 +1262,8 @@
 
         /* 展开/收起按钮 */
         .debug-resize-btn {
-            position: absolute;
-            left: var(--left-width);
-            top: 50%;
+            position: fixed;
+            top: 50vh;
             transform: translateY(-50%);
             width: 20px;
             height: 40px;
@@ -1258,7 +1274,7 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            z-index: 10;
+            z-index: 100;
             padding: 0;
             transition: background-color 0.15s ease;
         }
@@ -1369,7 +1385,7 @@
         }
 
         .browser-content {
-            height: 400px;
+            height: 500px;
             background: linear-gradient(135deg, #E8E8E8 0%, #F5F5F5 50%, #E8E8E8 100%);
             display: flex;
             align-items: center;
@@ -1675,7 +1691,7 @@
 
         .debug-prompt-textarea {
             width: 100%;
-            height: 400px;
+            height: 500px;
             padding: 16px;
             font-size: 14px;
             line-height: 1.6;
@@ -1691,7 +1707,7 @@
             white-space: pre-wrap;
             word-wrap: break-word;
             overflow-y: auto;
-            min-height: 200px;
+            min-height: 250px;
         }
 
         .debug-prompt-textarea[contenteditable="true"]:empty::before {
@@ -1995,6 +2011,140 @@
             display: none;
         }
 
+        /* ============================================
+           模板中心页面样式
+           ============================================ */
+        .template-page {
+            display: none;
+        }
+
+        .template-page.active {
+            display: block;
+        }
+
+        .template-search-bar {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .template-search-bar .search-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .template-search-bar .search-right {
+            display: flex;
+            gap: 8px;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .template-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: box-shadow var(--transition-normal), transform var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .template-card-cover {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #E8EAF6 0%, #C5CAE9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .template-card-cover-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            opacity: 0.35;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .template-card-body {
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .template-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background-color: #FF4D4F;
+            color: var(--text-white);
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            line-height: 1.5;
+        }
+
+        .template-card-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .template-card-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .template-card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .template-card-action:hover {
+            color: var(--primary-color);
+        }
+
         /* 调试页面合并卡片样式 */
         .debug-combined-card {
             background-color: var(--card-bg);
@@ -2156,6 +2306,35 @@
         /* 组别选择容器 */
         .group-select-container {
             transition: all 0.3s ease;
+        }
+
+        /* 分组下拉框与新增按钮同行 */
+        .group-select-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .group-select-row .form-select {
+            flex: 1;
+        }
+
+        .btn-add-group {
+            padding: 8px 12px;
+            font-size: 13px;
+            color: var(--primary-color);
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            font-family: var(--font-family);
+        }
+
+        .btn-add-group:hover {
+            background: var(--primary-color);
+            color: #fff;
         }
 
         /* 新增分组输入区域 */
@@ -2783,17 +2962,17 @@
             position: absolute;
             left: 0;
             right: 0;
-            height: 8px;
+            height: 4px;
             background: transparent;
             pointer-events: auto;
         }
 
         .prompt-tooltip:not(.bottom-arrow)::before {
-            top: -8px;
+            top: -4px;
         }
 
         .prompt-tooltip.bottom-arrow::before {
-            bottom: -8px;
+            bottom: -4px;
             top: auto;
         }
 
@@ -2907,6 +3086,25 @@
         .operation-log-stat-label {
             font-size: 13px;
             color: var(--text-secondary);
+        }
+
+        /* 内嵌操作日志统计卡片 —— 紧凑样式 */
+        .debug-operation-log .operation-log-stats {
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+
+        .debug-operation-log .operation-log-stat-card {
+            padding: 3px;
+        }
+
+        .debug-operation-log .operation-log-stat-value {
+            font-size: 20px;
+            margin-bottom: 1px;
+        }
+
+        .debug-operation-log .operation-log-stat-label {
+            font-size: 12px;
         }
 
         .operation-log-stat-value.success {
@@ -3327,6 +3525,34 @@
         </div>
         </div><!-- /list-page -->
 
+        <!-- 模板中心页面 -->
+        <div class="template-page" id="templatePage">
+            <!-- 搜索筛选栏 -->
+            <div class="template-search-bar">
+                <div class="search-left">
+                    <div class="search-item">
+                        <span class="search-label">名称</span>
+                        <div class="search-input-wrapper">
+                            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                            <input type="text" class="search-input" id="templateSearchInput" placeholder="请输入模板名称">
+                        </div>
+                    </div>
+                    <div class="search-right">
+                        <button class="btn btn-search" id="templateSearchBtn">查询</button>
+                        <button class="btn btn-reset" id="templateResetBtn">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模板卡片网格区域 -->
+            <div class="template-grid" id="templateGrid">
+                <!-- 卡片将通过 JavaScript 动态生成 -->
+            </div>
+        </div>
+
         <!-- 调试页面 -->
         <div class="debug-page" id="debugPage">
             <!-- 面包屑导航 -->
@@ -3536,6 +3762,27 @@
                                         </svg>
                                         <p>浏览器实时画面</p>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- 操作日志内嵌显示区域（调试结束后显示） -->
+                            <div class="debug-operation-log" id="debugOperationLog">
+                                <div class="operation-log-stats">
+                                    <div class="operation-log-stat-card">
+                                        <div class="operation-log-stat-value" id="debugLogTotalSteps">0</div>
+                                        <div class="operation-log-stat-label">总步骤数</div>
+                                    </div>
+                                    <div class="operation-log-stat-card">
+                                        <div class="operation-log-stat-value" id="debugLogTotalActions">0</div>
+                                        <div class="operation-log-stat-label">执行步骤数</div>
+                                    </div>
+                                    <div class="operation-log-stat-card">
+                                        <div class="operation-log-stat-value" id="debugLogDuration">0秒</div>
+                                        <div class="operation-log-stat-label">执行时长</div>
+                                    </div>
+                                </div>
+                                <div class="operation-log-cards" id="debugLogCards">
+                                    <!-- 动态生成 -->
                                 </div>
                             </div>
                         </div>
@@ -3857,13 +4104,29 @@
                         <label class="form-label">
                             所属分组<span class="required">*</span>
                         </label>
-                        <select class="form-select" id="settingsGroupSelect">
-                            <option value="">请选择分组</option>
-                            <option value="默认分组">默认分组</option>
-                            <option value="数据处理">数据处理</option>
-                            <option value="系统运维">系统运维</option>
-                            <option value="业务流程">业务流程</option>
-                        </select>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="settingsGroupMode" value="existing" checked id="settingsExistingGroupRadio">
+                                <span>选择现有分组</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="settingsGroupMode" value="new" id="settingsNewGroupRadio">
+                                <span>新增分组</span>
+                            </label>
+                        </div>
+                        <div class="group-select-container" id="settingsExistingGroupContainer">
+                            <select class="form-select" id="settingsGroupSelect">
+                                <option value="">请选择分组</option>
+                                <option value="默认分组">默认分组</option>
+                                <option value="数据处理">数据处理</option>
+                                <option value="系统运维">系统运维</option>
+                                <option value="业务流程">业务流程</option>
+                            </select>
+                        </div>
+                        <div class="new-group-container" id="settingsNewGroupContainer">
+                            <input type="text" class="new-group-input" id="settingsNewGroupInput" placeholder="请输入新分组名称">
+                        </div>
+                        <div class="form-error" id="settingsGroupError">请选择或输入所属分组</div>
                     </div>
 
                     <!-- 管理员 -->
@@ -3880,13 +4143,17 @@
                     <!-- 权限组 -->
                     <div class="form-group">
                         <label class="form-label">权限组</label>
-                        <input type="text" class="form-input" id="settingsPermissionGroup">
+                        <select class="form-select" id="settingsPermissionGroup">
+                            <option value="">请选择权限组</option>
+                        </select>
                     </div>
 
                     <!-- 部门 -->
                     <div class="form-group">
                         <label class="form-label">部门</label>
-                        <input type="text" class="form-input" id="settingsDepartment">
+                        <select class="form-select" id="settingsDepartment">
+                            <option value="">请选择部门</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -4007,13 +4274,17 @@
                     <!-- 权限组 -->
                     <div class="form-group">
                         <label class="form-label">权限组</label>
-                        <input type="text" class="form-input" id="permissionGroup" placeholder="请输入权限组名称">
+                        <select class="form-select" id="permissionGroup">
+                            <option value="">请选择权限组</option>
+                        </select>
                     </div>
 
                     <!-- 部门 -->
                     <div class="form-group">
                         <label class="form-label">部门</label>
-                        <input type="text" class="form-input" id="department" placeholder="请输入部门名称">
+                        <select class="form-select" id="department">
+                            <option value="">请选择部门</option>
+                        </select>
                     </div>
                 </form>
             </div>
@@ -4152,6 +4423,36 @@
                 coverImage: null
             }
         ];
+
+        // ============================================
+        // 模板中心数据
+        // ============================================
+        const templateData = [
+            { id: 1, name: 'flightaware', coverText: 'FLIGHTAWARE', desc: '航班追踪网站' },
+            { id: 2, name: 'qrcargo', coverText: 'QRCARGO', desc: 'Qatar Cargo货运追踪' },
+            { id: 3, name: 'iagcargo', coverText: 'IAGCARGO', desc: 'IAG Cargo物流追踪' },
+            { id: 4, name: 'cathaycargo', coverText: 'CATHAY', desc: 'Cathay Cargo国泰货运' },
+            { id: 5, name: 'HRP', coverText: 'HRP', desc: 'HR Parcel快递追踪' },
+            { id: 6, name: '东航物流', coverText: 'CE AIR', desc: '东航物流运单查询' },
+            { id: 7, name: 'DE Hermes', coverText: 'HERMES', desc: 'myHermes Business德国物流' },
+            { id: 8, name: 'Yodel', coverText: 'YODEL', desc: 'eRin登录页面' }
+        ];
+
+        // 全局自定义分组集合（用于存储通过设置弹窗新增的分组）
+        let customGroups = new Set();
+
+        // 获取所有分组（commandData 中的分组 + 自定义分组）
+        function getAllGroups() {
+            const groups = new Set([
+                ...commandData.map(item => item.group || '默认分组'),
+                ...customGroups
+            ]);
+            return [...groups].sort((a, b) => {
+                if (a === '默认分组') return -1;
+                if (b === '默认分组') return 1;
+                return a.localeCompare(b);
+            });
+        }
 
         // ============================================
         // SVG 图标定义
@@ -4575,12 +4876,117 @@
         // ============================================
         function initTabs() {
             const tabItems = document.querySelectorAll('.tab-item');
+            const listPage = document.getElementById('listPage');
+            const templatePage = document.getElementById('templatePage');
+            const debugPage = document.getElementById('debugPage');
+
             tabItems.forEach(tab => {
                 tab.addEventListener('click', () => {
                     tabItems.forEach(t => t.classList.remove('active'));
                     tab.classList.add('active');
-                    console.log('切换到:', tab.dataset.tab);
+
+                    const tabName = tab.dataset.tab;
+                    if (tabName === 'command') {
+                        listPage.classList.remove('hidden');
+                        templatePage.classList.remove('active');
+                        debugPage.classList.remove('active');
+                    } else if (tabName === 'template') {
+                        listPage.classList.add('hidden');
+                        templatePage.classList.add('active');
+                        debugPage.classList.remove('active');
+                    }
                 });
+            });
+        }
+
+        // ============================================
+        // 模板中心功能
+        // ============================================
+        function renderTemplateCards(data) {
+            const grid = document.getElementById('templateGrid');
+            if (data.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="9" x2="15" y2="15"></line>
+                            <line x1="15" y1="9" x2="9" y2="15"></line>
+                        </svg>
+                        <p>暂无匹配的模板</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = data.map(item => `
+                <div class="template-card" data-id="${item.id}">
+                    <div class="template-card-cover">
+                        <span class="template-card-cover-text">${escapeHtml(item.coverText || item.name)}</span>
+                    </div>
+                    <div class="template-card-body">
+                        <div class="template-card-header">
+                            <span class="template-tag">BUA</span>
+                            <span class="template-card-name">${escapeHtml(item.name)}</span>
+                        </div>
+                    </div>
+                    <div class="template-card-actions">
+                        <button class="template-card-action" onclick="showTemplateDetail(${item.id})">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            详情
+                        </button>
+                        <button class="template-card-action" onclick="createTemplateCommand(${item.id})">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            创建指令
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showTemplateDetail(id) {
+            const item = templateData.find(t => t.id === id);
+            if (item) {
+                showToast(`模板详情：${item.name} - ${item.desc}`);
+            }
+        }
+
+        function createTemplateCommand(id) {
+            const item = templateData.find(t => t.id === id);
+            if (item) {
+                showToast(`正在基于「${item.name}」创建指令...`);
+            }
+        }
+
+        function initTemplateSearch() {
+            const searchInput = document.getElementById('templateSearchInput');
+            const searchBtn = document.getElementById('templateSearchBtn');
+            const resetBtn = document.getElementById('templateResetBtn');
+
+            function doSearch() {
+                const keyword = searchInput.value.trim().toLowerCase();
+                if (!keyword) {
+                    renderTemplateCards(templateData);
+                    return;
+                }
+                const filtered = templateData.filter(item =>
+                    item.name.toLowerCase().includes(keyword)
+                );
+                renderTemplateCards(filtered);
+            }
+
+            searchBtn.addEventListener('click', doSearch);
+            searchInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') doSearch();
+            });
+            resetBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                renderTemplateCards(templateData);
             });
         }
 
@@ -4592,9 +4998,35 @@
             const item = commandData.find(cmd => cmd.id === id);
             if (!item) return;
 
+            // 记住当前卡片所属分组，用于设置下拉框默认值
+            const currentGroup = item.group || '默认分组';
+
+            // 更新下拉框选项（确保包含最新分组、权限组、部门）
+            updateGroupSelectOptions();
+            updatePermissionGroupOptions();
+            updateDepartmentOptions();
+
             // 填充数据
             document.getElementById('settingsCommandName').value = item.name || '';
-            document.getElementById('settingsGroupSelect').value = item.group || '默认分组';
+            // 默认选中"选择现有分组"并选中当前卡片所在分组
+            document.getElementById('settingsExistingGroupRadio').checked = true;
+            document.getElementById('settingsNewGroupRadio').checked = false;
+            document.getElementById('settingsExistingGroupContainer').style.display = 'block';
+            document.getElementById('settingsNewGroupContainer').classList.remove('show');
+            document.getElementById('settingsNewGroupInput').value = '';
+            // 设置分组下拉框默认选中当前卡片所在分组
+            const settingsGroupSelectEl = document.getElementById('settingsGroupSelect');
+            settingsGroupSelectEl.value = currentGroup;
+            // 如果 value 设置失败（选项中不匹配），尝试通过 selectedIndex 定位
+            if (settingsGroupSelectEl.value !== currentGroup) {
+                const options = settingsGroupSelectEl.options;
+                for (let i = 0; i < options.length; i++) {
+                    if (options[i].value === currentGroup) {
+                        settingsGroupSelectEl.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
             document.getElementById('settingsPermissionGroup').value = item.permissionGroup || '';
             document.getElementById('settingsDepartment').value = item.department || '';
 
@@ -4638,7 +5070,13 @@
 
             // 收集数据
             const name = document.getElementById('settingsCommandName').value.trim();
-            const group = document.getElementById('settingsGroupSelect').value;
+            const settingsNewGroupRadio = document.getElementById('settingsNewGroupRadio');
+            let group;
+            if (settingsNewGroupRadio.checked) {
+                group = document.getElementById('settingsNewGroupInput').value.trim();
+            } else {
+                group = document.getElementById('settingsGroupSelect').value;
+            }
             const permissionGroup = document.getElementById('settingsPermissionGroup').value.trim();
             const department = document.getElementById('settingsDepartment').value.trim();
 
@@ -4744,6 +5182,31 @@
                     } else {
                         showToast('至少保留一名管理员');
                     }
+                }
+            });
+
+            // 组别选择单选切换
+            const settingsExistingGroupRadio = document.getElementById('settingsExistingGroupRadio');
+            const settingsNewGroupRadio = document.getElementById('settingsNewGroupRadio');
+            const settingsExistingGroupContainer = document.getElementById('settingsExistingGroupContainer');
+            const settingsNewGroupContainer = document.getElementById('settingsNewGroupContainer');
+            const settingsGroupSelect = document.getElementById('settingsGroupSelect');
+            const settingsNewGroupInput = document.getElementById('settingsNewGroupInput');
+
+            settingsExistingGroupRadio.addEventListener('change', () => {
+                if (settingsExistingGroupRadio.checked) {
+                    settingsExistingGroupContainer.style.display = 'block';
+                    settingsNewGroupContainer.classList.remove('show');
+                    settingsNewGroupInput.value = '';
+                }
+            });
+
+            settingsNewGroupRadio.addEventListener('change', () => {
+                if (settingsNewGroupRadio.checked) {
+                    settingsExistingGroupContainer.style.display = 'none';
+                    settingsNewGroupContainer.classList.add('show');
+                    settingsGroupSelect.value = '';
+                    settingsNewGroupInput.focus();
                 }
             });
 
@@ -4877,11 +5340,13 @@
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.remove('show');
 
-            // 显示占位区域，隐藏浏览器窗口
+            // 显示占位区域，隐藏浏览器窗口和操作日志
             const placeholder = document.getElementById('debugPlaceholder');
             if (placeholder) placeholder.style.display = '';
             const browserPreview = document.querySelector('.browser-preview-section');
             if (browserPreview) browserPreview.classList.remove('show');
+            const debugOperationLog = document.getElementById('debugOperationLog');
+            if (debugOperationLog) debugOperationLog.classList.remove('show');
 
             // 隐藏任务状态区域
             if (statusSection) {
@@ -4924,8 +5389,9 @@
             // 恢复面包屑默认文字
             document.getElementById('breadcrumbCommandName').textContent = '我的BUA调试页面';
 
-            // 显示列表页，隐藏调试页
+            // 显示列表页，隐藏调试页和模板页
             document.getElementById('listPage').classList.remove('hidden');
+            document.getElementById('templatePage').classList.remove('active');
             document.getElementById('debugPage').classList.remove('active');
 
             // 显示 Tab 导航栏
@@ -5195,16 +5661,19 @@
                     // 停止/完成后始终显示左侧完整内容
                     if (leftColumn) leftColumn.classList.remove('running-only-prompt');
 
-                    // 停止/完成后：展开时隐藏浏览器、加高任务状态；收起时恢复
+                    // 停止/完成后：展开时隐藏操作日志、加高任务状态；收起时显示操作日志、恢复任务状态
                     const browserPreview = document.getElementById('panelBrowserPreview');
+                    const debugOperationLog = document.getElementById('debugOperationLog');
                     const taskStatusSection = document.getElementById('taskStatusSection');
                     if (isDebugCollapsed) {
-                        // 展开到 70%/28%，右侧变窄：隐藏浏览器，加高任务状态
+                        // 展开到 70%/28%，右侧变窄：隐藏操作日志，加高任务状态
                         if (browserPreview) browserPreview.classList.remove('show');
+                        if (debugOperationLog) debugOperationLog.classList.remove('show');
                         if (taskStatusSection) taskStatusSection.classList.add('expanded-status');
                     } else {
-                        // 收起回 35%/65%，右侧变宽：恢复浏览器，恢复任务状态
-                        if (browserPreview) browserPreview.classList.add('show');
+                        // 收起回 35%/65%，右侧变宽：显示操作日志，恢复任务状态
+                        if (browserPreview) browserPreview.classList.remove('show');
+                        if (debugOperationLog) debugOperationLog.classList.add('show');
                         if (taskStatusSection) taskStatusSection.classList.remove('expanded-status');
                     }
                 } else {
@@ -5388,11 +5857,23 @@
                             </svg>
                         </div>
                         <span class="status-text success">执行完成</span>
-                        <button class="status-log-btn" onclick="openOperationLogModal()">查看日志</button>
                     </div>
                     <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
+            
+            // 隐藏浏览器预览，显示内嵌操作日志
+            const browserPreview = document.getElementById('panelBrowserPreview');
+            const debugOperationLog = document.getElementById('debugOperationLog');
+            if (browserPreview) browserPreview.classList.remove('show');
+            if (debugOperationLog) {
+                debugOperationLog.classList.add('show');
+                renderDebugOperationLog(finalTime);
+            }
+
+            // 显示展开/收起按钮
+            const resizeBtn = document.getElementById('debugResizeBtn');
+            if (resizeBtn) resizeBtn.classList.add('show');
         }
 
         // 显示已停止状态
@@ -5409,11 +5890,23 @@
                             </svg>
                         </div>
                         <span class="status-text stopped">已停止</span>
-                        <button class="status-log-btn" onclick="openOperationLogModal()">查看日志</button>
                     </div>
                     <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
+            
+            // 隐藏浏览器预览，显示内嵌操作日志
+            const browserPreview = document.getElementById('panelBrowserPreview');
+            const debugOperationLog = document.getElementById('debugOperationLog');
+            if (browserPreview) browserPreview.classList.remove('show');
+            if (debugOperationLog) {
+                debugOperationLog.classList.add('show');
+                renderDebugOperationLog(finalTime);
+            }
+
+            // 显示展开/收起按钮
+            const resizeBtn = document.getElementById('debugResizeBtn');
+            if (resizeBtn) resizeBtn.classList.add('show');
         }
 
         // 显示执行失败状态
@@ -5432,13 +5925,25 @@
                                 </svg>
                             </div>
                             <span class="status-text failed">指令执行失败</span>
-                            <button class="status-log-btn" onclick="openOperationLogModal()">查看日志</button>
                         </div>
                         <span class="timer-text">${formatTime(finalTime)}</span>
                     </div>
                     <div style="margin-top:4px;font-size:12px;color:#FF4D4F;">错误原因：${failReason || '未知错误'}</div>
                 </div>
             `;
+            
+            // 隐藏浏览器预览，显示内嵌操作日志
+            const browserPreview = document.getElementById('panelBrowserPreview');
+            const debugOperationLog = document.getElementById('debugOperationLog');
+            if (browserPreview) browserPreview.classList.remove('show');
+            if (debugOperationLog) {
+                debugOperationLog.classList.add('show');
+                renderDebugOperationLog(finalTime);
+            }
+
+            // 显示展开/收起按钮
+            const resizeBtn = document.getElementById('debugResizeBtn');
+            if (resizeBtn) resizeBtn.classList.add('show');
         }
 
         // 展开/收起状态
@@ -5454,6 +5959,21 @@
                 layout.style.setProperty('--left-width', leftPercent);
                 layout.style.setProperty('--right-width', rightPercent);
             }
+            updateResizeBtnPosition();
+        }
+
+        // 更新展开/收起按钮位置（fixed 定位需动态计算水平位置）
+        function updateResizeBtnPosition() {
+            const btn = document.getElementById('debugResizeBtn');
+            const layout = document.querySelector('.debug-layout');
+            if (!btn || !layout) return;
+            if (!btn.classList.contains('show')) {
+                btn.style.left = '';
+                return;
+            }
+            const rect = layout.getBoundingClientRect();
+            const leftWidth = parseFloat(getComputedStyle(layout).getPropertyValue('--left-width')) / 100;
+            btn.style.left = (rect.left + rect.width * leftWidth) + 'px';
         }
 
         // 更新展开/收起按钮箭头方向
@@ -5503,23 +6023,10 @@
                 isDebugCollapsed = false;
                 updateResizeBtnIcon();
                 setDebugLayout('35%', '65%');
-                document.getElementById('debugResizeBtn').classList.add('show');
 
                 // 任务状态：已停止（灰色）
                 showStoppedStatus(debugElapsedTime);
 
-                // 浏览器区域恢复默认占位
-                browserContent.className = 'browser-content';
-                browserContent.innerHTML = `
-                    <div class="browser-content-placeholder">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                            <line x1="8" y1="21" x2="16" y2="21"></line>
-                            <line x1="12" y1="17" x2="12" y2="21"></line>
-                        </svg>
-                        <p>浏览器实时画面</p>
-                    </div>
-                `;
                 return;
             }
 
@@ -5529,17 +6036,20 @@
             debugStartTime = Date.now();
             debugElapsedTime = 0;
 
-            // 隐藏占位区域，显示浏览器窗口
+            // 隐藏占位区域，显示浏览器窗口，隐藏操作日志
             document.getElementById('debugPlaceholder').style.display = 'none';
             document.querySelector('.browser-preview-section').classList.add('show');
+            const debugOperationLog = document.getElementById('debugOperationLog');
+            if (debugOperationLog) debugOperationLog.classList.remove('show');
 
             // 展开右侧面板
             setDebugLayout('35%', '65%');
-            document.getElementById('debugResizeBtn').classList.remove('show');
 
             // 设置收起状态，只显示Prompt
             isDebugCollapsed = true;
             updateResizeBtnIcon();
+            // 调试运行中隐藏展开/收起按钮
+            document.getElementById('debugResizeBtn').classList.remove('show');
             const leftColumn = document.querySelector('.debug-left-column');
             if (leftColumn) leftColumn.classList.add('running-only-prompt');
 
@@ -5616,7 +6126,6 @@
                 isDebugCollapsed = false;
                 updateResizeBtnIcon();
                 setDebugLayout('35%', '65%');
-                document.getElementById('debugResizeBtn').classList.add('show');
 
                 if (isFailTest) {
                     // 任务状态：执行失败（红色）
@@ -5626,9 +6135,6 @@
                     showCompletedStatus(debugElapsedTime);
                 }
 
-                // 浏览器内容区域显示完成效果
-                browserContent.className = 'browser-content screenshot';
-                browserContent.innerHTML = '';
             }, simulateDelay);
         }
 
@@ -5672,11 +6178,7 @@
         // 初始化分组筛选下拉框
         function initGroupFilter() {
             const groupFilter = document.getElementById('groupFilter');
-            const groups = [...new Set(commandData.map(item => item.group || '默认分组'))].sort((a, b) => {
-                if (a === '默认分组') return -1;
-                if (b === '默认分组') return 1;
-                return a.localeCompare(b);
-            });
+            const groups = getAllGroups();
 
             // 保留"全部"选项，添加其他分组
             groupFilter.innerHTML = '<option value="">全部</option>' +
@@ -5711,11 +6213,7 @@
         function updateGroupFilter() {
             const groupFilter = document.getElementById('groupFilter');
             const currentValue = groupFilter.value;
-            const groups = [...new Set(commandData.map(item => item.group || '默认分组'))].sort((a, b) => {
-                if (a === '默认分组') return -1;
-                if (b === '默认分组') return 1;
-                return a.localeCompare(b);
-            });
+            const groups = getAllGroups();
 
             groupFilter.innerHTML = '<option value="">全部</option>' +
                 groups.map(group => `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`).join('');
@@ -5771,6 +6269,9 @@
             resetForm();
             // 动态更新分组选项（从 commandData 读取最新分组）
             updateGroupSelectOptions();
+            // 动态更新权限组和部门选项
+            updatePermissionGroupOptions();
+            updateDepartmentOptions();
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -5814,19 +6315,86 @@
         function updateGroupSelectOptions() {
             const groupSelect = document.getElementById('groupSelect');
             const settingsGroupSelect = document.getElementById('settingsGroupSelect');
-            const groups = [...new Set(commandData.map(item => item.group || '默认分组'))].sort((a, b) => {
-                if (a === '默认分组') return -1;
-                if (b === '默认分组') return 1;
-                return a.localeCompare(b);
+            const groups = getAllGroups();
+
+            // 使用 DOM API 构建 option，避免 escapeHtml 导致的 value 不匹配问题
+            function buildOptions(selectEl) {
+                if (!selectEl) return;
+                selectEl.innerHTML = '';
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = '请选择分组';
+                selectEl.appendChild(defaultOpt);
+                groups.forEach(group => {
+                    const opt = document.createElement('option');
+                    opt.value = group;
+                    opt.textContent = group;
+                    selectEl.appendChild(opt);
+                });
+            }
+
+            buildOptions(groupSelect);
+            buildOptions(settingsGroupSelect);
+        }
+
+        // 动态更新权限组下拉选项（从 commandData 读取真实数据 + 默认值）
+        function updatePermissionGroupOptions() {
+            const defaultOptions = ['测试组', '开发组', '运营组', '管理组'];
+            const existingValues = new Set();
+            commandData.forEach(item => {
+                if (item.permissionGroup && item.permissionGroup.trim()) {
+                    existingValues.add(item.permissionGroup.trim());
+                }
             });
-            const optionsHtml = '<option value="">请选择分组</option>' +
-                groups.map(group => `<option value="${escapeHtml(group)}">${escapeHtml(group)}</option>`).join('');
-            if (groupSelect) {
-                groupSelect.innerHTML = optionsHtml;
+            const allOptions = Array.from(new Set([...defaultOptions, ...existingValues]));
+
+            function buildOptions(selectEl) {
+                if (!selectEl) return;
+                selectEl.innerHTML = '';
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = '请选择权限组';
+                selectEl.appendChild(defaultOpt);
+                allOptions.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    selectEl.appendChild(option);
+                });
             }
-            if (settingsGroupSelect) {
-                settingsGroupSelect.innerHTML = optionsHtml;
+
+            buildOptions(document.getElementById('permissionGroup'));
+            buildOptions(document.getElementById('settingsPermissionGroup'));
+        }
+
+        // 动态更新部门下拉选项（从 commandData 读取真实数据 + 默认值）
+        function updateDepartmentOptions() {
+            const defaultOptions = ['测试部', '技术部', '运营部', '产品部'];
+            const existingValues = new Set();
+            commandData.forEach(item => {
+                if (item.department && item.department.trim()) {
+                    existingValues.add(item.department.trim());
+                }
+            });
+            const allOptions = Array.from(new Set([...defaultOptions, ...existingValues]));
+
+            function buildOptions(selectEl) {
+                if (!selectEl) return;
+                selectEl.innerHTML = '';
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = '请选择部门';
+                selectEl.appendChild(defaultOpt);
+                allOptions.forEach(opt => {
+                    const option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    selectEl.appendChild(option);
+                });
             }
+
+            buildOptions(document.getElementById('department'));
+            buildOptions(document.getElementById('settingsDepartment'));
         }
 
         // 组别选择
@@ -6178,10 +6746,10 @@
                     let top;
 
                     if (spaceBelow >= tooltipHeight + 8 || spaceBelow >= spaceAbove) {
-                        top = rect.bottom + 4;
+                        top = rect.bottom + 2;
                         tooltip.classList.remove('bottom-arrow');
                     } else {
-                        top = rect.top - tooltipHeight - 4;
+                        top = rect.top - tooltipHeight - 2;
                         tooltip.classList.add('bottom-arrow');
                     }
 
@@ -6624,6 +7192,70 @@
             }
         ];
 
+        // 渲染内嵌操作日志内容
+        function renderDebugOperationLog(finalTime) {
+            const container = document.getElementById('debugLogCards');
+            const totalSteps = operationLogData.length;
+            const totalActions = operationLogData.reduce((sum, item) => sum + item.actionResults.length, 0);
+
+            document.getElementById('debugLogTotalSteps').textContent = totalSteps;
+            document.getElementById('debugLogTotalActions').textContent = totalActions;
+            document.getElementById('debugLogDuration').textContent = (finalTime || 0) + '秒';
+
+            container.innerHTML = operationLogData.map(item => {
+                const actionResultsHtml = item.actionResults.map(result => {
+                    const itemClass = result.success ? 'success' : 'failed';
+                    const icon = result.success ? '✅' : '❌';
+                    return `
+                        <div class="log-action-result-item ${itemClass}">
+                            <span class="log-action-result-icon">${icon}</span>
+                            <span>${escapeHtml(result.text)}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                return `
+                <div class="operation-log-card">
+                    <div class="operation-log-card-header">
+                        <span class="operation-log-card-step">步骤 ${item.step}/${totalSteps}</span>
+                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl)}')" title="${escapeHtml(item.pageUrl)}">${escapeHtml(item.pageUrl)}</span>
+                    </div>
+                    <div class="operation-log-card-body">
+                        <div class="operation-log-card-left">
+                            <div class="log-block">
+                                <div class="log-block-header" onclick="toggleLogBlock(this)">
+                                    <span class="log-block-toggle collapsed">▶</span>
+                                    <span class="log-block-tag user">用户提示词</span>
+                                </div>
+                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
+                            </div>
+                            <div class="log-block">
+                                <div class="log-block-header" onclick="toggleLogBlock(this)">
+                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-tag llm">思考+执行过程</span>
+                                </div>
+                                <div class="log-block-content">${escapeHtml(item.llmOutput)}</div>
+                            </div>
+                        </div>
+                        <div class="operation-log-card-right">
+                            <div class="log-screenshot-container">
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    <span class="log-screenshot-label">页面截图</span>
+                                    <a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>
+                                </div>
+                                <img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">
+                            </div>
+                            <div class="log-action-results">
+                                <span class="log-action-results-title">执行结果</span>
+                                ${actionResultsHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
         // 渲染操作日志卡片列表
         function renderOperationLogCards() {
             const container = document.getElementById('operationLogCards');
@@ -6655,10 +7287,10 @@
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-toggle collapsed">▶</span>
                                     <span class="log-block-tag user">用户提示词</span>
                                 </div>
-                                <div class="log-block-content">${escapeHtml(item.userPrompt)}</div>
+                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
                             </div>
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
@@ -6767,8 +7399,10 @@
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
             renderCards(commandData);
+            renderTemplateCards(templateData);
             initTabs();
             initSearch();
+            initTemplateSearch();
             initNewGroupOption();
             initModal();
             initConfirmDialog();
@@ -6778,6 +7412,16 @@
             initRunRecordsDrawer();
             initOperationLogModal();
             initVariablesModal();
+
+            // 监听调试布局变化，自动更新展开/收起按钮位置
+            const layoutEl = document.querySelector('.debug-layout');
+            if (layoutEl) {
+                const resizeObserver = new ResizeObserver(() => {
+                    updateResizeBtnPosition();
+                });
+                resizeObserver.observe(layoutEl);
+            }
+            window.addEventListener('scroll', updateResizeBtnPosition, { passive: true });
         });
     </script>
 </body>
