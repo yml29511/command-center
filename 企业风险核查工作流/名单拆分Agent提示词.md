@@ -11,7 +11,7 @@
 | 变量名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
 | `${upstreamOutput}` | JSON对象 | 上游Agent的完整JSON输出（包含task_id、status、message、data等） | 见下方示例 |
-| `${batchSize}` | 整数 | 每组最大数量，默认5 | `5` |
+| `${batchSize}` | 整数 | 每组最大数量，默认10 | `10` |
 
 **`${upstreamOutput}` 输入示例：**
 
@@ -42,7 +42,7 @@
 2. 校验 `status` 字段：
    - 如果 `status` 不是 `"success"`，直接输出错误信息（见 Constraints 第6条）。
 3. 从 `data.company_list` 提取企业名单数组。
-4. 解析 `${batchSize}`，如未提供或非法则使用默认值 **5**。
+4. 解析 `${batchSize}`，如未提供或非法则使用默认值 **10**。
 5. 提取以下元数据：`task_id`、`target_date`、`business_line`、`risk_level`，在组装输出时将其复制到每个 batch 对象中。
 
 ### Step 2: 分批拆分

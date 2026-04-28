@@ -1303,7 +1303,10 @@
         }
 
         .debug-page.active {
-            display: block;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 48px);
+            overflow: hidden;
         }
 
         /* 执行记录页面样式 */
@@ -1456,11 +1459,13 @@
         .debug-layout {
             display: flex;
             gap: 20px;
-            align-items: stretch;
             position: relative;
             --left-width: 70%;
             --right-width: 28%;
-            padding-bottom: 40vh;
+            flex: 1;
+            overflow: hidden;
+            padding-right: 16px;
+            padding-bottom: 16px;
         }
 
         .debug-left-column {
@@ -1470,6 +1475,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .debug-right-column {
@@ -1479,6 +1485,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
         }
 
         /* 调试详情面板样式 */
@@ -1486,17 +1494,16 @@
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
+            overflow: visible;
+            flex: 1;
         }
 
         .runtime-panel-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 16px;
+            padding: 14px 0;
+            margin: 0 16px;
             border-bottom: 1px solid var(--border-light);
             justify-content: flex-start;
             flex-wrap: wrap;
@@ -1516,8 +1523,6 @@
 
         .runtime-panel-body {
             padding: 20px;
-            display: flex;
-            flex-direction: column;
         }
 
         /* 任务状态区域 */
@@ -1710,7 +1715,7 @@
         .debug-resize-btn {
             position: fixed;
             top: 50vh;
-            transform: translateY(-50%);
+            transform: translate(-50%, -50%);
             width: 20px;
             height: 40px;
             background-color: #E8E8E8;
@@ -1946,6 +1951,7 @@
             gap: 8px;
             margin-bottom: 20px;
             font-size: 14px;
+            flex-shrink: 0;
         }
 
         .breadcrumb-item {
@@ -2101,7 +2107,7 @@
 
         .debug-prompt-actions {
             display: flex;
-            gap: 12px;
+            gap: 4px;
             align-items: center;
             flex-shrink: 0;
         }
@@ -2111,6 +2117,8 @@
             font-size: 13px;
             line-height: 1.4;
             white-space: nowrap;
+            height: 32px;
+            box-sizing: border-box;
         }
 
         /* 沙箱类型选择框 */
@@ -2133,6 +2141,8 @@
             background-position: right 8px center;
             width: auto;
             min-width: 0;
+            height: 32px;
+            box-sizing: border-box;
         }
 
         .sandbox-select:focus {
@@ -2446,7 +2456,7 @@
         }
 
         .debug-left-column.running-only-prompt .debug-combined-card {
-            padding-top: 16px;
+            padding-top: 0;
             padding-bottom: 16px;
             flex: 1;
             min-height: 0;
@@ -2612,6 +2622,7 @@
             flex: 1 1 auto;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .debug-combined-header {
@@ -2731,16 +2742,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
+            flex-wrap: nowrap;
+            gap: 4px;
+            margin-top: 12px;
             margin-bottom: 12px;
+            overflow: visible;
         }
 
         .debug-prompt-actions-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 2px;
         }
 
         /* 单选按钮组样式 */
@@ -3930,7 +3942,8 @@
         }
 
         .log-llm-content {
-            max-height: 242px;
+            height: 281px;
+            max-height: 281px;
         }
 
         .log-screenshot-container {
@@ -4178,7 +4191,7 @@
         }
         /* 版本选择器 */
         .version-selector { position: relative; display: inline-block; }
-        .version-trigger { display: flex; align-items: center; gap: 6px; padding: 6px 28px 6px 10px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--font-family); color: var(--text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); user-select: none; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: auto; min-width: 0; }
+        .version-trigger { display: flex; align-items: center; gap: 6px; padding: 4px 28px 4px 10px; box-sizing: border-box; height: 32px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--font-family); color: var(--text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); user-select: none; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: auto; min-width: 0; }
         .version-trigger:hover { border-color: var(--primary-color); }
         .version-trigger.active { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1); }
         .version-trigger .version-tag { background-color: transparent; padding: 0; border-radius: 0; font-size: 13px; }
@@ -6831,6 +6844,7 @@
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
         }
 
         // 显示已停止状态
@@ -6872,6 +6886,7 @@
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
         }
 
         // 显示执行失败状态
@@ -6909,6 +6924,7 @@
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
         }
 
         // 展开/收起执行结果文字
@@ -7020,7 +7036,7 @@
             }
             const rect = layout.getBoundingClientRect();
             const leftWidth = parseFloat(getComputedStyle(layout).getPropertyValue('--left-width')) / 100;
-            btn.style.left = (rect.left + rect.width * leftWidth) + 'px';
+            btn.style.left = (rect.left + rect.width * leftWidth + 4) + 'px';
         }
 
         // 更新展开/收起按钮箭头方向
@@ -7782,7 +7798,7 @@
                     </td>
                     <td>
                         <div class="action-cell">
-                            <span class="${logBtnClass}" ${logBtnAttrs}>查看执行结果</span>
+                            <span class="${logBtnClass}" ${logBtnAttrs}>执行结果</span>
                         </div>
                     </td>
                 </tr>
@@ -8267,13 +8283,6 @@
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle ${isUnexecuted ? '' : 'collapsed'}">${isUnexecuted ? '▼' : '▶'}</span>
-                                    <span class="log-block-tag user">用户提示词</span>
-                                </div>
-                                <div class="log-block-content ${isUnexecuted ? '' : 'collapsed'}">${escapeHtml(item.userPrompt)}</div>
-                            </div>
-                            <div class="log-block">
-                                <div class="log-block-header" onclick="toggleLogBlock(this)">
                                     <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>
                                     <span class="log-block-tag llm">思考+执行过程</span>
                                 </div>
@@ -8362,13 +8371,6 @@
                     </div>
                     <div class="operation-log-card-body">
                         <div class="operation-log-card-left">
-                            <div class="log-block">
-                                <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle ${isUnexecuted ? '' : 'collapsed'}">${isUnexecuted ? '▼' : '▶'}</span>
-                                    <span class="log-block-tag user">用户提示词</span>
-                                </div>
-                                <div class="log-block-content ${isUnexecuted ? '' : 'collapsed'}">${escapeHtml(item.userPrompt)}</div>
-                            </div>
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
                                     <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>

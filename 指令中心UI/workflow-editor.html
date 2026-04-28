@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作流编辑器</title>
+    <style>
+        :root {
+            --primary: #653DD6;
+            --primary-hover: #5531B8;
+            --primary-light: #F0EBFF;
+            --accent: #17BFB5;
+            --accent-light: #E6F9F7;
+            --bg: #F0F4FF;
+            --card-bg: #FFFFFF;
+            --border: #E5E7EB;
+            --border-light: #F0F1F3;
+            --text-1: #1A1A2E;
+            --text-2: #666666;
+            --text-3: #999999;
+            --text-white: #FFFFFF;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text-1);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ===== Top Header Bar ===== */
+        .top-bar {
+            height: 56px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            color: var(--text-2);
+            font-size: 18px;
+            transition: background 0.15s;
+        }
+        .back-btn:hover { background: var(--primary-light); color: var(--primary); }
+
+        .workflow-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .settings-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-3);
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: color 0.15s;
+        }
+        .settings-icon:hover { color: var(--primary); }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .status-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-btn {
+            height: 32px;
+            padding: 0 14px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.15s;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text-1);
+            white-space: nowrap;
+        }
+        .header-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .header-btn .btn-icon { font-size: 14px; }
+
+        .header-btn.primary-outline {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--card-bg);
+        }
+        .header-btn.primary-outline:hover {
+            background: var(--primary-light);
+        }
+
+        .header-btn.primary-fill {
+            border: none;
+            background: var(--primary);
+            color: var(--text-white);
+        }
+        .header-btn.primary-fill:hover {
+            background: var(--primary-hover);
+        }
+
+        /* ===== Main Layout ===== */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 56px);
+            margin-top: 56px;
+        }
+
+        /* ===== Left Icon Sidebar ===== */
+        .icon-sidebar {
+            width: 56px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            color: var(--text-3);
+            cursor: default;
+            font-size: 18px;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .sidebar-icon.active {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .sidebar-icon.add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--text-white);
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .sidebar-spacer { flex: 1; }
+
+        /* ===== Left Node Panel ===== */
+        .node-panel {
+            width: 200px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .node-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+        .node-panel-header .filter-icon {
+            color: var(--text-3);
+            font-size: 16px;
+        }
+
+        .node-search {
+            margin: 0 12px 12px;
+            position: relative;
+        }
+        .node-search input {
+            width: 100%;
+            height: 32px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 12px 0 32px;
+            font-size: 13px;
+            color: var(--text-1);
+            background: var(--card-bg);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .node-search input::placeholder { color: var(--text-3); }
+        .node-search input:focus { border-color: var(--primary); }
+        .node-search .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-3);
+            font-size: 14px;
+        }
+
+        .node-category {
+            padding: 0 12px;
+            margin-bottom: 4px;
+        }
+        .node-category-title {
+            font-size: 12px;
+            color: var(--text-3);
+            padding: 8px 4px 4px;
+            font-weight: 500;
+        }
+
+        .node-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 8px;
+            border-radius: var(--radius-md);
+            cursor: default;
+            transition: background 0.15s;
+            font-size: 13px;
+            color: var(--text-1);
+        }
+        .node-item:hover { background: var(--primary-light); }
+
+        .node-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .node-icon.blue { background: #E3F2FD; color: #1976D2; }
+        .node-icon.red { background: #FCE4EC; color: #C62828; }
+        .node-icon.orange { background: #FFF3E0; color: #E65100; }
+        .node-icon.purple { background: var(--primary-light); color: var(--primary); }
+        .node-icon.green { background: #E8F5E9; color: #2E7D32; }
+        .node-icon.teal { background: var(--accent-light); color: var(--accent); }
+        .node-icon.pink { background: #FCE4EC; color: #AD1457; }
+
+        /* ===== Center Canvas ===== */
+        .canvas-area {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg);
+            /* 网格背景 */
+            background-image:
+                radial-gradient(circle, #D0D5E0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .canvas-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* Workflow nodes */
+        .wf-node {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            min-width: 140px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .wf-node-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .wf-node-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .wf-node-dot.green { background: #4CAF50; }
+        .wf-node-dot.blue { background: #2196F3; }
+
+        .wf-node-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .wf-node-body {
+            font-size: 11px;
+            color: var(--text-3);
+            line-height: 1.5;
+        }
+        .wf-node-body .sub-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .wf-node-body .sub-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .wf-node-body .sub-dot.blue { background: #2196F3; }
+        .wf-node-body .sub-dot.orange { background: #FF9800; }
+
+        /* Connector ports */
+        .wf-port {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: var(--card-bg);
+            position: absolute;
+        }
+        .wf-port.left { left: -5px; top: 50%; transform: translateY(-50%); }
+        .wf-port.right { right: -5px; top: 50%; transform: translateY(-50%); }
+
+        /* Connector lines */
+        .wf-connector {
+            width: 48px;
+            height: 2px;
+            background: var(--primary);
+            opacity: 0.4;
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        /* Canvas bottom toolbar */
+        .canvas-toolbar {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 4px 8px;
+            box-shadow: var(--shadow-md);
+        }
+        .toolbar-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            color: var(--text-2);
+            cursor: default;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+        }
+        .toolbar-percent {
+            font-size: 12px;
+            color: var(--text-2);
+            padding: 0 4px;
+            min-width: 36px;
+            text-align: center;
+        }
+        .toolbar-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--border);
+            margin: 0 4px;
+        }
+
+        /* ===== Right Drawer ===== */
+        .right-drawer {
+            width: 420px;
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: -2px 0 12px rgba(0,0,0,0.04);
+            overflow-y: auto;
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 2;
+        }
+        .drawer-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+        .drawer-close {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            color: var(--text-3);
+            font-size: 18px;
+            transition: all 0.15s;
+        }
+        .drawer-close:hover {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .drawer-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .drawer-section {}
+        .drawer-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .drawer-section-title .section-icon {
+            font-size: 15px;
+        }
+
+        /* Command name area */
+        .cmd-name-link {
+            color: var(--primary);
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .cmd-name-link:hover { text-decoration: underline; }
+
+        .cmd-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .cmd-action {
+            font-size: 12px;
+            color: var(--text-3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: color 0.15s;
+        }
+        .cmd-action:hover { color: var(--primary); }
+
+        /* Command content textarea */
+        .cmd-content-wrap {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .cmd-content-wrap:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+        }
+
+        .cmd-textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 12px 14px;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            font-family: var(--font);
+            color: var(--text-1);
+            line-height: 1.7;
+            resize: vertical;
+            background: transparent;
+        }
+        .cmd-textarea::placeholder { color: var(--text-3); }
+
+        .cmd-content-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px;
+            border-top: 1px solid var(--border-light);
+            background: #FAFBFC;
+        }
+        .cmd-hint {
+            font-size: 12px;
+            color: var(--primary);
+            opacity: 0.7;
+        }
+        .cmd-char-count {
+            font-size: 12px;
+            color: var(--text-3);
+        }
+
+        .fullscreen-edit-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
+            font-size: 12px;
+            color: var(--text-2);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .fullscreen-edit-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Execution mode */
+        .exec-mode-value {
+            font-size: 13px;
+            color: var(--text-1);
+            padding: 8px 0;
+        }
+
+        /* Variables section */
+        .var-item {
+            margin-bottom: 12px;
+        }
+        .var-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--primary);
+            background: var(--primary-light);
+            border: 1px solid rgba(101, 61, 214, 0.2);
+            margin-bottom: 6px;
+        }
+        .var-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .var-select {
+            width: 80px;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 8px;
+            font-size: 13px;
+            color: var(--text-1);
+            background: var(--card-bg);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+        .var-select:focus { border-color: var(--primary); }
+
+        .var-input {
+            flex: 1;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 12px;
+            font-size: 13px;
+            color: var(--text-1);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+        .var-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+        }
+
+        /* ===== 执行衔接 (BUA Link) ===== */
+        .link-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+        .link-toggle-label {
+            font-size: 13px;
+            color: var(--text-1);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            width: 40px;
+            height: 22px;
+            border-radius: 11px;
+            background: #D1D5DB;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            flex-shrink: 0;
+        }
+        .toggle-switch .toggle-knob {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease;
+        }
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(18px);
+        }
+
+        /* Collapse content */
+        .collapse-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.25s ease, opacity 0.25s ease;
+            opacity: 0;
+        }
+        .collapse-content.open {
+            max-height: 150px;
+            opacity: 1;
+        }
+
+        .link-select-label {
+            font-size: 12px;
+            color: var(--text-2);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .link-select {
+            width: 100%;
+            height: 34px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0 28px 0 10px;
+            font-size: 13px;
+            color: var(--text-1);
+            background: var(--card-bg);
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            transition: border-color 0.15s;
+        }
+        .link-select:focus {
+            border-color: var(--primary);
+        }
+
+        .link-hint {
+            font-size: 12px;
+            color: var(--text-3);
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D0D5E0; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #B0B5C0; }
+
+        /* ===== FAB Button ===== */
+        .fab-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--text-white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 16px rgba(101, 61, 214, 0.35);
+            z-index: 200;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .fab-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(101, 61, 214, 0.45);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== Top Bar ===== -->
+<div class="top-bar">
+    <div class="top-bar-left">
+        <button class="back-btn">←</button>
+        <span class="workflow-title">跨境物流禁止合作商家状态核对与预警</span>
+        <span class="settings-icon">⚙</span>
+        <span class="status-badge">已启用</span>
+    </div>
+    <div class="top-bar-right">
+        <button class="header-btn"><span class="btn-icon">☰</span> 检查清单</button>
+        <button class="header-btn"><span class="btn-icon">▶</span> 试跑</button>
+        <button class="header-btn"><span class="btn-icon">⚡</span> 一键评测</button>
+        <button class="header-btn"><span class="btn-icon">💬</span> 对话创建</button>
+        <button class="header-btn"><span class="btn-icon">🕓</span> 历史版本</button>
+        <button class="header-btn primary-outline">保存草稿</button>
+        <button class="header-btn primary-fill"><span class="btn-icon">⬆</span> 更新版本</button>
+    </div>
+</div>
+
+<!-- ===== Main Layout ===== -->
+<div class="main-layout">
+
+    <!-- Left Icon Sidebar -->
+    <div class="icon-sidebar">
+        <div class="sidebar-icon add-btn">+</div>
+        <div class="sidebar-icon active">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        </div>
+        <div class="sidebar-spacer"></div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <div class="sidebar-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        </div>
+    </div>
+
+    <!-- Left Node Panel -->
+    <div class="node-panel">
+        <div class="node-panel-header">
+            节点库
+            <span class="filter-icon">≡</span>
+        </div>
+        <div class="node-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="输入查找" disabled>
+        </div>
+
+        <div class="node-category">
+            <div class="node-category-title">事件</div>
+            <div class="node-item">
+                <div class="node-icon blue">▶</div>
+                <span>触发器</span>
+            </div>
+        </div>
+
+        <div class="node-category">
+            <div class="node-category-title">智能体</div>
+            <div class="node-item">
+                <div class="node-icon blue">🤖</div>
+                <span>Simple Agent</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon red">⚡</div>
+                <span>Skill Agent</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon orange">🔌</div>
+                <span>MCP</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon purple">📋</div>
+                <span>图片解析</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon blue">🤖</div>
+                <span>Simple Agent</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon red">⚡</div>
+                <span>Skill Agent</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon orange">🔌</div>
+                <span>MCP</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon purple">🖼</div>
+                <span>图片解析</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon teal">🌐</div>
+                <span>浏览器操作</span>
+            </div>
+        </div>
+
+        <div class="node-category">
+            <div class="node-category-title">逻辑</div>
+            <div class="node-item">
+                <div class="node-icon blue">📦</div>
+                <span>子流程</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon green">🔄</div>
+                <span>子流程循环</span>
+            </div>
+            <div class="node-item">
+                <div class="node-icon purple">🔀</div>
+                <span>条件分支</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Center Canvas -->
+    <div class="canvas-area">
+        <div class="canvas-content">
+            <!-- Node 1: 定时触发 -->
+            <div class="wf-node">
+                <div class="wf-node-header">
+                    <div class="wf-node-dot green"></div>
+                    <div class="wf-node-title">定时触发</div>
+                </div>
+                <div class="wf-port right"></div>
+            </div>
+            <div class="wf-connector"></div>
+            <!-- Node 2: 浏览器操作 -->
+            <div class="wf-node" style="min-width: 180px;">
+                <div class="wf-node-header">
+                    <div class="wf-node-dot blue"></div>
+                    <div class="wf-node-title">浏览器操作</div>
+                </div>
+                <div class="wf-node-body">
+                    <div>浏览器操作Agent &amp;</div>
+                    <div>通过浏览器操作Agent执行</div>
+                    <div>遍历合# Row 目录一个数据...</div>
+                    <div class="sub-item">
+                        <div class="sub-dot blue"></div>
+                        <span>Simple Agent</span>
+                    </div>
+                    <div class="sub-item">
+                        <div class="sub-dot orange"></div>
+                        <span>格式转换2.yml</span>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-3);margin-top:4px;">通知/停止，需要程序列进信息...</div>
+                </div>
+                <div class="wf-port left"></div>
+                <div class="wf-port right"></div>
+            </div>
+            <div class="wf-connector"></div>
+            <!-- Node 3: Simple Agent -->
+            <div class="wf-node">
+                <div class="wf-node-header">
+                    <div class="wf-node-dot blue"></div>
+                    <div class="wf-node-title">Simple Agent</div>
+                </div>
+                <div class="wf-node-body">
+                    <div>在请求后Agent.yml</div>
+                    <div>通知设置结果后进行综合信息...</div>
+                </div>
+                <div class="wf-port left"></div>
+            </div>
+        </div>
+
+        <!-- Canvas Toolbar -->
+        <div class="canvas-toolbar">
+            <div class="toolbar-btn">🔍−</div>
+            <div class="toolbar-percent">39%</div>
+            <div class="toolbar-btn">🔍+</div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-btn">⊕</div>
+            <div class="toolbar-btn">↗</div>
+            <div class="toolbar-btn">✋</div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-btn">⊞</div>
+            <div class="toolbar-btn">⛶</div>
+        </div>
+    </div>
+
+    <!-- Right Drawer -->
+    <div class="right-drawer" id="rightDrawer">
+        <div class="drawer-header">
+            <span class="drawer-title">浏览器操作</span>
+            <button class="drawer-close" onclick="toggleDrawer()" title="关闭">✕</button>
+        </div>
+        <div class="drawer-body">
+            <!-- 指令名称 -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">
+                    <span class="section-icon">📝</span>
+                    指令名称
+                </div>
+                <a class="cmd-name-link" href="javascript:void(0)">禁止合作商家-risk演示用</a>
+                <div class="cmd-actions">
+                    <span class="cmd-action">🔄 刷新指令内容</span>
+                    <span class="cmd-action">🔀 更换指令</span>
+                </div>
+            </div>
+
+            <!-- 指令内容 -->
+            <div class="drawer-section">
+                <div class="drawer-section-title" style="justify-content: space-between; width: 100%;">
+                    <span style="display:flex;align-items:center;gap:6px;">
+                        <span class="section-icon">📄</span>
+                        指令内容
+                    </span>
+                </div>
+                <div class="cmd-content-wrap">
+                    <button class="fullscreen-edit-btn">⛶ 全屏编辑</button>
+                    <textarea class="cmd-textarea" id="cmdContent">3. 点击【查询】或【搜索】按钮，等待列表加载完成。
+
+### Step 3: 结果处理
+
+1. **检查分页**：
+   - 若数据超过1页，将每页显示数量调整为 **50条/页**，再重新加载。
+   - 逐页读取所有数据，确保不遗漏任何页。
+
+2. **读取企业名称**：
+   - 上下滚动列表，逐行读取所有记录的"企业名称"字段。
+
+3. **去重处理**：
+   - 对读取到的企业名称列表进行去重，相同名称只保留一条。</textarea>
+                    <div class="cmd-content-footer">
+                        <span class="cmd-hint">输入"/"引用变量</span>
+                        <span class="cmd-char-count" id="charCount">字符数：2230</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 执行模式 -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">
+                    <span class="section-icon">🚀</span>
+                    执行模式
+                </div>
+                <div class="exec-mode-value">AgentBay/无影BUA</div>
+            </div>
+
+            <!-- 执行衔接 -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">
+                    <span class="section-icon">🔗</span>
+                    执行衔接
+                </div>
+                <div class="link-toggle-row">
+                    <span class="link-toggle-label">接续前置BUA执行</span>
+                    <div class="toggle-switch" id="buaLinkSwitch" onclick="toggleBuaLink()">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+                <div class="collapse-content" id="buaLinkCollapse">
+                    <label class="link-select-label" for="preBuaSelect">前置BUA节点</label>
+                    <select class="link-select" id="preBuaSelect">
+                        <option>浏览器操作-1（风险系统数据抓取）</option>
+                        <option>浏览器操作-2（商家状态核验）</option>
+                    </select>
+                    <div class="link-hint">开启后，本节点将在人工确认完成后，接续所选BUA节点的浏览器会话继续执行</div>
+                </div>
+            </div>
+
+            <!-- 变量填写 -->
+            <div class="drawer-section">
+                <div class="drawer-section-title">
+                    <span class="section-icon">🔧</span>
+                    变量填写
+                </div>
+
+                <div class="var-item">
+                    <div class="var-tag">${riskUrl}</div>
+                    <div class="var-row">
+                        <select class="var-select">
+                            <option>输入</option>
+                            <option>变量</option>
+                        </select>
+                        <input class="var-input" type="text" value="https://risk.cainiao.com/merchantRisk/list">
+                    </div>
+                </div>
+
+                <div class="var-item">
+                    <div class="var-tag">${riskUser}</div>
+                    <div class="var-row">
+                        <select class="var-select">
+                            <option>输入</option>
+                            <option>变量</option>
+                        </select>
+                        <input class="var-input" type="text" value="xiangyu.jxy">
+                    </div>
+                </div>
+
+                <div class="var-item">
+                    <div class="var-tag">${riskPass}</div>
+                    <div class="var-row">
+                        <select class="var-select">
+                            <option>输入</option>
+                            <option>变量</option>
+                        </select>
+                        <input class="var-input" type="text" value="Jxy371691@@">
+                    </div>
+                </div>
+
+                <div class="var-item">
+                    <div class="var-tag">${targetDate}</div>
+                    <div class="var-row">
+                        <select class="var-select">
+                            <option>输入</option>
+                            <option>变量</option>
+                        </select>
+                        <input class="var-input" type="text" value="2026-04-04">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAB -->
+<button class="fab-btn">💬</button>
+
+<script>
+    // 字符数统计
+    const textarea = document.getElementById('cmdContent');
+    const charCount = document.getElementById('charCount');
+
+    function updateCharCount() {
+        charCount.textContent = '字符数：' + textarea.value.length;
+    }
+
+    textarea.addEventListener('input', updateCharCount);
+
+    // 抽屉开关
+    function toggleDrawer() {
+        const drawer = document.getElementById('rightDrawer');
+        if (drawer.style.display === 'none') {
+            drawer.style.display = 'flex';
+        } else {
+            drawer.style.display = 'none';
+        }
+    }
+
+    // 执行衔接开关
+    function toggleBuaLink() {
+        const switchEl = document.getElementById('buaLinkSwitch');
+        const collapseEl = document.getElementById('buaLinkCollapse');
+        switchEl.classList.toggle('active');
+        collapseEl.classList.toggle('open');
+    }
+</script>
+</body>
+</html>
