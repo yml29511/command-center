@@ -1580,6 +1580,112 @@
             margin-bottom: auto;
         }
 
+        /* 执行结果展示区域 */
+        .debug-execution-result {
+            display: none;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            gap: 8px;
+        }
+
+        .debug-execution-result.show {
+            display: flex;
+        }
+
+        .execution-result-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .execution-result-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 3em;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .execution-result-text.expanded {
+            max-height: none;
+        }
+
+        .execution-result-toggle {
+            font-size: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            align-self: flex-start;
+            user-select: none;
+        }
+
+        .execution-result-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .execution-result-files {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .execution-result-file-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .execution-result-file-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .execution-result-file-icon {
+            font-size: 18px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .execution-result-file-name {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .execution-result-file-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: background-color 0.2s ease;
+        }
+
+        .execution-result-file-download:hover {
+            background-color: rgba(101, 61, 214, 0.08);
+        }
+
+        .execution-result-file-download svg {
+            width: 16px;
+            height: 16px;
+        }
+
         /* 操作日志内嵌显示区域 */
         .debug-operation-log {
             display: none;
@@ -3570,6 +3676,20 @@
             margin-bottom: 0;
         }
 
+        .operation-log-card.unexecuted-merged {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            min-height: auto;
+        }
+
+        .unexecuted-merged-text {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
         .operation-log-card-header {
             display: flex;
             align-items: center;
@@ -3755,6 +3875,33 @@
         .log-action-result-icon {
             flex-shrink: 0;
             font-size: 14px;
+        }
+
+        .log-empty-placeholder {
+            padding: 4px 0;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .log-empty-placeholder-boxed {
+            background-color: #f8f9fa;
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .log-block-content-unexecuted {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .log-block-content-unexecuted.collapsed {
+            display: none;
         }
 
         /* 图片放大查看遮罩层 */
@@ -4282,6 +4429,14 @@
                                 <div id="taskStatusContent">
                                     <div class="task-status-text" id="taskStatusText">等待调试...</div>
                                 </div>
+                            </div>
+
+                            <!-- 执行结果展示区域（调试结束后显示） -->
+                            <div class="debug-execution-result" id="debugExecutionResult" style="display:none;">
+                                <div class="execution-result-title">执行结果</div>
+                                <div class="execution-result-text" id="executionResultText"></div>
+                                <a class="execution-result-toggle" id="executionResultToggle" onclick="toggleExecutionResult()">展开</a>
+                                <div class="execution-result-files" id="executionResultFiles"></div>
                             </div>
 
                             <!-- 浏览器实时画面 -->
@@ -4860,6 +5015,17 @@
         // ============================================
         const commandData = [
             {
+                id: 11,
+                name: '执行失败测试',
+                desc: '模拟指令执行失败的测试场景，用于验证失败状态展示。',
+                time: '2024-12-20 09:00',
+                group: '默认分组',
+                admins: ['余梦玲'],
+                permissionGroup: '测试组',
+                department: '测试部',
+                coverImage: null
+            },
+            {
                 id: 1,
                 name: '跨境物流抓取',
                 desc: '专业的跨境物流数据抓取 Agent，访问看板提取数据。',
@@ -4967,17 +5133,6 @@
                 admins: ['余梦玲'],
                 permissionGroup: '',
                 department: '',
-                coverImage: null
-            },
-            {
-                id: 11,
-                name: '执行失败测试',
-                desc: '模拟指令执行失败的测试场景，用于验证失败状态展示。',
-                time: '2024-12-09 10:00',
-                group: '默认分组',
-                admins: ['余梦玲'],
-                permissionGroup: '测试组',
-                department: '测试部',
                 coverImage: null
             }
         ];
@@ -5978,6 +6133,13 @@
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
 
+            // 隐藏执行结果区域
+            const debugExecutionResult = document.getElementById('debugExecutionResult');
+            if (debugExecutionResult) {
+                debugExecutionResult.style.display = 'none';
+                debugExecutionResult.classList.remove('show');
+            }
+
             // 隐藏任务状态区域
             if (statusSection) {
                 statusSection.classList.remove('show');
@@ -6490,6 +6652,9 @@
                 renderDebugOperationLog(finalTime);
             }
 
+            // 渲染执行结果（成功案例）
+            renderExecutionResult(true);
+
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
@@ -6529,7 +6694,7 @@
         }
 
         // 显示执行失败状态
-        function showFailedStatus(finalTime, failReason) {
+        function showFailedStatus(finalTime, failReason, statsDuration) {
             const statusContent = document.getElementById('taskStatusContent');
             if (!statusContent) return;
 
@@ -6557,12 +6722,84 @@
             if (browserPreview) browserPreview.classList.remove('show');
             if (debugOperationLog) {
                 debugOperationLog.classList.add('show');
-                renderDebugOperationLog(finalTime);
+                renderDebugOperationLog(finalTime, statsDuration);
             }
+
+            // 渲染执行结果（失败案例）
+            renderExecutionResult(false, failReason);
 
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+        }
+
+        // 展开/收起执行结果文字
+        function toggleExecutionResult() {
+            const text = document.getElementById('executionResultText');
+            const toggle = document.getElementById('executionResultToggle');
+            if (!text || !toggle) return;
+
+            if (text.classList.contains('expanded')) {
+                text.classList.remove('expanded');
+                toggle.textContent = '展开';
+            } else {
+                text.classList.add('expanded');
+                toggle.textContent = '收起';
+            }
+        }
+
+        // 渲染执行结果
+        function renderExecutionResult(isSuccess, failReason) {
+            const container = document.getElementById('debugExecutionResult');
+            const textEl = document.getElementById('executionResultText');
+            const filesEl = document.getElementById('executionResultFiles');
+            const toggleEl = document.getElementById('executionResultToggle');
+
+            if (!container || !textEl || !filesEl || !toggleEl) return;
+
+            // 重置展开状态
+            textEl.classList.remove('expanded');
+            toggleEl.textContent = '展开';
+
+            if (isSuccess) {
+                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。';
+
+                filesEl.innerHTML = `
+                    <div class="execution-result-file-card" onclick="downloadFile('订舱申请报告_2024121.pdf')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">订舱申请报告_2024121.pdf</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="execution-result-file-card" onclick="downloadFile('操作日志_完整记录.xlsx')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">操作日志_完整记录.xlsx</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            } else {
+                textEl.textContent = '任务执行失败。无法连接到远程浏览器沙箱环境。错误详情：' + (failReason || '未知错误') + '，请检查网络配置或联系管理员重试。';
+                filesEl.innerHTML = '';
+            }
+
+            container.style.display = '';
+            container.classList.add('show');
+        }
+
+        // 文件下载
+        function downloadFile(fileName) {
+            showToast('开始下载: ' + fileName);
         }
 
         // 展开/收起状态
@@ -6655,11 +6892,16 @@
             debugStartTime = Date.now();
             debugElapsedTime = 0;
 
-            // 隐藏占位区域，显示浏览器窗口，隐藏操作日志
+            // 隐藏占位区域，显示浏览器窗口，隐藏操作日志和执行结果
             document.getElementById('debugPlaceholder').style.display = 'none';
             document.querySelector('.browser-preview-section').classList.add('show');
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
+            const debugExecutionResult = document.getElementById('debugExecutionResult');
+            if (debugExecutionResult) {
+                debugExecutionResult.style.display = 'none';
+                debugExecutionResult.classList.remove('show');
+            }
 
             // 展开右侧面板
             setDebugLayout('35%', '65%');
@@ -6747,8 +6989,8 @@
                 setDebugLayout('35%', '65%');
 
                 if (isFailTest) {
-                    // 任务状态：执行失败（红色）
-                    showFailedStatus(debugElapsedTime, '网络问题');
+                    // 任务状态：执行失败（红色），统计时长为0秒（因为没有任何步骤成功执行）
+                    showFailedStatus(debugElapsedTime, '沙箱环境连接失败', 0);
                 } else {
                     // 任务状态：执行完成（绿色）
                     showCompletedStatus(debugElapsedTime);
@@ -7694,13 +7936,12 @@
                 llmOutput: `{\n  "thinking": "根据之前的步骤，已成功登录系统并点击了'航空公司订舱'菜单（index 305），当前页面显示该菜单的下拉选项，包括'订舱申请'（index 311）。下一步应点击'订舱申请'以进入订舱申请页面，这是用户请求中明确要求的第二步操作。确认该元素可见且可交互，因此直接点击即可。",\n  "evaluation_previous_goal": "成功点击'航空公司订舱'菜单，下拉菜单已展开，显示包括'订舱申请'在内的多个选项。Verdict: Success",\n  "memory": "已完成登录；已展开'航空公司订舱'菜单；当前需点击'订舱申请'进入订舱申请页面。后续还需输入运单号999-91896501并点击'订舱'按钮。",\n  "next_goal": "点击'订舱申请'链接（index 311）以进入订舱申请页面。",\n  "action": [\n    {\n      "click": {\n        "index": 311\n      }\n    }\n  ]\n}`,
                 screenshot: 'https://picsum.photos/seed/log5/400/250',
                 actionResults: [
-                    { success: true, text: "1. 验证元素: Element '.filter-area' found" },
-                    { success: true, text: "2. 确认页面: Page title matches" }
+                    { success: true, text: "操作结果: 成功点击'订舱申请'链接，进入订舱申请页面" }
                 ]
             },
             {
                 step: 6,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Select the filter option for banned merchants...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7721,16 +7962,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据当前页面状态，已成功进入'订舱申请'页面（步骤7完成）。页面中可见运单号输入框（index 728）和'订舱'按钮（index 724）。下一步需输入运单号 '999-91896501' 到运单号输入框，然后点击'订舱'按钮。由于运单号输入框在iframe内且为shadow DOM元素，但已提供明确索引[728]，可直接使用input操作。确认输入后点击订舱按钮即可完成步骤8-9。",\n  "evaluation_previous_goal": "成功点击'订舱申请'链接，进入订舱申请页面。Verdict: Success",\n  "memory": "已完成登录、展开'航空公司订舱'菜单、点击'订舱申请'；当前在订舱申请页面，运单号输入框索引为728，订舱按钮索引为724；下一步需输入运单号999-91896501并点击订舱。",\n  "next_goal": "输入运单号 '999-91896501' 到运单号输入框（index 728），然后点击'订舱'按钮（index 724）。",\n  "action": [\n    {\n      "input": {\n        "index": 728,\n        "text": "999-91896501",\n        "clear": true\n      }\n    },\n    {\n      "click": {\n        "index": 724\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已进入订舱申请页面，需要在运单号输入框中输入999-91896501。",\n  "evaluation_previous_goal": "成功进入订舱申请页面。Verdict: Success",\n  "next_goal": "在运单号输入框中输入999-91896501",\n  "action": [{"input_text": {"index": 42, "text": "999-91896501"}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log6/400/250',
                 actionResults: [
-                    { success: true, text: "1. 展开下拉: Clicked '.filter-select'" },
-                    { success: true, text: "2. 选择选项: Selected '禁止合作'" }
+                    { success: true, text: "操作结果: 成功进入订舱申请页面，开始填写货物信息" }
                 ]
             },
             {
                 step: 7,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Execute the search query...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7751,16 +7991,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已成功在运单号输入框中输入999-91896501。现在需要点击'订舱'按钮来提交申请。",\n  "evaluation_previous_goal": "成功输入运单号999-91896501。Verdict: Success",\n  "next_goal": "点击'订舱'按钮提交申请",\n  "action": [{"click": {"index": 55}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log7/400/250',
                 actionResults: [
-                    { success: true, text: "1. 点击查询: Clicked '.btn-search'" },
-                    { success: true, text: "2. 等待数据: Table data loaded (15 rows)" }
+                    { success: true, text: "操作结果: 成功输入运单号 999-91896501" }
                 ]
             },
             {
                 step: 8,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list?status=banned',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Extract data from the table rows...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7781,15 +8020,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已点击'订舱'按钮，系统正在处理申请，需要等待页面跳转至确认页面。",\n  "evaluation_previous_goal": "成功点击'订舱'按钮，系统正在处理。Verdict: Success",\n  "next_goal": "等待系统响应并跳转至确认页面",\n  "action": [{"wait": {"time": 3}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log8/400/250',
                 actionResults: [
-                    { success: true, text: "1. 提取数据: Extracted 15 rows from table" }
+                    { success: true, text: "操作结果: 成功点击'订舱'按钮，等待系统响应" }
                 ]
             },
             {
                 step: 9,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list?status=banned',
+                pageUrl: 'http://www.infoccsp.com/booking/confirm',
                 systemPrompt: "Format the extracted data and return results...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7810,26 +8049,90 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "订舱申请已成功提交，系统已返回确认页面并显示订舱编号。任务已完成，需要使用done动作返回最终结果。",\n  "evaluation_previous_goal": "订舱申请提交成功，获得订舱编号BKG-2024121901。Verdict: Success",\n  "next_goal": "任务完成，返回订舱结果",\n  "action": [{"done": {"text": "订舱申请已成功提交。订舱编号: BKG-2024121901，运单号: 999-91896501。"}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log9/400/250',
                 actionResults: [
-                    { success: true, text: "1. 格式化输出: Converted to JSON (15 records)" },
-                    { success: true, text: "2. 任务完成: Task finished successfully" }
+                    { success: true, text: "操作结果: 订舱申请提交成功，获得订舱编号 BKG-2024121901" }
                 ]
             }
         ];
 
+        // 完全失败测试案例数据：第1步即失败（沙箱环境连接失败），步骤2-9未执行
+        const failCaseUserPrompt = "你的目标是访问商家风险系统并提取禁止合作的跨境物流商家名单。\n=== 第一步：登录系统 ===\n1. 访问风险系统登录页\n2. 输入账号密码\n3. 点击登录按钮\n\n=== 第二步：提取数据 ===\n4. 在登录后的页面，选择业务线为跨境物流事业部\n5. 设置当前风险等级为禁止合作\n6. 设置处置状态为已完结\n7. 点击查询按钮\n8. 提取查询结果中的商家名单\n9. 使用 done 动作总结完成情况\n\n重要提示:\n- 每个步骤之间等待页面加载完成";
+        const operationLogDataFullFail = [
+            {
+                step: 1,
+                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                systemPrompt: "You are an AI agent designed to operate in an interface using automated browser tasks. Your ultimate goal is accomplishing the given task.",
+                userPrompt: "你的目标是访问商家风险系统并提取禁止合作的跨境物流商家名单。\n=== 第一步：登录系统 ===\n1. 访问风险系统登录页\n2. 输入账号密码\n3. 点击登录按钮\n\n=== 第二步：提取数据 ===\n4. 在登录后的页面，选择业务线为跨境物流事业部\n5. 设置当前风险等级为禁止合作\n6. 设置处置状态为已完结\n7. 点击查询按钮\n8. 提取查询结果中的商家名单\n9. 使用 done 动作总结完成情况\n\n重要提示:\n- 每个步骤之间等待页面加载完成",
+                llmOutput: `{
+  "evaluation_previous_goal": "Start",
+  "next_goal": "初始化浏览器环境",
+  "action": [
+    {
+      "navigate": {
+        "url": "https://risk.cainiao.com/merchantRisk/list"
+      }
+    }
+  ],
+  "error": "沙箱环境连接失败: 网络超时，无法访问远程浏览器实例。可能原因: 1) 网络不稳定 2) 沙箱服务未就绪 3) 防火墙限制"
+}`,
+                screenshot: 'https://picsum.photos/seed/log-fail1/400/250',
+                actionResults: [
+                    { success: false, text: "操作结果: 沙箱环境连接失败" },
+                    { success: false, text: "失败原因: 无法建立与远程浏览器沙箱的连接，网络请求超时(errno: ETIMEDOUT)，请检查网络配置或重试" }
+                ]
+            },
+            { step: 2, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 3, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 4, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 5, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 6, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 7, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 8, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 9, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] }
+        ];
+
         // 渲染内嵌操作日志内容
-        function renderDebugOperationLog(finalTime) {
+        function renderDebugOperationLog(finalTime, statsDuration) {
             const container = document.getElementById('debugLogCards');
-            const totalSteps = operationLogData.length;
-            const totalActions = operationLogData.reduce((sum, item) => sum + item.actionResults.length, 0);
+            const data = currentDebugId === 11 ? operationLogDataFullFail : operationLogData;
+            const totalSteps = data.length;
+            const completedSteps = data.filter(item => item.actionResults.length > 0 && item.actionResults.every(r => r.success)).length;
 
             document.getElementById('debugLogTotalSteps').textContent = totalSteps;
-            document.getElementById('debugLogTotalActions').textContent = totalActions;
-            document.getElementById('debugLogDuration').textContent = (finalTime || 0) + '秒';
+            document.getElementById('debugLogTotalActions').textContent = completedSteps;
+            document.getElementById('debugLogDuration').textContent = (statsDuration !== undefined ? statsDuration : (finalTime || 0)) + '秒';
 
-            container.innerHTML = operationLogData.map(item => {
+            // 计算连续未执行步骤的范围
+            let firstUnexecutedIdx = -1;
+            let lastUnexecutedIdx = -1;
+            data.forEach((item, idx) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+                if (isUnexecuted) {
+                    if (firstUnexecutedIdx === -1) firstUnexecutedIdx = idx;
+                    lastUnexecutedIdx = idx;
+                }
+            });
+
+            container.innerHTML = data.map((item, index) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+
+                // 如果是第一个未执行步骤，渲染合并板块
+                if (index === firstUnexecutedIdx) {
+                    const startStep = data[firstUnexecutedIdx].step;
+                    const endStep = data[lastUnexecutedIdx].step;
+                    const stepText = startStep === endStep ? `步骤 ${startStep} 未执行` : `步骤 ${startStep}-${endStep} 未执行`;
+                    return `<div class="operation-log-card unexecuted-merged">
+                        <div class="unexecuted-merged-text">${stepText}</div>
+                    </div>`;
+                }
+                // 如果是后续未执行步骤，跳过
+                if (isUnexecuted && index > firstUnexecutedIdx) {
+                    return '';
+                }
+
+                const placeholderClass = index === 2 ? 'log-empty-placeholder-boxed' : 'log-empty-placeholder';
                 const actionResultsHtml = item.actionResults.map(result => {
                     const itemClass = result.success ? 'success' : 'failed';
                     const icon = result.success ? '✅' : '❌';
@@ -7845,36 +8148,36 @@
                 <div class="operation-log-card">
                     <div class="operation-log-card-header">
                         <span class="operation-log-card-step">步骤 ${item.step}/${totalSteps}</span>
-                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl)}')" title="${escapeHtml(item.pageUrl)}">${escapeHtml(item.pageUrl)}</span>
+                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl || '-') }')" title="${escapeHtml(item.pageUrl || '-')}">${escapeHtml(item.pageUrl || '-')}</span>
                     </div>
                     <div class="operation-log-card-body">
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle collapsed">▶</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? '' : 'collapsed'}">${isUnexecuted ? '▼' : '▶'}</span>
                                     <span class="log-block-tag user">用户提示词</span>
                                 </div>
-                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
+                                <div class="log-block-content ${isUnexecuted ? '' : 'collapsed'}">${escapeHtml(item.userPrompt)}</div>
                             </div>
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>
                                     <span class="log-block-tag llm">思考+执行过程</span>
                                 </div>
-                                <div class="log-block-content log-llm-content">${escapeHtml(item.llmOutput)}</div>
+                                <div class="${isUnexecuted ? 'log-block-content-unexecuted collapsed' : 'log-block-content log-llm-content'}">${item.llmOutput ? escapeHtml(item.llmOutput) : `<span class="${placeholderClass}">未执行</span>`}</div>
                             </div>
                         </div>
                         <div class="operation-log-card-right">
                             <div class="log-screenshot-container">
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <span class="log-screenshot-label">页面截图</span>
-                                    <a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>
+                                    ${item.screenshot ? `<a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>` : ''}
                                 </div>
-                                <img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">
+                                ${item.screenshot ? `<img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">` : `<span class="${placeholderClass}">暂无截图</span>`}
                             </div>
                             <div class="log-action-results">
                                 <span class="log-action-results-title">执行结果</span>
-                                ${actionResultsHtml}
+                                ${actionResultsHtml || `<span class="${placeholderClass}">未执行</span>`}
                             </div>
                         </div>
                     </div>
@@ -7887,12 +8190,40 @@
         function renderOperationLogCards() {
             const container = document.getElementById('operationLogCards');
             const totalSteps = operationLogData.length;
-            const totalActions = operationLogData.reduce((sum, item) => sum + item.actionResults.length, 0);
+            const completedSteps = operationLogData.filter(item => item.actionResults.length > 0 && item.actionResults.every(r => r.success)).length;
 
             document.getElementById('logTotalSteps').textContent = totalSteps;
-            document.getElementById('logTotalActions').textContent = totalActions;
+            document.getElementById('logTotalActions').textContent = completedSteps;
 
-            container.innerHTML = operationLogData.map(item => {
+            // 计算连续未执行步骤的范围
+            let firstUnexecutedIdx = -1;
+            let lastUnexecutedIdx = -1;
+            operationLogData.forEach((item, idx) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+                if (isUnexecuted) {
+                    if (firstUnexecutedIdx === -1) firstUnexecutedIdx = idx;
+                    lastUnexecutedIdx = idx;
+                }
+            });
+
+            container.innerHTML = operationLogData.map((item, index) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+
+                // 如果是第一个未执行步骤，渲染合并板块
+                if (index === firstUnexecutedIdx) {
+                    const startStep = operationLogData[firstUnexecutedIdx].step;
+                    const endStep = operationLogData[lastUnexecutedIdx].step;
+                    const stepText = startStep === endStep ? `步骤 ${startStep} 未执行` : `步骤 ${startStep}-${endStep} 未执行`;
+                    return `<div class="operation-log-card unexecuted-merged">
+                        <div class="unexecuted-merged-text">${stepText}</div>
+                    </div>`;
+                }
+                // 如果是后续未执行步骤，跳过
+                if (isUnexecuted && index > firstUnexecutedIdx) {
+                    return '';
+                }
+
+                const placeholderClass = index === 2 ? 'log-empty-placeholder-boxed' : 'log-empty-placeholder';
                 const actionResultsHtml = item.actionResults.map(result => {
                     const itemClass = result.success ? 'success' : 'failed';
                     const icon = result.success ? '✅' : '❌';
@@ -7908,36 +8239,36 @@
                 <div class="operation-log-card">
                     <div class="operation-log-card-header">
                         <span class="operation-log-card-step">步骤 ${item.step}/${totalSteps}</span>
-                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl)}')" title="${escapeHtml(item.pageUrl)}">${escapeHtml(item.pageUrl)}</span>
+                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl || '-') }')" title="${escapeHtml(item.pageUrl || '-')}">${escapeHtml(item.pageUrl || '-')}</span>
                     </div>
                     <div class="operation-log-card-body">
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle collapsed">▶</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? '' : 'collapsed'}">${isUnexecuted ? '▼' : '▶'}</span>
                                     <span class="log-block-tag user">用户提示词</span>
                                 </div>
-                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
+                                <div class="log-block-content ${isUnexecuted ? '' : 'collapsed'}">${escapeHtml(item.userPrompt)}</div>
                             </div>
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>
                                     <span class="log-block-tag llm">思考+执行过程</span>
                                 </div>
-                                <div class="log-block-content log-llm-content">${escapeHtml(item.llmOutput)}</div>
+                                <div class="${isUnexecuted ? 'log-block-content-unexecuted collapsed' : 'log-block-content log-llm-content'}">${item.llmOutput ? escapeHtml(item.llmOutput) : `<span class="${placeholderClass}">未执行</span>`}</div>
                             </div>
                         </div>
                         <div class="operation-log-card-right">
                             <div class="log-screenshot-container">
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <span class="log-screenshot-label">页面截图</span>
-                                    <a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>
+                                    ${item.screenshot ? `<a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>` : ''}
                                 </div>
-                                <img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">
+                                ${item.screenshot ? `<img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">` : `<span class="${placeholderClass}">暂无截图</span>`}
                             </div>
                             <div class="log-action-results">
                                 <span class="log-action-results-title">执行结果</span>
-                                ${actionResultsHtml}
+                                ${actionResultsHtml || `<span class="${placeholderClass}">未执行</span>`}
                             </div>
                         </div>
                     </div>
