@@ -8,41 +8,25 @@
 
 ## Input
 
-你将收到上游循环组件传入的动态变量：
+循环组件会遍历上游名单拆分Agent输出的 `batches` 数组，每次迭代自动将当前 batch 对象的字段映射到同名变量：
 
 | 变量名 | 类型 | 说明 |
 |--------|------|------|
-| `${currentBatch}` | JSON对象 | 循环组件传入的当前批次完整数据（含 batchId、items、元数据） |
+| `${batchId}` | 字符串 | 当前批次编号 |
+| `${items}` | JSON数组 | 当前批次的企业名单 |
+| `${task_id}` | 字符串 | 任务ID（元数据，需原样透传） |
+| `${target_date}` | 字符串 | 目标日期（元数据，需原样透传） |
+| `${business_line}` | 字符串 | 业务线（元数据，需原样透传） |
+| `${risk_level}` | 字符串 | 风险等级（元数据，需原样透传） |
 | `${user}` | 字符串 | 登录账号 |
 | `${pass}` | 字符串 | 登录密码 |
 | `${queryUrl}` | 字符串 | 目标查询系统URL |
-
-**`${currentBatch}` 结构示例：**
-
-```json
-{
-  "batchId": "batch_1",
-  "task_id": "UNIQUE_TASK_20260420",
-  "target_date": "2026-04-04",
-  "business_line": "跨境物流事业部",
-  "risk_level": "禁止合作",
-  "items": [
-    {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
-    {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
-  ]
-}
-```
-
-**首先从 `${currentBatch}` 中解析出以下字段：**
-- `batchId`：当前批次编号
-- `items`：当前批次的企业名单数组
-- `task_id`、`target_date`、`business_line`、`risk_level`：元数据，需原样透传到输出
 
 ## Workflow
 
 ### Step 1: 逐条执行查询
 
-从 `${currentBatch}` 中解析出 `items` 数组，对其中的每一条记录，依次执行：
+对 `${items}` 中的每一条记录，依次执行：
 
 1. **调用 [preAgentbayBua]**：将下方的「浏览器操作指令」作为Prompt传入，其中将当前记录的 `company_name` 替换指令中的企业名称占位符。
 2. **等待执行完成**：等待BUA工具返回执行结果。
@@ -142,4 +126,4 @@
 7. **条间间隔5秒**：每条记录处理完后等待5秒，避免操作过快。
 8. **纯JSON输出**：输出必须是可被 `json.loads()` 直接解析的纯JSON字符串，禁止任何额外文本、注释或Markdown格式。
 9. **职责单一**：仅执行当前批次的查询，不负责拆分名单、不负责汇总推送。
-10. **元数据原样透传**：从 `${currentBatch}` 中解析的 `task_id`、`target_date`、`business_line`、`risk_level` 必须原样输出到结果JSON中，不得修改、删除或遗漏。
+10. **元数据原样透传**：输入中的 `${task_id}`、`${target_date}`、`${business_line}`、`${risk_level}` 必须原样输出到结果JSON中，不得修改、删除或遗漏。

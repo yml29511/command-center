@@ -1531,8 +1531,8 @@
 
         .task-status-section.show {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: stretch;
             gap: 8px;
             padding: 12px 16px;
             min-height: 48px;
@@ -1541,11 +1541,10 @@
         .task-status-section.expanded-status {
             min-height: 80px;
             flex: 0 0 auto;
-            align-items: flex-start;
         }
 
         #taskStatusContent {
-            flex: 1;
+            flex: 0 0 auto;
         }
 
         .task-status-text {
@@ -1578,28 +1577,6 @@
             align-items: center;
             margin-top: auto;
             margin-bottom: auto;
-        }
-
-        /* 执行结果展示区域 */
-        .debug-execution-result {
-            display: none;
-            flex-direction: column;
-            background-color: #fff;
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-color);
-            gap: 8px;
-        }
-
-        .debug-execution-result.show {
-            display: flex;
-        }
-
-        .execution-result-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
         }
 
         .execution-result-text {
@@ -2109,10 +2086,12 @@
         }
 
         .prompt-content-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            padding: 14px 16px;
+            margin: 0 -16px 8px -16px;
+            border-bottom: 1px solid var(--border-light);
             display: none;
         }
 
@@ -3448,73 +3427,134 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            cursor: default;
+            cursor: pointer;
+            color: #1677FF;
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        /* Prompt Tooltip - 全局固定定位 */
-        .prompt-tooltip {
+        .prompt-cell:hover {
+            color: #4096FF;
+        }
+
+        /* Prompt 内容查看弹窗 */
+        .prompt-view-modal-overlay {
             position: fixed;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: #fff;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 400px;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            z-index: 9999;
-            pointer-events: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: opacity 0.25s ease, visibility 0.25s ease;
         }
 
-        .prompt-tooltip.show {
+        .prompt-view-modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .prompt-tooltip::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 24px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid rgba(0, 0, 0, 0.85);
+        .prompt-view-modal-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 600px;
+            max-width: 90vw;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
         }
 
-        .prompt-tooltip.bottom-arrow::after {
-            top: auto;
-            bottom: -4px;
-            border-bottom: none;
-            border-top: 6px solid rgba(0, 0, 0, 0.85);
+        .prompt-view-modal-overlay.active .prompt-view-modal-container {
+            transform: scale(1);
         }
 
-        /* 桥接 tooltip 与 prompt 单元格之间的间隙，确保鼠标移动时气泡不消失 */
-        .prompt-tooltip::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: transparent;
-            pointer-events: auto;
+        .prompt-view-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .prompt-tooltip:not(.bottom-arrow)::before {
-            top: -4px;
+        .prompt-view-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .prompt-tooltip.bottom-arrow::before {
-            bottom: -4px;
-            top: auto;
+        .prompt-view-modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: all var(--transition-fast);
+            background: none;
+            border: none;
+        }
+
+        .prompt-view-modal-close:hover {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .prompt-view-modal-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .prompt-view-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prompt-view-modal-copy {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: #7c3aed;
+            background-color: transparent;
+            border: 1px solid #7c3aed;
+            transition: all var(--transition-fast);
+        }
+
+        .prompt-view-modal-copy:hover {
+            background-color: rgba(124, 58, 237, 0.08);
+            border-color: #6d28d9;
+            color: #6d28d9;
+        }
+
+        .prompt-view-modal-copy.copied {
+            background-color: transparent;
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .prompt-view-modal-body {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: 60vh;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            user-select: text;
+            -webkit-user-select: text;
+            color: var(--text-primary);
         }
 
         /* ============================================
@@ -3602,6 +3642,78 @@
             flex: 1;
         }
 
+        /* 执行输出结果区域 */
+        .execution-result-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .execution-result-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .execution-result-status .status-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .execution-result-status .status-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .execution-result-status .status-text.success {
+            color: #52C41A;
+        }
+
+        .execution-result-status .status-text.failed {
+            color: #F5222D;
+        }
+
+        .execution-result-output {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .execution-result-text-content {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 3em;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .execution-result-text-content.expanded {
+            max-height: none;
+        }
+
+        .execution-result-toggle-link {
+            font-size: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            align-self: flex-start;
+            user-select: none;
+        }
+
+        .execution-result-toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .execution-result-files-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         /* 总览数据区域 */
         .operation-log-stats {
             display: grid;
@@ -3666,6 +3778,17 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+
+        /* 无影GUI日志不可用提示 */
+        .no-log-notice {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            text-align: center;
+            padding: 32px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 16px;
         }
 
         .operation-log-card {
@@ -4424,18 +4547,13 @@
                                 <span class="debug-placeholder-text">点击「调试」开始执行任务</span>
                             </div>
 
-                            <!-- 任务状态 -->
+                            <!-- 任务状态（包含执行结果） -->
                             <div class="task-status-section" id="taskStatusSection">
                                 <div id="taskStatusContent">
                                     <div class="task-status-text" id="taskStatusText">等待调试...</div>
                                 </div>
-                            </div>
-
-                            <!-- 执行结果展示区域（调试结束后显示） -->
-                            <div class="debug-execution-result" id="debugExecutionResult" style="display:none;">
-                                <div class="execution-result-title">执行结果</div>
                                 <div class="execution-result-text" id="executionResultText"></div>
-                                <a class="execution-result-toggle" id="executionResultToggle" onclick="toggleExecutionResult()">展开</a>
+                                <a class="execution-result-toggle" id="executionResultToggle" onclick="toggleExecutionResult()">展开 <span style="font-size:10px">▼</span></a>
                                 <div class="execution-result-files" id="executionResultFiles"></div>
                             </div>
 
@@ -4636,11 +4754,11 @@
         </button>
     </div>
 
-    <!-- 操作日志弹窗 -->
+    <!-- 执行结果弹窗 -->
     <div class="operation-log-modal-overlay" id="operationLogModal">
         <div class="operation-log-modal-container">
             <div class="operation-log-modal-header">
-                <h3 class="operation-log-modal-title">操作日志</h3>
+                <h3 class="operation-log-modal-title">执行结果</h3>
                 <button class="operation-log-modal-close" id="operationLogModalClose">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -4649,6 +4767,18 @@
                 </button>
             </div>
             <div class="operation-log-modal-body">
+                <!-- 执行输出结果 -->
+                <div class="execution-result-section" id="modalExecutionResult">
+                    <div class="execution-result-status" id="modalResultStatus">
+                        <span class="status-icon" id="modalResultStatusIcon">✅</span>
+                        <span class="status-text success" id="modalResultStatusText">执行完成</span>
+                    </div>
+                    <div class="execution-result-output">
+                        <div class="execution-result-text-content" id="modalResultText"></div>
+                        <a class="execution-result-toggle-link" id="modalResultToggle" onclick="toggleModalResultText()" style="display:none">展开 <span style="font-size:10px">▼</span></a>
+                    </div>
+                    <div class="execution-result-files-section" id="modalResultFiles"></div>
+                </div>
                 <!-- 总览数据区域 -->
                 <div class="operation-log-stats">
                     <div class="operation-log-stat-card">
@@ -4668,6 +4798,27 @@
                 <div class="operation-log-cards" id="operationLogCards">
                     <!-- 动态生成 -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt 内容查看弹窗 -->
+    <div class="prompt-view-modal-overlay" id="promptViewModal">
+        <div class="prompt-view-modal-container">
+            <div class="prompt-view-modal-header">
+                <h3 class="prompt-view-modal-title">Prompt 内容</h3>
+                <div class="prompt-view-modal-actions">
+                    <button class="prompt-view-modal-copy" id="promptViewModalCopy">复制</button>
+                    <button class="prompt-view-modal-close" id="promptViewModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            </div>
+            <div class="prompt-view-modal-body" id="promptViewModalBody">
+                <!-- 动态填充 -->
             </div>
         </div>
     </div>
@@ -5002,8 +5153,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn-modal btn-modal-default" id="cancelBtn">取消</button>
-                <button class="btn-modal btn-modal-default" id="saveOnlyBtn">确定</button>
+                                <button class="btn-modal btn-modal-default" id="saveOnlyBtn">确定</button>
                 <button class="btn-modal btn-modal-primary" id="confirmBtn">去调试</button>
             </div>
         </div>
@@ -6133,11 +6283,19 @@
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
 
-            // 隐藏执行结果区域
-            const debugExecutionResult = document.getElementById('debugExecutionResult');
-            if (debugExecutionResult) {
-                debugExecutionResult.style.display = 'none';
-                debugExecutionResult.classList.remove('show');
+            // 清空并隐藏执行结果区域（已合并到状态栏）
+            const executionResultText = document.getElementById('executionResultText');
+            const executionResultToggle = document.getElementById('executionResultToggle');
+            const executionResultFiles = document.getElementById('executionResultFiles');
+            if (executionResultText) {
+                executionResultText.style.display = 'none';
+                executionResultText.textContent = '';
+                executionResultText.classList.remove('expanded');
+            }
+            if (executionResultToggle) executionResultToggle.style.display = 'none';
+            if (executionResultFiles) {
+                executionResultFiles.style.display = 'none';
+                executionResultFiles.innerHTML = '';
             }
 
             // 隐藏任务状态区域
@@ -6232,6 +6390,21 @@
             if (placeholder) placeholder.style.display = '';
             const browserPreview = document.querySelector('.browser-preview-section');
             if (browserPreview) browserPreview.classList.remove('show');
+
+            // 清空并隐藏执行结果区域（已合并到状态栏）
+            const executionResultText3 = document.getElementById('executionResultText');
+            const executionResultToggle3 = document.getElementById('executionResultToggle');
+            const executionResultFiles3 = document.getElementById('executionResultFiles');
+            if (executionResultText3) {
+                executionResultText3.style.display = 'none';
+                executionResultText3.textContent = '';
+                executionResultText3.classList.remove('expanded');
+            }
+            if (executionResultToggle3) executionResultToggle3.style.display = 'none';
+            if (executionResultFiles3) {
+                executionResultFiles3.style.display = 'none';
+                executionResultFiles3.innerHTML = '';
+            }
 
             // 隐藏任务状态区域
             if (statusSection) {
@@ -6688,6 +6861,14 @@
                 renderDebugOperationLog(finalTime);
             }
 
+            // 隐藏执行结果元素（已停止时不显示结果）
+            const erText = document.getElementById('executionResultText');
+            const erToggle = document.getElementById('executionResultToggle');
+            const erFiles = document.getElementById('executionResultFiles');
+            if (erText) { erText.style.display = 'none'; erText.textContent = ''; erText.classList.remove('expanded'); }
+            if (erToggle) erToggle.style.display = 'none';
+            if (erFiles) { erFiles.style.display = 'none'; erFiles.innerHTML = ''; }
+
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
@@ -6699,20 +6880,17 @@
             if (!statusContent) return;
 
             statusContent.innerHTML = `
-                <div>
-                    <div class="task-status-row">
-                        <div class="task-status-left" style="gap:8px;">
-                            <div class="status-icon failed">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </div>
-                            <span class="status-text failed">指令执行失败</span>
+                <div class="task-status-row">
+                    <div class="task-status-left" style="gap:8px;">
+                        <div class="status-icon failed">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
                         </div>
-                        <span class="timer-text">${formatTime(finalTime)}</span>
+                        <span class="status-text failed">指令执行失败</span>
                     </div>
-                    <div style="margin-top:4px;font-size:12px;color:#FF4D4F;">错误原因：${failReason || '未知错误'}</div>
+                    <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
             
@@ -6741,28 +6919,27 @@
 
             if (text.classList.contains('expanded')) {
                 text.classList.remove('expanded');
-                toggle.textContent = '展开';
+                toggle.innerHTML = '展开 <span style="font-size:10px">▼</span>';
             } else {
                 text.classList.add('expanded');
-                toggle.textContent = '收起';
+                toggle.innerHTML = '收起 <span style="font-size:10px">▲</span>';
             }
         }
 
-        // 渲染执行结果
+        // 渲染执行结果（已合并到 taskStatusSection 内）
         function renderExecutionResult(isSuccess, failReason) {
-            const container = document.getElementById('debugExecutionResult');
             const textEl = document.getElementById('executionResultText');
             const filesEl = document.getElementById('executionResultFiles');
             const toggleEl = document.getElementById('executionResultToggle');
 
-            if (!container || !textEl || !filesEl || !toggleEl) return;
+            if (!textEl || !filesEl || !toggleEl) return;
 
             // 重置展开状态
             textEl.classList.remove('expanded');
-            toggleEl.textContent = '展开';
+            toggleEl.innerHTML = '展开 <span style="font-size:10px">▼</span>';
 
             if (isSuccess) {
-                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。';
+                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。本次操作已生成订舱申请报告及完整操作日志，详细记录了每个步骤的执行时间、页面截图和系统响应状态，可供后续审计追溯使用。';
 
                 filesEl.innerHTML = `
                     <div class="execution-result-file-card" onclick="downloadFile('订舱申请报告_2024121.pdf')">
@@ -6793,8 +6970,22 @@
                 filesEl.innerHTML = '';
             }
 
-            container.style.display = '';
-            container.classList.add('show');
+            // 显示文案内容
+            textEl.style.display = '';
+            filesEl.style.display = '';
+
+            // 检测文案高度，超过2行才显示展开按钮
+            setTimeout(() => {
+                if (textEl && toggleEl) {
+                    const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight) || 22;
+                    const maxTwoLineHeight = lineHeight * 2 + 4;
+                    if (textEl.scrollHeight <= maxTwoLineHeight) {
+                        toggleEl.style.display = 'none';
+                    } else {
+                        toggleEl.style.display = 'inline-block';
+                    }
+                }
+            }, 50);
         }
 
         // 文件下载
@@ -6897,11 +7088,13 @@
             document.querySelector('.browser-preview-section').classList.add('show');
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
-            const debugExecutionResult = document.getElementById('debugExecutionResult');
-            if (debugExecutionResult) {
-                debugExecutionResult.style.display = 'none';
-                debugExecutionResult.classList.remove('show');
-            }
+            // 清空执行结果（已合并到状态栏内）
+            const erText = document.getElementById('executionResultText');
+            const erToggle = document.getElementById('executionResultToggle');
+            const erFiles = document.getElementById('executionResultFiles');
+            if (erText) { erText.style.display = 'none'; erText.textContent = ''; erText.classList.remove('expanded'); }
+            if (erToggle) erToggle.style.display = 'none';
+            if (erFiles) { erFiles.style.display = 'none'; erFiles.innerHTML = ''; }
 
             // 展开右侧面板
             setDebugLayout('35%', '65%');
@@ -7104,7 +7297,7 @@
 
             // 关闭弹窗
             closeBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
             // 点击遮罩关闭
             modal.addEventListener('click', (e) => {
@@ -7147,7 +7340,7 @@
         function resetForm() {
             // 重置所有输入
             document.getElementById('commandName').value = '';
-            document.getElementById('groupSelect').value = '';
+            document.getElementById('groupSelect').value = '默认分组';
             document.getElementById('permissionGroup').value = '';
             document.getElementById('department').value = '';
             document.getElementById('commandDesc').value = '';
@@ -7552,83 +7745,6 @@
             document.body.removeChild(textarea);
         }
 
-        // Prompt Tooltip 全局元素
-        let promptTooltipEl = null;
-
-        function getPromptTooltip() {
-            if (!promptTooltipEl) {
-                promptTooltipEl = document.createElement('div');
-                promptTooltipEl.className = 'prompt-tooltip';
-                document.body.appendChild(promptTooltipEl);
-            }
-            return promptTooltipEl;
-        }
-
-        function bindPromptTooltips() {
-            const tooltip = getPromptTooltip();
-
-            // 确保 tooltip 事件只绑定一次
-            if (!tooltip._hoverBound) {
-                tooltip._hoverBound = true;
-                tooltip.addEventListener('mouseenter', () => {
-                    if (tooltip._hideTimeout) {
-                        clearTimeout(tooltip._hideTimeout);
-                        tooltip._hideTimeout = null;
-                    }
-                });
-                tooltip.addEventListener('mouseleave', () => {
-                    tooltip._hideTimeout = setTimeout(() => {
-                        tooltip.classList.remove('show');
-                    }, 150);
-                });
-            }
-
-            document.querySelectorAll('.prompt-cell').forEach(cell => {
-                cell.addEventListener('mouseenter', (e) => {
-                    const index = parseInt(cell.dataset.index);
-                    const prompt = runRecordsData[index]?.prompt || '';
-                    tooltip.textContent = prompt;
-
-                    if (tooltip._hideTimeout) {
-                        clearTimeout(tooltip._hideTimeout);
-                        tooltip._hideTimeout = null;
-                    }
-
-                    const rect = cell.getBoundingClientRect();
-
-                    // 临时显示以测量高度
-                    tooltip.style.visibility = 'hidden';
-                    tooltip.classList.add('show');
-                    const tooltipHeight = tooltip.offsetHeight;
-                    tooltip.classList.remove('show');
-                    tooltip.style.visibility = '';
-
-                    const spaceBelow = window.innerHeight - rect.bottom - 10;
-                    const spaceAbove = rect.top - 10;
-
-                    let top;
-
-                    if (spaceBelow >= tooltipHeight + 8 || spaceBelow >= spaceAbove) {
-                        top = rect.bottom + 2;
-                        tooltip.classList.remove('bottom-arrow');
-                    } else {
-                        top = rect.top - tooltipHeight - 2;
-                        tooltip.classList.add('bottom-arrow');
-                    }
-
-                    tooltip.style.left = rect.left + 'px';
-                    tooltip.style.top = top + 'px';
-                    tooltip.classList.add('show');
-                });
-
-                cell.addEventListener('mouseleave', () => {
-                    tooltip._hideTimeout = setTimeout(() => {
-                        tooltip.classList.remove('show');
-                    }, 150);
-                });
-            });
-        }
-
         // 渲染运行记录表格
         function renderRunRecordsTable() {
             const tbody = document.getElementById('runRecordsTableBody');
@@ -7638,10 +7754,11 @@
             tbody.innerHTML = records.map((record, index) => {
                 const promptPreview = record.prompt.substring(0, 20).replace(/\n/g, ' ') + '...';
                 const isShadowGui = record.sandboxType === '无影GUI';
-                const logBtnClass = isShadowGui ? 'action-link disabled tooltip-wrapper' : 'action-link';
+                const isFail = record.status.text === '执行失败';
+                const logBtnClass = 'action-link';
                 const logBtnAttrs = isShadowGui
-                    ? 'data-tooltip="无影沙箱暂不支持查看日志"'
-                    : 'onclick="openOperationLogModal()"';
+                    ? `onclick="openOperationLogModal(true, ${isFail})"`
+                    : `onclick="openOperationLogModal(false, ${isFail})"`;
                 return `
                 <tr>
                     <td>${record.initiator}</td>
@@ -7652,7 +7769,7 @@
                             ${copyIconSvg}
                         </span>
                     </td>
-                    <td class="prompt-cell" data-index="${index}">
+                    <td class="prompt-cell" onclick="openPromptViewModal(${index})">
                         ${promptPreview}
                     </td>
                     <td>${record.sandboxType}</td>
@@ -7665,15 +7782,11 @@
                     </td>
                     <td>
                         <div class="action-cell">
-                            <span class="action-link" onclick="showToast('查看详情功能开发中')">详情</span>
-                            <span class="action-divider"></span>
-                            <span class="${logBtnClass}" ${logBtnAttrs}>查看日志</span>
+                            <span class="${logBtnClass}" ${logBtnAttrs}>查看执行结果</span>
                         </div>
                     </td>
                 </tr>
             `}).join('');
-
-            bindPromptTooltips();
         }
 
         // 打开运行记录抽屉
@@ -8195,6 +8308,12 @@
             document.getElementById('logTotalSteps').textContent = totalSteps;
             document.getElementById('logTotalActions').textContent = completedSteps;
 
+            // 无影GUI模式：隐藏日志详情，显示提示
+            if (window.currentLogModalIsShadowGui) {
+                container.innerHTML = '<div class="no-log-notice">无影GUI暂不支持查看日志</div>';
+                return;
+            }
+
             // 计算连续未执行步骤的范围
             let firstUnexecutedIdx = -1;
             let lastUnexecutedIdx = -1;
@@ -8326,8 +8445,112 @@
             }, 300);
         }
 
+        // 展开/收起弹窗执行结果文案
+        function toggleModalResultText() {
+            const text = document.getElementById('modalResultText');
+            const toggle = document.getElementById('modalResultToggle');
+            if (!text || !toggle) return;
+
+            if (text.classList.contains('expanded')) {
+                text.classList.remove('expanded');
+                toggle.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+            } else {
+                text.classList.add('expanded');
+                toggle.innerHTML = '收起 <span style="font-size:10px">▲</span>';
+            }
+        }
+
+        // 渲染弹窗执行输出结果
+        function renderModalExecutionResult(isFail) {
+            const statusIcon = document.getElementById('modalResultStatusIcon');
+            const statusText = document.getElementById('modalResultStatusText');
+            const textEl = document.getElementById('modalResultText');
+            const toggleEl = document.getElementById('modalResultToggle');
+            const filesEl = document.getElementById('modalResultFiles');
+
+            if (!statusIcon || !statusText || !textEl || !toggleEl || !filesEl) return;
+
+            // 重置展开状态
+            textEl.classList.remove('expanded');
+            toggleEl.style.display = 'none';
+            toggleEl.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+
+            // 判断失败：显式传入或 currentDebugId === 11
+            const isFailedCase = isFail === true || window.currentDebugId === 11;
+
+            if (isFailedCase) {
+                statusIcon.textContent = '❌';
+                statusText.textContent = '执行失败';
+                statusText.classList.remove('success');
+                statusText.classList.add('failed');
+
+                // 提取失败原因（从 operationLogDataFullFail 第1步的 error 中）
+                let failReason = '无法连接到远程浏览器沙箱环境，网络请求超时，请检查网络配置或联系管理员重试。';
+                const failData = (typeof operationLogDataFullFail !== 'undefined') ? operationLogDataFullFail[0] : null;
+                if (failData && failData.llmOutput) {
+                    try {
+                        const parsed = JSON.parse(failData.llmOutput);
+                        if (parsed.error) {
+                            failReason = parsed.error;
+                        }
+                    } catch (e) {
+                        // 解析失败时使用默认文案
+                    }
+                }
+                textEl.textContent = '任务执行失败。' + failReason;
+                filesEl.innerHTML = '';
+            } else {
+                statusIcon.textContent = '✅';
+                statusText.textContent = '执行完成';
+                statusText.classList.remove('failed');
+                statusText.classList.add('success');
+
+                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。本次操作已生成订舱申请报告及完整操作日志，详细记录了每个步骤的执行时间、页面截图和系统响应状态，可供后续审计追溯使用。';
+
+                filesEl.innerHTML = `
+                    <div class="execution-result-file-card" onclick="downloadFile('订舱申请报告_2024121.pdf')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">订舱申请报告_2024121.pdf</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="execution-result-file-card" onclick="downloadFile('操作日志_完整记录.xlsx')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">操作日志_完整记录.xlsx</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 检测文案高度，超过2行才显示展开按钮
+            setTimeout(() => {
+                if (textEl && toggleEl) {
+                    const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight) || 22;
+                    const maxTwoLineHeight = lineHeight * 2 + 4;
+                    if (textEl.scrollHeight <= maxTwoLineHeight) {
+                        toggleEl.style.display = 'none';
+                    } else {
+                        toggleEl.style.display = 'inline-block';
+                    }
+                }
+            }, 50);
+        }
+
         // 打开操作日志弹窗
-        function openOperationLogModal() {
+        function openOperationLogModal(isShadowGui, isFail) {
+            window.currentLogModalIsShadowGui = isShadowGui || false;
+            renderModalExecutionResult(isFail);
             renderOperationLogCards();
             document.getElementById('operationLogModal').classList.add('active');
         }
@@ -8335,6 +8558,7 @@
         // 关闭操作日志弹窗
         function closeOperationLogModal() {
             document.getElementById('operationLogModal').classList.remove('active');
+            window.currentLogModalIsShadowGui = false;
         }
 
         // 初始化操作日志弹窗事件
@@ -8348,6 +8572,50 @@
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     closeOperationLogModal();
+                }
+            });
+        }
+
+        // 打开 Prompt 内容查看弹窗
+        function openPromptViewModal(index) {
+            const prompt = runRecordsData[index]?.prompt || '';
+            document.getElementById('promptViewModalBody').textContent = prompt;
+            document.getElementById('promptViewModal').classList.add('active');
+        }
+
+        // 关闭 Prompt 内容查看弹窗
+        function closePromptViewModal() {
+            document.getElementById('promptViewModal').classList.remove('active');
+        }
+
+        // 初始化 Prompt 内容查看弹窗事件
+        function initPromptViewModal() {
+            const modal = document.getElementById('promptViewModal');
+            const closeBtn = document.getElementById('promptViewModalClose');
+            const copyBtn = document.getElementById('promptViewModalCopy');
+
+            closeBtn.addEventListener('click', closePromptViewModal);
+
+            copyBtn.addEventListener('click', () => {
+                const text = document.getElementById('promptViewModalBody').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板');
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '已复制';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.classList.remove('copied');
+                    }, 1500);
+                }).catch(() => {
+                    showToast('复制失败，请手动复制');
+                });
+            });
+
+            // 点击遮罩关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closePromptViewModal();
                 }
             });
         }
@@ -8370,6 +8638,7 @@
             initCopyModal();
             initRunRecordsDrawer();
             initOperationLogModal();
+            initPromptViewModal();
             initVariablesModal();
 
             // 监听调试布局变化，自动更新展开/收起按钮位置
