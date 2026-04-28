@@ -633,7 +633,7 @@
         .code-icon {
             width: 28px;
             height: 28px;
-            background-color: var(--primary-color);
+            background: var(--gradient-primary);
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
@@ -1999,8 +1999,7 @@
             font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
-            display: block;
-            margin-bottom: 12px;
+            flex-shrink: 0;
         }
 
         .prompt-content-title {
@@ -2031,7 +2030,7 @@
 
         /* 沙箱类型选择框 */
         .sandbox-select {
-            padding: 6px 24px 6px 10px;
+            padding: 6px 28px 6px 10px;
             font-size: 13px;
             font-weight: 500;
             border: 1px solid var(--border-color);
@@ -2048,7 +2047,7 @@
             background-repeat: no-repeat;
             background-position: right 8px center;
             width: auto;
-            min-width: 120px;
+            min-width: 0;
         }
 
         .sandbox-select:focus {
@@ -2108,6 +2107,12 @@
         .prompt-expand-btn:hover {
             background-color: var(--bg-secondary);
             color: var(--primary-color);
+        }
+
+        .prompt-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* 变量标签区域 */
@@ -2539,10 +2544,7 @@
         }
 
         .debug-combined-indicator {
-            width: 4px;
-            height: 18px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
+            display: none;
         }
 
         .debug-combined-title {
@@ -2640,11 +2642,20 @@
             display: none;
         }
 
+        .debug-prompt-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
         .debug-prompt-actions-row {
             display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
-            margin-bottom: 16px;
+            align-items: center;
+            gap: 8px;
         }
 
         /* 单选按钮组样式 */
@@ -3503,10 +3514,11 @@
         .operation-log-stat-value {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, #8B5CF6 0%, #653DD6 100%);
+            background: linear-gradient(135deg, #7F46FF 0%, #C251FD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            color: transparent;
             margin-bottom: 4px;
         }
 
@@ -3528,10 +3540,11 @@
         .debug-operation-log .operation-log-stat-value {
             font-size: 22px;
             margin-bottom: 1px;
-            background: linear-gradient(135deg, #8B5CF6 0%, #653DD6 100%);
+            background: linear-gradient(135deg, #7F46FF 0%, #C251FD 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            color: transparent;
         }
 
         .debug-operation-log .operation-log-stat-label {
@@ -3674,8 +3687,7 @@
         }
 
         .log-llm-content {
-            min-height: 480px;
-            max-height: 480px;
+            max-height: 242px;
         }
 
         .log-screenshot-container {
@@ -3896,7 +3908,7 @@
         }
         /* 版本选择器 */
         .version-selector { position: relative; display: inline-block; }
-        .version-trigger { display: flex; align-items: center; gap: 6px; padding: 6px 24px 6px 10px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--font-family); color: var(--text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); user-select: none; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: auto; min-width: 120px; }
+        .version-trigger { display: flex; align-items: center; gap: 6px; padding: 6px 28px 6px 10px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--font-family); color: var(--text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); user-select: none; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: auto; min-width: 0; }
         .version-trigger:hover { border-color: var(--primary-color); }
         .version-trigger.active { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1); }
         .version-trigger .version-tag { background-color: transparent; padding: 0; border-radius: 0; font-size: 13px; }
@@ -3907,7 +3919,7 @@
         .version-trigger .version-arrow { display: none; }
         .version-arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
         .version-trigger.active .version-arrow { transform: rotate(180deg); }
-        .version-dropdown { position: absolute; top: calc(100% + 6px); left: 0; width: 340px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 1200; display: none; overflow: hidden; padding: 6px 0; }
+        .version-dropdown { position: fixed; width: 340px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 1200; display: none; overflow: hidden; padding: 6px 0; }
         .version-dropdown.show { display: block; }
         .version-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background-color 0.15s ease; }
         .version-item:hover { background-color: #F5F5F5; }
@@ -4143,8 +4155,10 @@
                         <!-- 分隔线 -->
                         <div class="debug-combined-divider"></div>
 
-                        <!-- 操作按钮行 -->
-                        <div class="debug-prompt-actions-row">
+                        <!-- Prompt 内容标题 + 操作按钮 -->
+                        <div class="debug-prompt-header-row">
+                            <span class="debug-prompt-title">Prompt 内容</span>
+                            <div class="debug-prompt-actions-row">
                             <div class="debug-prompt-actions">
                                 <div class="version-selector" id="versionSelector">
                                     <div class="version-trigger" id="versionTrigger" onclick="toggleVersionDropdown()">
@@ -4165,18 +4179,10 @@
                                     </svg>
                                     变量
                                 </button>
-                                <button class="btn btn-primary-outline" id="debugClearBtn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                    清空
-                                </button>
+
                             </div>
                         </div>
-
-                        <!-- Prompt 内容标题 -->
-                        <span class="debug-prompt-title">Prompt 内容</span>
+                        </div>
 
                         <!-- 变量标签区域 -->
                         <div class="debug-variable-tags-wrapper" id="debugVariableTagsWrapper">
@@ -4187,7 +4193,10 @@
                                     </svg>
                                     <span>展开变量</span>
                                 </div>
-                                <button class="prompt-expand-btn" onclick="event.stopPropagation(); openPromptFullscreen()" title="全屏编辑">⛶ 全屏</button>
+                                <div class="prompt-actions-right">
+                                    <button class="prompt-expand-btn" onclick="event.stopPropagation(); openPromptFullscreen()" title="全屏编辑">⛶ 全屏</button>
+                                    <button class="prompt-expand-btn" id="debugClearBtn" title="清空内容">✕ 清空</button>
+                                </div>
                             </div>
                             <div class="debug-variable-tags-panel">
                                 <div class="debug-variable-tags-content">
@@ -6119,7 +6128,8 @@
             });
 
             // 清空按钮
-            document.getElementById('debugClearBtn').addEventListener('click', () => {
+            document.getElementById('debugClearBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
                 showClearConfirm();
             });
 
@@ -8052,7 +8062,7 @@
         function renderVersionDropdown(){var d=document.getElementById('versionDropdown');if(!d)return;d.innerHTML=versionData.map(function(item){return '<div class="version-item" onclick="selectVersion('+item.id+')"><div class="version-check">'+(item.selected?'✓':'')+'</div><div class="version-item-info"><span class="version-tag '+getVersionTagClass(item.status)+'">'+item.status+': '+item.version+'</span><div class="version-item-meta"><span class="version-item-id">版本Id: '+item.id+'</span><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';}).join('');}
         function updateVersionTrigger(){var s=versionData.find(function(v){return v.selected;});if(!s)return;var t=document.getElementById('versionTriggerTag');if(t){t.textContent=s.status+': '+s.version;t.className='version-tag '+getVersionTagClass(s.status);}}
         function selectVersion(id){versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);var c=versionData.find(function(v){return v.id===id;});if(c)showToast('已切换到 '+c.status+': '+c.version);}
-        function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');}else{d.classList.remove('show');t.classList.remove('active');}}
+        function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');var r=t.getBoundingClientRect();d.style.top=(r.bottom+6)+'px';var l=r.left,w=340;if(l+w>window.innerWidth-10){l=r.right-w;}if(l<10)l=10;d.style.left=l+'px';}else{d.classList.remove('show');t.classList.remove('active');}}
         document.addEventListener('click',function(e){var s=document.getElementById('versionSelector');if(s&&!s.contains(e.target))toggleVersionDropdown(false);});
         renderVersionDropdown();updateVersionTrigger();
 
