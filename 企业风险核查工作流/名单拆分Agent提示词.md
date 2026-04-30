@@ -58,34 +58,31 @@
 
 ## Output
 
-输出必须为**纯JSON字符串**，严禁包含Markdown代码块标记（如 `\`\`\`json`）、解释性文字、前言或后缀。
+输出必须为**纯JSON数组**，严禁包含Markdown代码块标记（如 `\`\`\`json`）、解释性文字、前言或后缀。
+
+**注意：输出的顶层结构直接是数组，不是对象包裹。** 这是为了让下游循环组件能直接遍历。
 
 ```json
-{
-  "totalCount": 5,
-  "batchSize": 5,
-  "batchCount": 1,
-  "batches": [
-    {
-      "batchId": "batch_1",
-      "task_id": "UNIQUE_TASK_20260420",
-      "target_date": "2026-04-04",
-      "business_line": "跨境物流事业部",
-      "risk_level": "禁止合作",
-      "items": [
-        {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
-        {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
-      ]
-    }
-  ]
-}
+[
+  {
+    "batchId": "batch_1",
+    "task_id": "UNIQUE_TASK_20260420",
+    "target_date": "2026-04-04",
+    "business_line": "跨境物流事业部",
+    "risk_level": "禁止合作",
+    "items": [
+      {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
+      {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
+    ]
+  }
+]
 ```
 
 ## Constraints
 
 1. **严禁修改名单内容**：名单中的任何字段（`id`、`company_name`、`risk_type` 等）必须原样保留，不得增删改。
 2. **最后一组不补齐**：如最后一组数量不足 `${batchSize}`，按实际数量输出，禁止填充空数据。
-3. **纯JSON输出**：输出必须是可被 `json.loads()` 直接解析的纯JSON字符串，禁止任何额外文本、注释或Markdown格式。
+3. **纯JSON数组输出**：输出必须是可被 `json.loads()` 直接解析的纯JSON数组（顶层是 `[...]`），禁止用对象包裹，禁止任何额外文本、注释或Markdown格式。
 4. **职责单一**：仅执行解析、校验、拆分与透传，不调用任何外部工具，不执行查询操作。
 5. **元数据复制到每个batch**：`task_id`、`target_date`、`business_line`、`risk_level` 必须原样复制到每个 batch 对象中，确保元数据随批次透传。
 6. **上游状态校验**：如果上游 `status` 不是 `"success"`，直接输出 `{"status":"skip","reason":"上游状态异常：${status} - ${message}"}`，不再执行拆分。

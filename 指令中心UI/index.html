@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的BUA</title>
+    <title>我的GUI</title>
     <style>
         /* ============================================
            CSS 变量定义 - 设计系统
            ============================================ */
         :root {
             /* 主色调 */
-            --primary-color: #4353FF;
-            --primary-hover: #3644E0;
-            --primary-light: #EEF0FF;
+            --primary-color: #653DD6;
+            --primary-hover: #5531B8;
+            --primary-light: #F0EBFF;
+            
+            /* 辅助色 */
+            --accent-color: #17BFB5;
+            --accent-hover: #14A89E;
+            --accent-light: #E6F9F7;
             
             /* 中性色 */
-            --bg-color: #F5F7FA;
+            --bg-color: #F0F4FF;
             --card-bg: #FFFFFF;
-            --border-color: #E8E8E8;
-            --border-light: #F0F0F0;
+            --border-color: #E5E7EB;
+            --border-light: #F0F1F3;
             
             /* 文字色 */
             --text-primary: #1A1A2E;
@@ -27,9 +32,9 @@
             --text-white: #FFFFFF;
             
             /* 阴影 */
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
             
             /* 圆角 */
             --radius-sm: 4px;
@@ -43,6 +48,19 @@
             /* 过渡 */
             --transition-fast: 0.15s ease;
             --transition-normal: 0.25s ease;
+            
+            /* 渐变 */
+            --gradient-primary: linear-gradient(135deg, #8B5CF6 0%, #653DD6 100%);
+            --gradient-primary-hover: linear-gradient(135deg, #7C4FE0 0%, #5531B8 100%);
+            --sidebar-width: 220px;
+        }
+
+        /* 通用渐变文字工具类 */
+        .gradient-text {
+            background: linear-gradient(135deg, #8B5CF6 0%, #653DD6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* ============================================
@@ -63,12 +81,203 @@
         }
 
         /* ============================================
+           左侧导航栏
+           ============================================ */
+/* ============================================
+   左侧导航栏
+   ============================================ */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: #FFFFFF;
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    z-index: 90;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 12px;
+    gap: 8px;
+}
+
+.sidebar-add-btn {
+    flex: 1;
+    height: 40px;
+    border-radius: 20px;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    padding: 0 16px;
+}
+
+.sidebar.collapsed .sidebar-add-btn {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.sidebar-add-btn:hover {
+    background: var(--gradient-primary-hover);
+}
+
+.sidebar-add-btn .add-text {
+    transition: opacity 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-add-btn .add-text {
+    display: none;
+}
+
+.sidebar-toggle-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.sidebar-toggle-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.sidebar.collapsed .sidebar-toggle-btn {
+    display: none;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px;
+    gap: 2px;
+}
+
+.sidebar-nav-item {
+    width: 100%;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: all var(--transition-fast);
+    border: none;
+    background: transparent;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.sidebar-nav-item .nav-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    width: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-nav-item .nav-text {
+    transition: opacity 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-nav-item {
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar.collapsed .sidebar-nav-item .nav-text {
+    display: none;
+}
+
+.sidebar-nav-item:hover {
+    background: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.sidebar-nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.sidebar-nav-item.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: #E5E7EB;
+    margin: 8px 12px;
+    transition: margin 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-divider {
+    margin: 8px 8px;
+}
+
+.sidebar-expand-btn {
+    display: none;
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--primary-light);
+    color: var(--primary-color);
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-expand-btn {
+    display: flex;
+}
+
+        /* ============================================
            顶部 Tab 导航栏
            ============================================ */
         .tab-nav {
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 0 24px;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
         }
 
         .tab-nav-inner {
@@ -103,8 +312,8 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background-color: var(--primary-color);
+            height: 3px;
+            background: linear-gradient(90deg, #8B5CF6, #653DD6);
             border-radius: 2px 2px 0 0;
         }
 
@@ -114,7 +323,9 @@
         .main-container {
             max-width: 1440px;
             margin: 0 auto;
+            margin-left: var(--sidebar-width);
             padding: 24px;
+            transition: margin-left 0.3s ease;
         }
 
         /* ============================================
@@ -129,11 +340,17 @@
 
         .page-title {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
+            align-items: baseline;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            font-weight: 400;
+            color: #999;
         }
 
         .title-icon {
@@ -172,24 +389,26 @@
         }
 
         .btn-primary-outline {
-            background-color: var(--card-bg);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
+            background-color: #F3F4F6;
+            color: #374151;
+            border: none;
             border-radius: var(--radius-md);
         }
 
         .btn-primary-outline:hover {
-            background-color: var(--primary-light);
+            background-color: #E5E7EB;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background: var(--gradient-primary);
             color: var(--text-white);
             border-radius: var(--radius-md);
+            padding: 10px 20px;
+            font-weight: 600;
         }
 
         .btn-primary:hover {
-            background-color: var(--primary-hover);
+            background: var(--gradient-primary-hover);
         }
 
         /* ============================================
@@ -248,7 +467,7 @@
 
         .search-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .search-input::placeholder {
@@ -280,7 +499,7 @@
 
         .search-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .search-select option {
@@ -305,16 +524,15 @@
         }
 
         .btn-reset {
-            background-color: var(--card-bg);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
+            background-color: #F3F4F6;
+            color: #374151;
+            border: none;
             padding: 8px 20px;
             border-radius: var(--radius-md);
         }
 
         .btn-reset:hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+            background-color: #E5E7EB;
         }
 
         /* ============================================
@@ -323,7 +541,7 @@
         .card-container {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 16px;
         }
 
         .group-section {
@@ -336,25 +554,22 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-left: 4px;
+            margin-bottom: 12px;
         }
 
         .group-indicator {
-            width: 4px;
-            height: 18px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
+            display: none;
         }
 
         .group-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #1a1a1a;
         }
 
         .group-count {
-            font-size: 13px;
-            color: var(--text-tertiary);
+            font-size: 14px;
+            color: #999;
             margin-left: 4px;
         }
 
@@ -395,6 +610,7 @@
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
+            border: 1px solid #E5E7EB;
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -403,8 +619,8 @@
         }
 
         .command-card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
 
         .card-header {
@@ -417,7 +633,7 @@
         .code-icon {
             width: 28px;
             height: 28px;
-            background-color: var(--primary-color);
+            background: var(--gradient-primary);
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
@@ -547,7 +763,7 @@
             right: 0;
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
             padding: 4px;
             min-width: auto;
             z-index: 100;
@@ -722,7 +938,7 @@
         }
 
         .variables-table tbody tr:hover {
-            background-color: #F0F5FF;
+            background-color: #F0EBFF;
         }
 
         .variables-table .col-name {
@@ -754,7 +970,7 @@
 
         .variables-table input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .variables-table input::placeholder {
@@ -789,7 +1005,7 @@
         }
 
         .btn-add-row:hover {
-            background-color: #E0E4FF;
+            background-color: #EDE5FF;
         }
 
         .variables-info-icon {
@@ -875,7 +1091,7 @@
         }
 
         .modal-body {
-            padding: 24px;
+            padding: 20px;
             overflow-y: auto;
             flex: 1;
         }
@@ -917,7 +1133,7 @@
         .form-input:focus,
         .form-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.08);
         }
 
         .form-input::placeholder {
@@ -949,7 +1165,7 @@
 
         .tag-input-container:focus-within {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .tag-input-container.has-error {
@@ -980,7 +1196,7 @@
         }
 
         .tag-remove:hover {
-            background-color: rgba(67, 83, 255, 0.2);
+            background-color: rgba(101, 61, 214, 0.2);
         }
 
         .tag-remove svg {
@@ -1030,7 +1246,7 @@
             width: 360px;
             max-width: 90vw;
             padding: 24px;
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
             transform: scale(0.95);
             transition: transform 0.25s ease;
         }
@@ -1087,18 +1303,169 @@
         }
 
         .debug-page.active {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 48px);
+            overflow: hidden;
+        }
+
+        /* 执行记录页面样式 */
+        .execution-record-page {
+            display: none;
+        }
+
+        .execution-record-page.active {
             display: block;
+        }
+
+        .execution-record-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .execution-record-filter {
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .execution-record-filter-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .execution-record-filter-row + .execution-record-filter-row {
+            margin-top: 12px;
+        }
+
+        .execution-record-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .execution-record-filter-item .filter-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        .execution-record-filter-item .filter-input,
+        .execution-record-filter-item .filter-select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .execution-record-filter-item .filter-input {
+            width: 180px;
+        }
+
+        .execution-record-filter-item .filter-select {
+            width: 160px;
+            cursor: pointer;
+        }
+
+        .execution-record-filter-item .filter-input:focus,
+        .execution-record-filter-item .filter-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+        }
+
+        .execution-record-filter-item .filter-date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .execution-record-filter-item .filter-date-input {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            background-color: var(--card-bg);
+            color: var(--text-primary);
+            width: 140px;
+        }
+
+        .execution-record-filter-item .filter-date-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+        }
+
+        .execution-record-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12pt;
+            background-color: var(--card-bg);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .execution-record-table th,
+        .execution-record-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border: 1px solid var(--border-light);
+            font-size: 12px;
+        }
+
+        .execution-record-table th {
+            background-color: #FAFAFA;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .execution-record-table td {
+            color: var(--text-secondary);
+        }
+
+        .execution-record-table tbody tr {
+            background-color: var(--card-bg);
+            transition: background-color var(--transition-fast);
+        }
+
+        .execution-record-table tbody tr:hover {
+            background-color: #F3EEFF;
+        }
+
+        .execution-record-table .cell-ellipsis {
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .execution-record-table .cell-ellipsis-wide {
+            max-width: 380px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* 调试页面两栏布局 */
         .debug-layout {
             display: flex;
             gap: 20px;
-            align-items: stretch;
             position: relative;
             --left-width: 70%;
             --right-width: 28%;
-            padding-bottom: 40vh;
+            flex: 1;
+            overflow: hidden;
+            padding-right: 16px;
+            padding-bottom: 16px;
         }
 
         .debug-left-column {
@@ -1108,6 +1475,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .debug-right-column {
@@ -1117,6 +1485,8 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
         }
 
         /* 调试详情面板样式 */
@@ -1124,19 +1494,19 @@
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
+            overflow: visible;
+            flex: 1;
         }
 
         .runtime-panel-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 14px 16px;
+            padding: 14px 0;
+            margin: 0 16px;
             border-bottom: 1px solid var(--border-light);
             justify-content: flex-start;
+            flex-wrap: wrap;
         }
 
         .runtime-panel-icon {
@@ -1153,8 +1523,6 @@
 
         .runtime-panel-body {
             padding: 20px;
-            display: flex;
-            flex-direction: column;
         }
 
         /* 任务状态区域 */
@@ -1168,8 +1536,8 @@
 
         .task-status-section.show {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: stretch;
             gap: 8px;
             padding: 12px 16px;
             min-height: 48px;
@@ -1178,11 +1546,10 @@
         .task-status-section.expanded-status {
             min-height: 80px;
             flex: 0 0 auto;
-            align-items: flex-start;
         }
 
         #taskStatusContent {
-            flex: 1;
+            flex: 0 0 auto;
         }
 
         .task-status-text {
@@ -1215,6 +1582,90 @@
             align-items: center;
             margin-top: auto;
             margin-bottom: auto;
+        }
+
+        .execution-result-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 3em;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .execution-result-text.expanded {
+            max-height: none;
+        }
+
+        .execution-result-toggle {
+            font-size: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            align-self: flex-start;
+            user-select: none;
+        }
+
+        .execution-result-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .execution-result-files {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .execution-result-file-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px 12px;
+            transition: box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .execution-result-file-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .execution-result-file-icon {
+            font-size: 18px;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .execution-result-file-name {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .execution-result-file-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--primary-color);
+            transition: background-color 0.2s ease;
+        }
+
+        .execution-result-file-download:hover {
+            background-color: rgba(101, 61, 214, 0.08);
+        }
+
+        .execution-result-file-download svg {
+            width: 16px;
+            height: 16px;
         }
 
         /* 操作日志内嵌显示区域 */
@@ -1264,7 +1715,7 @@
         .debug-resize-btn {
             position: fixed;
             top: 50vh;
-            transform: translateY(-50%);
+            transform: translate(-50%, -50%);
             width: 20px;
             height: 40px;
             background-color: #E8E8E8;
@@ -1326,7 +1777,7 @@
 
         .browser-fullscreen-btn:hover {
             background-color: rgba(255, 255, 255, 0.2);
-            color: #4353FF;
+            color: #653DD6;
         }
 
         .browser-fullscreen-btn svg {
@@ -1500,6 +1951,7 @@
             gap: 8px;
             margin-bottom: 20px;
             font-size: 14px;
+            flex-shrink: 0;
         }
 
         .breadcrumb-item {
@@ -1614,7 +2066,7 @@
 
         .debug-detail-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         /* Prompt 内容区域 */
@@ -1636,13 +2088,16 @@
             font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
+            flex-shrink: 0;
         }
 
         .prompt-content-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            padding: 14px 16px;
+            margin: 0 -16px 8px -16px;
+            border-bottom: 1px solid var(--border-light);
             display: none;
         }
 
@@ -1652,19 +2107,23 @@
 
         .debug-prompt-actions {
             display: flex;
-            gap: 12px;
+            gap: 4px;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .debug-prompt-actions .btn {
             padding: 6px 12px;
             font-size: 13px;
             line-height: 1.4;
+            white-space: nowrap;
+            height: 32px;
+            box-sizing: border-box;
         }
 
         /* 沙箱类型选择框 */
         .sandbox-select {
-            padding: 6px 24px 6px 10px;
+            padding: 6px 28px 6px 10px;
             font-size: 13px;
             font-weight: 500;
             border: 1px solid var(--border-color);
@@ -1681,12 +2140,14 @@
             background-repeat: no-repeat;
             background-position: right 8px center;
             width: auto;
-            min-width: 120px;
+            min-width: 0;
+            height: 32px;
+            box-sizing: border-box;
         }
 
         .sandbox-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .debug-prompt-textarea {
@@ -1716,12 +2177,6 @@
             pointer-events: none;
         }
 
-        .debug-prompt-textarea[contenteditable="false"] {
-            background-color: #E8E8E8;
-            color: #999;
-            cursor: not-allowed;
-        }
-
         /* Prompt 全屏展开按钮 */
         .prompt-expand-btn {
             background: none;
@@ -1741,6 +2196,12 @@
         .prompt-expand-btn:hover {
             background-color: var(--bg-secondary);
             color: var(--primary-color);
+        }
+
+        .prompt-actions-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* 变量标签区域 */
@@ -1980,7 +2441,8 @@
         /* 调试运行时左侧只显示Prompt */
         .debug-left-column.running-only-prompt .debug-combined-header,
         .debug-left-column.running-only-prompt .debug-combined-divider,
-        .debug-left-column.running-only-prompt .debug-prompt-header-row,
+        .debug-left-column.running-only-prompt .debug-prompt-actions-row,
+        .debug-left-column.running-only-prompt .debug-prompt-title,
         .debug-left-column.running-only-prompt .prompt-expand-btn,
         .debug-left-column.running-only-prompt .debug-variable-tags-wrapper,
         .debug-left-column.running-only-prompt .debug-variable-tags-toggle {
@@ -1988,7 +2450,7 @@
         }
 
         .debug-left-column.running-only-prompt .debug-combined-card {
-            padding-top: 16px;
+            padding-top: 0;
             padding-bottom: 16px;
             flex: 1;
             min-height: 0;
@@ -2154,6 +2616,7 @@
             flex: 1 1 auto;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .debug-combined-header {
@@ -2171,10 +2634,7 @@
         }
 
         .debug-combined-indicator {
-            width: 4px;
-            height: 18px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
+            display: none;
         }
 
         .debug-combined-title {
@@ -2245,7 +2705,7 @@
 
         .debug-combined-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .debug-combined-select {
@@ -2265,7 +2725,7 @@
 
         .debug-combined-select:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .debug-combined-divider {
@@ -2276,8 +2736,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 20px;
-            margin-bottom: 16px;
+            flex-wrap: nowrap;
+            gap: 4px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            overflow: visible;
+        }
+
+        .debug-prompt-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 2px;
         }
 
         /* 单选按钮组样式 */
@@ -2360,7 +2829,7 @@
 
         .new-group-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         /* 封面图片上传区域 */
@@ -2388,7 +2857,7 @@
 
         .cover-preview:hover {
             border-color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(67, 83, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(101, 61, 214, 0.2);
         }
 
         .cover-preview.has-image {
@@ -2473,7 +2942,7 @@
 
         .cover-url-input:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(67, 83, 255, 0.1);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
         .file-input {
@@ -2684,17 +3153,17 @@
 
         .status-log-btn {
             padding: 2px 10px;
-            border: 1px solid #4353FF;
+            border: 1px solid #653DD6;
             border-radius: 4px;
             background: transparent;
-            color: #4353FF;
+            color: #653DD6;
             font-size: 13px;
             cursor: pointer;
             white-space: nowrap;
         }
 
         .status-log-btn:hover {
-            background-color: rgba(67, 83, 255, 0.05);
+            background-color: rgba(101, 61, 214, 0.05);
         }
 
         @keyframes spin {
@@ -2810,7 +3279,7 @@
         }
 
         .drawer-table tbody tr:hover {
-            background-color: #F0F5FF;
+            background-color: #F3EEFF;
         }
 
         .drawer-table .status-success {
@@ -2839,9 +3308,9 @@
 
         .drawer-table .status-running {
             display: inline-block;
-            background-color: #E6F7FF;
-            color: #4353FF;
-            border: 1px solid #91D5FF;
+            background-color: #F0EBFF;
+            color: #653DD6;
+            border: 1px solid #C4AEFF;
             border-radius: 4px;
             padding: 2px 8px;
             font-size: 12px;
@@ -2863,13 +3332,19 @@
         }
 
         .drawer-table .action-link {
-            color: var(--primary-color);
+            color: #1890FF;
             cursor: pointer;
             white-space: nowrap;
         }
 
         .drawer-table .action-link:hover {
+            color: #40A9FF;
             text-decoration: underline;
+        }
+
+        .drawer-table .action-link.disabled:hover {
+            color: #999;
+            text-decoration: none;
         }
 
         .drawer-table .action-divider {
@@ -2877,6 +3352,57 @@
             height: 14px;
             background-color: #E0E0E0;
             margin: 0 8px;
+        }
+
+        .drawer-table .action-link.disabled {
+            color: #999;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        /* 通用黑色 tooltip */
+        .tooltip-wrapper {
+            position: relative;
+        }
+
+        .tooltip-wrapper::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .tooltip-wrapper::before {
+            content: '';
+            position: absolute;
+            bottom: calc(100% + 2px);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .tooltip-wrapper:hover::after,
+        .tooltip-wrapper:hover::before {
+            opacity: 1;
+            visibility: visible;
         }
 
         /* 可复制单元格 */
@@ -2907,73 +3433,134 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            cursor: default;
+            cursor: pointer;
+            color: #1677FF;
+            text-decoration: none;
+            transition: color 0.2s ease;
         }
 
-        /* Prompt Tooltip - 全局固定定位 */
-        .prompt-tooltip {
+        .prompt-cell:hover {
+            color: #4096FF;
+        }
+
+        /* Prompt 内容查看弹窗 */
+        .prompt-view-modal-overlay {
             position: fixed;
-            background-color: rgba(0, 0, 0, 0.85);
-            color: #fff;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 13px;
-            line-height: 1.5;
-            max-width: 400px;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-word;
-            z-index: 9999;
-            pointer-events: auto;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: opacity 0.25s ease, visibility 0.25s ease;
         }
 
-        .prompt-tooltip.show {
+        .prompt-view-modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .prompt-tooltip::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: 24px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid rgba(0, 0, 0, 0.85);
+        .prompt-view-modal-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            width: 600px;
+            max-width: 90vw;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            transform: scale(0.95);
+            transition: transform 0.25s ease;
         }
 
-        .prompt-tooltip.bottom-arrow::after {
-            top: auto;
-            bottom: -4px;
-            border-bottom: none;
-            border-top: 6px solid rgba(0, 0, 0, 0.85);
+        .prompt-view-modal-overlay.active .prompt-view-modal-container {
+            transform: scale(1);
         }
 
-        /* 桥接 tooltip 与 prompt 单元格之间的间隙，确保鼠标移动时气泡不消失 */
-        .prompt-tooltip::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: transparent;
-            pointer-events: auto;
+        .prompt-view-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .prompt-tooltip:not(.bottom-arrow)::before {
-            top: -4px;
+        .prompt-view-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
-        .prompt-tooltip.bottom-arrow::before {
-            bottom: -4px;
-            top: auto;
+        .prompt-view-modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: all var(--transition-fast);
+            background: none;
+            border: none;
+        }
+
+        .prompt-view-modal-close:hover {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+        }
+
+        .prompt-view-modal-close svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .prompt-view-modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .prompt-view-modal-copy {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            color: #7c3aed;
+            background-color: transparent;
+            border: 1px solid #7c3aed;
+            transition: all var(--transition-fast);
+        }
+
+        .prompt-view-modal-copy:hover {
+            background-color: rgba(124, 58, 237, 0.08);
+            border-color: #6d28d9;
+            color: #6d28d9;
+        }
+
+        .prompt-view-modal-copy.copied {
+            background-color: transparent;
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .prompt-view-modal-body {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: 60vh;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+            user-select: text;
+            -webkit-user-select: text;
+            color: var(--text-primary);
         }
 
         /* ============================================
@@ -3061,6 +3648,78 @@
             flex: 1;
         }
 
+        /* 执行输出结果区域 */
+        .execution-result-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .execution-result-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .execution-result-status .status-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .execution-result-status .status-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .execution-result-status .status-text.success {
+            color: #52C41A;
+        }
+
+        .execution-result-status .status-text.failed {
+            color: #F5222D;
+        }
+
+        .execution-result-output {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .execution-result-text-content {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 3em;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .execution-result-text-content.expanded {
+            max-height: none;
+        }
+
+        .execution-result-toggle-link {
+            font-size: 12px;
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            align-self: flex-start;
+            user-select: none;
+        }
+
+        .execution-result-toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .execution-result-files-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
         /* 总览数据区域 */
         .operation-log-stats {
             display: grid;
@@ -3077,9 +3736,13 @@
         }
 
         .operation-log-stat-value {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #7F46FF 0%, #C251FD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
             margin-bottom: 4px;
         }
 
@@ -3099,8 +3762,13 @@
         }
 
         .debug-operation-log .operation-log-stat-value {
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 1px;
+            background: linear-gradient(135deg, #7F46FF 0%, #C251FD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent;
         }
 
         .debug-operation-log .operation-log-stat-label {
@@ -3118,12 +3786,37 @@
             gap: 16px;
         }
 
+        /* 无影GUI日志不可用提示 */
+        .no-log-notice {
+            background-color: #f3f4f6;
+            color: #6b7280;
+            text-align: center;
+            padding: 32px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
         .operation-log-card {
             background-color: #FFFFFF;
             border-radius: 12px;
-            border: 1px solid #E8E8E8;
+            border: 1px solid var(--border-color);
             padding: 20px;
             margin-bottom: 0;
+        }
+
+        .operation-log-card.unexecuted-merged {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            min-height: auto;
+        }
+
+        .unexecuted-merged-text {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .operation-log-card-header {
@@ -3138,11 +3831,11 @@
         .operation-log-card-step {
             font-size: 15px;
             font-weight: 700;
-            color: #4353FF;
+            color: #653DD6;
         }
 
         .operation-log-card-url {
-            color: #4353FF;
+            color: #1890FF;
             font-size: 13px;
             cursor: pointer;
             max-width: 320px;
@@ -3153,6 +3846,7 @@
         }
 
         .operation-log-card-url:hover {
+            color: #40A9FF;
             text-decoration: underline;
         }
 
@@ -3219,13 +3913,13 @@
         }
 
         .log-block-tag.llm {
-            background-color: #4353FF;
+            background-color: #653DD6;
         }
 
         .log-block-content {
             background-color: #F5F7FA;
             border-radius: 6px;
-            border: 1px solid #E8E8E8;
+            border: 1px solid var(--border-color);
             padding: 12px;
             font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Fira Code', monospace;
             font-size: 12px;
@@ -3239,6 +3933,11 @@
 
         .log-block-content.collapsed {
             display: none;
+        }
+
+        .log-llm-content {
+            height: 281px;
+            max-height: 281px;
         }
 
         .log-screenshot-container {
@@ -3260,13 +3959,13 @@
             aspect-ratio: 400 / 250;
             object-fit: cover;
             border-radius: 8px;
-            border: 1px solid #E8E8E8;
+            border: 1px solid var(--border-color);
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
         .log-screenshot-img:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-sm);
         }
 
         .log-action-results {
@@ -3306,6 +4005,33 @@
         .log-action-result-icon {
             flex-shrink: 0;
             font-size: 14px;
+        }
+
+        .log-empty-placeholder {
+            padding: 4px 0;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .log-empty-placeholder-boxed {
+            background-color: #f8f9fa;
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .log-block-content-unexecuted {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .log-block-content-unexecuted.collapsed {
+            display: none;
         }
 
         /* 图片放大查看遮罩层 */
@@ -3397,7 +4123,7 @@
 
         .log-screenshot-download {
             font-size: 12px;
-            color: #4353FF;
+            color: #653DD6;
             cursor: pointer;
             text-decoration: none;
             margin-top: 4px;
@@ -3457,14 +4183,110 @@
             border-color: var(--primary-color);
             color: var(--primary-color);
         }
+        /* 版本选择器 */
+        .version-selector { position: relative; display: inline-block; }
+        .version-trigger { display: flex; align-items: center; gap: 6px; padding: 4px 28px 4px 10px; box-sizing: border-box; height: 32px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; font-family: var(--font-family); color: var(--text-primary); transition: border-color var(--transition-fast), box-shadow var(--transition-fast); user-select: none; outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; width: auto; min-width: 0; }
+        .version-trigger:hover { border-color: var(--primary-color); }
+        .version-trigger.active { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1); }
+        .version-trigger .version-tag { background-color: transparent; padding: 0; border-radius: 0; font-size: 13px; }
+        .version-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; line-height: 1.4; }
+        .version-tag--draft { background-color: #FFF7E6; color: #D48806; }
+        .version-tag--online { background-color: #F3EEFF; color: #7C3AED; }
+        .version-tag--version { background-color: #F0F0F0; color: #666666; }
+        .version-trigger .version-arrow { display: none; }
+        .version-arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
+        .version-trigger.active .version-arrow { transform: rotate(180deg); }
+        .version-dropdown { position: fixed; width: 340px; max-height: 320px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 1200; display: none; overflow: visible; padding: 6px 0; flex-direction: column; }
+        .version-dropdown.show { display: flex; }
+        .version-dropdown-list { flex: 1; overflow-y: auto; min-height: 0; }
+        .version-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background-color 0.15s ease; position: relative; }
+        .version-item:hover { background-color: #F5F5F5; }
+        .version-item--selected { background-color: rgba(124, 58, 237, 0.06); }
+        .version-item--selected:hover { background-color: rgba(124, 58, 237, 0.1); }
+        .version-item .version-delete-btn { visibility: hidden; color: #1890FF; font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 4px; white-space: nowrap; width: 40px; text-align: center; }
+        .version-item:hover .version-delete-btn { visibility: visible; }
+        .version-item .version-delete-btn:hover { background-color: rgba(24, 144, 255, 0.08); }
+        .version-delete-confirm { position: fixed; background: #fff; border-radius: 8px; padding: 10px 14px; box-shadow: 0 3px 12px rgba(0,0,0,0.15); z-index: 1300; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .version-delete-confirm::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); box-shadow: 2px 2px 4px rgba(0,0,0,0.08); }
+        .version-delete-confirm span { font-size: 12px; color: #333; }
+        .version-delete-confirm-yes { font-size: 12px; color: #fff; background: #1890FF; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+        .version-delete-confirm-no { font-size: 12px; color: #666; background: #f0f0f0; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+        .version-item-info { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .version-item-info .version-tag { flex-shrink: 0; }
+        .version-tag-col { width: 100px; text-align: right; flex-shrink: 0; }
+        .version-item-meta { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .version-item-meta-row { display: flex; align-items: center; justify-content: space-between; }
+        .version-item-id { font-size: 13px; color: #999; }
+        .version-item-time { font-size: 12px; color: #999; }
+
+        /* 新增版本按钮 */
+        .version-add-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 10px 16px;
+            border-top: 1px solid var(--border-light);
+            color: #7c3aed;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .version-add-btn:hover {
+            background-color: rgba(124, 58, 237, 0.06);
+        }
+
+        /* 不可编辑状态 */
+        .debug-prompt-textarea[contenteditable="false"] {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
+<!-- 左侧导航栏 -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <button class="sidebar-add-btn" title="新增指令" onclick="openNewCommandModal()">
+            <span class="add-icon">+</span>
+            <span class="add-text">新增指令</span>
+        </button>
+        <button class="sidebar-toggle-btn" title="收起侧边栏" onclick="toggleSidebar()">«</button>
+    </div>
+    <nav class="sidebar-nav">
+        <button class="sidebar-nav-item active" data-sidebar-tab="myCommands" onclick="switchSidebarTab('myCommands')" title="我的GUI">
+            <span class="nav-icon">🤖</span>
+            <span class="nav-text">我的GUI</span>
+        </button>
+        <button class="sidebar-nav-item" data-sidebar-tab="templatePage" onclick="switchSidebarTab('templatePage')" title="模板中心">
+            <span class="nav-icon">🏪</span>
+            <span class="nav-text">模板中心</span>
+        </button>
+        <button class="sidebar-nav-item" data-sidebar-tab="executionRecord" onclick="switchSidebarTab('executionRecord')" title="执行记录">
+            <span class="nav-icon">📋</span>
+            <span class="nav-text">执行记录</span>
+        </button>
+        <div class="sidebar-divider"></div>
+        <button class="sidebar-nav-item disabled" title="数据看板（即将上线）">
+            <span class="nav-icon">📊</span>
+            <span class="nav-text">数据看板</span>
+        </button>
+        <button class="sidebar-nav-item disabled" title="帮助中心（即将上线）">
+            <span class="nav-icon">❓</span>
+            <span class="nav-text">帮助中心</span>
+        </button>
+    </nav>
+    <button class="sidebar-expand-btn" title="展开侧边栏" onclick="toggleSidebar()">»</button>
+</div>
+
     <!-- 顶部 Tab 导航栏 -->
     <nav class="tab-nav">
         <div class="tab-nav-inner">
-            <div class="tab-item active" data-tab="command">我的BUA</div>
-            <div class="tab-item" data-tab="template">BUA样板间</div>
+            <div class="tab-item active" data-tab="command">我的GUI</div>
+            <div class="tab-item" data-tab="template">GUI样板间</div>
+            <div class="tab-item" data-tab="executionRecord">执行记录</div>
         </div>
     </nav>
 
@@ -3472,18 +4294,6 @@
     <main class="main-container">
         <!-- 列表页面 -->
         <div class="list-page" id="listPage">
-        <!-- 页面标题区域 -->
-        <header class="page-header">
-            <div class="page-title">
-                <span class="title-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                </span>
-                我的BUA
-            </div>
-        </header>
-
         <!-- 搜索筛选栏 -->
         <div class="search-bar">
             <div class="search-left">
@@ -3553,6 +4363,69 @@
             </div>
         </div>
 
+        <!-- 执行记录页面 -->
+        <div class="execution-record-page" id="executionRecordPage">
+            <!-- 页面标题 -->
+            <div class="execution-record-title">GUI记录管理</div>
+
+            <!-- 筛选区域 -->
+            <div class="execution-record-filter">
+                <div class="execution-record-filter-row">
+                    <div class="execution-record-filter-item">
+                        <span class="filter-label">Prompt关键词</span>
+                        <input type="text" class="filter-input" id="erKeywordFilter" placeholder="请输入Prompt关键词">
+                    </div>
+                    <div class="execution-record-filter-item">
+                        <span class="filter-label">异步任务ID</span>
+                        <input type="text" class="filter-input" id="erTaskIdFilter" placeholder="请输入异步任务ID">
+                    </div>
+                    <div class="execution-record-filter-item">
+                        <span class="filter-label">来源</span>
+                        <input type="text" class="filter-input" id="erSourceFilter" placeholder="请输入来源">
+                    </div>
+                    <div class="execution-record-filter-item">
+                        <span class="filter-label">任务状态</span>
+                        <select class="filter-select" id="erStatusFilter">
+                            <option value="">请选择任务状态</option>
+                            <option value="success">成功</option>
+                            <option value="failed">失败</option>
+                            <option value="running">运行中</option>
+                        </select>
+                    </div>
+                    <div class="execution-record-filter-item">
+                        <span class="filter-label">时间范围</span>
+                        <div class="filter-date-range">
+                            <input type="date" class="filter-date-input" id="erStartDate">
+                            <span style="color: var(--text-secondary);">-</span>
+                            <input type="date" class="filter-date-input" id="erEndDate">
+                        </div>
+                    </div>
+                </div>
+                <div class="execution-record-filter-row">
+                    <div class="execution-record-filter-item">
+                        <button class="btn btn-search" id="erSearchBtn" style="background: var(--gradient-primary);">查询</button>
+                        <button class="btn btn-reset" id="erResetBtn">重置</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据表格 -->
+            <table class="execution-record-table">
+                <thead>
+                    <tr>
+                        <th>创建时间</th>
+                        <th>结束时间</th>
+                        <th>来源</th>
+                        <th>任务执行结果</th>
+                        <th>指令</th>
+                        <th>错误信息</th>
+                    </tr>
+                </thead>
+                <tbody id="executionRecordTableBody">
+                    <!-- 动态生成 -->
+                </tbody>
+            </table>
+        </div>
         <!-- 调试页面 -->
         <div class="debug-page" id="debugPage">
             <!-- 面包屑导航 -->
@@ -3561,9 +4434,9 @@
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                     <polyline points="9 22 9 12 15 12 15 22"></polyline>
                 </svg>
-                <span class="breadcrumb-item" id="breadcrumbTemplate">我的BUA</span>
+                <span class="breadcrumb-item" id="breadcrumbTemplate">我的GUI</span>
                 <span class="breadcrumb-separator">/</span>
-                <span class="breadcrumb-item active" id="breadcrumbCommandName">我的BUA调试页面</span>
+                <span class="breadcrumb-item active" id="breadcrumbCommandName">我的GUI调试页面</span>
             </div>
 
             <!-- 两栏布局 -->
@@ -3597,13 +4470,21 @@
                         <!-- 分隔线 -->
                         <div class="debug-combined-divider"></div>
 
-                        <!-- Prompt 内容标题行 -->
+                        <!-- Prompt 内容标题 + 操作按钮 -->
                         <div class="debug-prompt-header-row">
                             <span class="debug-prompt-title">Prompt 内容</span>
+                            <div class="debug-prompt-actions-row">
                             <div class="debug-prompt-actions">
+                                <div class="version-selector" id="versionSelector">
+                                    <div class="version-trigger" id="versionTrigger" onclick="toggleVersionDropdown()">
+                                        <span class="version-tag version-tag--draft" id="versionTriggerTag">草稿: V4</span>
+                                        <span class="version-arrow">▾</span>
+                                    </div>
+                                    <div class="version-dropdown" id="versionDropdown"></div>
+                                </div>
                                 <select class="sandbox-select" id="sandboxSelect">
-                                    <option value="browser" selected>无影BUA</option>
-                                    <option value="code">CNBUA</option>
+                                    <option value="browser" selected>无影GUI</option>
+                                    <option value="code">CNGUI</option>
                                 </select>
                                 <button class="btn btn-primary-outline" id="debugVariablesBtn">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3613,14 +4494,9 @@
                                     </svg>
                                     变量
                                 </button>
-                                <button class="btn btn-primary-outline" id="debugClearBtn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                    清空
-                                </button>
+
                             </div>
+                        </div>
                         </div>
 
                         <!-- 变量标签区域 -->
@@ -3632,7 +4508,10 @@
                                     </svg>
                                     <span>展开变量</span>
                                 </div>
-                                <button class="prompt-expand-btn" onclick="event.stopPropagation(); openPromptFullscreen()" title="全屏编辑">⛶ 全屏</button>
+                                <div class="prompt-actions-right">
+                                    <button class="prompt-expand-btn" onclick="event.stopPropagation(); openPromptFullscreen()" title="全屏编辑">⛶ 全屏</button>
+                                    <button class="prompt-expand-btn" id="debugClearBtn" title="清空内容">✕ 清空</button>
+                                </div>
                             </div>
                             <div class="debug-variable-tags-panel">
                                 <div class="debug-variable-tags-content">
@@ -3689,18 +4568,11 @@
                                 <line x1="12" y1="17" x2="12" y2="21"></line>
                             </svg>
                             <span class="runtime-panel-title">调试详情</span>
-                            <div style="margin-left: auto; display: flex; gap: 8px;">
-                                <button class="btn btn-white" id="debugHistoryBtn" style="padding: 6px 12px; font-size: 13px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
+                            <div style="margin-left: auto; display: flex; gap: 8px; flex-shrink: 0; flex-wrap: nowrap;">
+                                <button class="btn btn-white" id="debugHistoryBtn" style="padding: 6px 12px; font-size: 13px; white-space: nowrap;">
                                     运行记录
                                 </button>
-                                <button class="btn btn-primary" id="debugRunBtn" style="padding: 6px 12px; font-size: 13px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                                    </svg>
+                                <button class="btn btn-primary" id="debugRunBtn" style="padding: 6px 12px; font-size: 13px; white-space: nowrap;">
                                     调试
                                 </button>
                             </div>
@@ -3720,11 +4592,14 @@
                                 <span class="debug-placeholder-text">点击「调试」开始执行任务</span>
                             </div>
 
-                            <!-- 任务状态 -->
+                            <!-- 任务状态（包含执行结果） -->
                             <div class="task-status-section" id="taskStatusSection">
                                 <div id="taskStatusContent">
                                     <div class="task-status-text" id="taskStatusText">等待调试...</div>
                                 </div>
+                                <div class="execution-result-text" id="executionResultText"></div>
+                                <a class="execution-result-toggle" id="executionResultToggle" onclick="toggleExecutionResult()">展开 <span style="font-size:10px">▼</span></a>
+                                <div class="execution-result-files" id="executionResultFiles"></div>
                             </div>
 
                             <!-- 浏览器实时画面 -->
@@ -3924,11 +4799,11 @@
         </button>
     </div>
 
-    <!-- 操作日志弹窗 -->
+    <!-- 执行结果弹窗 -->
     <div class="operation-log-modal-overlay" id="operationLogModal">
         <div class="operation-log-modal-container">
             <div class="operation-log-modal-header">
-                <h3 class="operation-log-modal-title">操作日志</h3>
+                <h3 class="operation-log-modal-title">执行结果</h3>
                 <button class="operation-log-modal-close" id="operationLogModalClose">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -3937,6 +4812,18 @@
                 </button>
             </div>
             <div class="operation-log-modal-body">
+                <!-- 执行输出结果 -->
+                <div class="execution-result-section" id="modalExecutionResult">
+                    <div class="execution-result-status" id="modalResultStatus">
+                        <span class="status-icon" id="modalResultStatusIcon">✅</span>
+                        <span class="status-text success" id="modalResultStatusText">执行完成</span>
+                    </div>
+                    <div class="execution-result-output">
+                        <div class="execution-result-text-content" id="modalResultText"></div>
+                        <a class="execution-result-toggle-link" id="modalResultToggle" onclick="toggleModalResultText()" style="display:none">展开 <span style="font-size:10px">▼</span></a>
+                    </div>
+                    <div class="execution-result-files-section" id="modalResultFiles"></div>
+                </div>
                 <!-- 总览数据区域 -->
                 <div class="operation-log-stats">
                     <div class="operation-log-stat-card">
@@ -3956,6 +4843,27 @@
                 <div class="operation-log-cards" id="operationLogCards">
                     <!-- 动态生成 -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt 内容查看弹窗 -->
+    <div class="prompt-view-modal-overlay" id="promptViewModal">
+        <div class="prompt-view-modal-container">
+            <div class="prompt-view-modal-header">
+                <h3 class="prompt-view-modal-title">Prompt 内容</h3>
+                <div class="prompt-view-modal-actions">
+                    <button class="prompt-view-modal-copy" id="promptViewModalCopy">复制</button>
+                    <button class="prompt-view-modal-close" id="promptViewModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            </div>
+            <div class="prompt-view-modal-body" id="promptViewModalBody">
+                <!-- 动态填充 -->
             </div>
         </div>
     </div>
@@ -3980,6 +4888,7 @@
                         <th>创建时间</th>
                         <th>运行结果id</th>
                         <th>prompt</th>
+                        <th>沙箱类型</th>
                         <th>状态</th>
                         <th>id</th>
                         <th>操作</th>
@@ -4289,8 +5198,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn-modal btn-modal-default" id="cancelBtn">取消</button>
-                <button class="btn-modal btn-modal-default" id="saveOnlyBtn">确定</button>
+                                <button class="btn-modal btn-modal-default" id="saveOnlyBtn">确定</button>
                 <button class="btn-modal btn-modal-primary" id="confirmBtn">去调试</button>
             </div>
         </div>
@@ -4301,6 +5209,17 @@
         // 示例数据
         // ============================================
         const commandData = [
+            {
+                id: 11,
+                name: '执行失败测试',
+                desc: '模拟指令执行失败的测试场景，用于验证失败状态展示。',
+                time: '2024-12-20 09:00',
+                group: '默认分组',
+                admins: ['余梦玲'],
+                permissionGroup: '测试组',
+                department: '测试部',
+                coverImage: null
+            },
             {
                 id: 1,
                 name: '跨境物流抓取',
@@ -4314,7 +5233,7 @@
             },
             {
                 id: 2,
-                name: 'BUA 指令优化',
+                name: 'GUI 指令优化',
                 desc: '打开指定链接并在浏览器中访问系统。',
                 time: '2024-12-18 16:45',
                 group: '默认分组',
@@ -4409,17 +5328,6 @@
                 admins: ['余梦玲'],
                 permissionGroup: '',
                 department: '',
-                coverImage: null
-            },
-            {
-                id: 11,
-                name: '执行失败测试',
-                desc: '模拟指令执行失败的测试场景，用于验证失败状态展示。',
-                time: '2024-12-09 10:00',
-                group: '默认分组',
-                admins: ['余梦玲'],
-                permissionGroup: '测试组',
-                department: '测试部',
                 coverImage: null
             }
         ];
@@ -4879,6 +5787,7 @@
             const listPage = document.getElementById('listPage');
             const templatePage = document.getElementById('templatePage');
             const debugPage = document.getElementById('debugPage');
+            const executionRecordPage = document.getElementById('executionRecordPage');
 
             tabItems.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -4890,13 +5799,84 @@
                         listPage.classList.remove('hidden');
                         templatePage.classList.remove('active');
                         debugPage.classList.remove('active');
+                        executionRecordPage.classList.remove('active');
                     } else if (tabName === 'template') {
                         listPage.classList.add('hidden');
                         templatePage.classList.add('active');
                         debugPage.classList.remove('active');
+                        executionRecordPage.classList.remove('active');
+                    } else if (tabName === 'executionRecord') {
+                        listPage.classList.add('hidden');
+                        templatePage.classList.remove('active');
+                        debugPage.classList.remove('active');
+                        executionRecordPage.classList.add('active');
                     }
+
+                    // 同步侧边栏状态
+                    syncSidebarWithTab(tab.textContent.trim());
                 });
             });
+        }
+
+        // ============================================
+        // 左侧导航栏功能
+        // ============================================
+        let sidebarCollapsed = false;
+
+        function toggleSidebar() {
+            sidebarCollapsed = !sidebarCollapsed;
+            const sidebar = document.getElementById('sidebar');
+            const root = document.documentElement;
+
+            if (sidebarCollapsed) {
+                sidebar.classList.add('collapsed');
+                root.style.setProperty('--sidebar-width', '64px');
+            } else {
+                sidebar.classList.remove('collapsed');
+                root.style.setProperty('--sidebar-width', '220px');
+            }
+        }
+
+        function switchSidebarTab(tabName) {
+            // 更新侧边栏活跃状态
+            document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+                item.classList.toggle('active', item.dataset.sidebarTab === tabName);
+            });
+
+            // 触发现有的 Tab 切换逻辑
+            const tabMap = {
+                'myCommands': '我的GUI',
+                'templatePage': 'GUI样板间',
+                'executionRecord': '执行记录'
+            };
+
+            const targetText = tabMap[tabName];
+            if (targetText) {
+                const tabItems = document.querySelectorAll('.tab-item');
+                tabItems.forEach(tab => {
+                    if (tab.textContent.trim() === targetText) {
+                        tab.click();
+                    }
+                });
+            }
+        }
+
+        function syncSidebarWithTab(tabText) {
+            const textToTab = {
+                '我的GUI': 'myCommands',
+                'GUI样板间': 'templatePage',
+                '执行记录': 'executionRecord'
+            };
+            const sidebarTab = textToTab[tabText];
+            if (sidebarTab) {
+                document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.sidebarTab === sidebarTab);
+                });
+            }
+        }
+
+        function openNewCommandModal() {
+            openModal();
         }
 
         // ============================================
@@ -4925,7 +5905,7 @@
                     </div>
                     <div class="template-card-body">
                         <div class="template-card-header">
-                            <span class="template-tag">BUA</span>
+                            <span class="template-tag">GUI</span>
                             <span class="template-card-name">${escapeHtml(item.name)}</span>
                         </div>
                     </div>
@@ -5278,7 +6258,7 @@
 
         // 示例 Prompt 内容（当描述太短时使用）
         const samplePrompt = `1. 打开店小秘ERP登录地址，https://www.dianxiaomi.com/index.htm
-2. 此时执行【BUA暂停，人工介入】，等待用户登录
+2. 此时执行【GUI暂停，人工介入】，等待用户登录
 3. 完成登录后进入ERP首页
 4. 点击「关闭」按钮，关闭公告弹窗（可选）
 5. 点击「物流」「选择物流方式」菜单
@@ -5298,14 +6278,16 @@
             // 更新面包屑导航为当前指令名称
             document.getElementById('breadcrumbCommandName').textContent = item.name || '未命名指令';
 
-            // 设置 Prompt 内容（如果描述为空，使用示例内容）
+            // 根据当前选中的版本设置 Prompt、沙箱和变量
+            const selectedVersion = versionData.find(v => v.selected);
             const textarea = document.getElementById('debugPromptTextarea');
             if (textarea) {
-                textarea.textContent = item.desc || samplePrompt;
+                textarea.textContent = (selectedVersion && selectedVersion.prompt) ? selectedVersion.prompt : (item.desc || samplePrompt);
             }
-
-            // 重置沙箱类型为默认值
-            setSandboxType('browser');
+            setSandboxType((selectedVersion && selectedVersion.sandbox) ? selectedVersion.sandbox : 'browser');
+            if (selectedVersion && selectedVersion.variables) {
+                renderDebugVariableTags(selectedVersion.variables);
+            }
 
             // 重置调试详情面板状态
             resetDebugBtn();
@@ -5329,8 +6311,8 @@
             // 恢复布局为原始比例
             setDebugLayout('70%', '28%');
 
-            // 恢复 Prompt 可编辑
-            if (textarea) textarea.contentEditable = 'true';
+            // 根据选中版本状态设置编辑权限
+            updateDebugEditability(selectedVersion ? selectedVersion.status : '草稿');
 
             // 移除只显示Prompt状态
             const leftColumn = document.querySelector('.debug-left-column');
@@ -5347,6 +6329,21 @@
             if (browserPreview) browserPreview.classList.remove('show');
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
+
+            // 清空并隐藏执行结果区域（已合并到状态栏）
+            const executionResultText = document.getElementById('executionResultText');
+            const executionResultToggle = document.getElementById('executionResultToggle');
+            const executionResultFiles = document.getElementById('executionResultFiles');
+            if (executionResultText) {
+                executionResultText.style.display = 'none';
+                executionResultText.textContent = '';
+                executionResultText.classList.remove('expanded');
+            }
+            if (executionResultToggle) executionResultToggle.style.display = 'none';
+            if (executionResultFiles) {
+                executionResultFiles.style.display = 'none';
+                executionResultFiles.innerHTML = '';
+            }
 
             // 隐藏任务状态区域
             if (statusSection) {
@@ -5387,7 +6384,7 @@
             }
 
             // 恢复面包屑默认文字
-            document.getElementById('breadcrumbCommandName').textContent = '我的BUA调试页面';
+            document.getElementById('breadcrumbCommandName').textContent = '我的GUI调试页面';
 
             // 显示列表页，隐藏调试页和模板页
             document.getElementById('listPage').classList.remove('hidden');
@@ -5397,11 +6394,14 @@
             // 显示 Tab 导航栏
             document.querySelector('.tab-nav').style.display = 'block';
 
-            // 切换回"我的BUA" Tab
+            // 切换回"我的GUI" Tab
             const tabItems = document.querySelectorAll('.tab-item');
             tabItems.forEach(t => t.classList.remove('active'));
             const commandTab = document.querySelector('.tab-item[data-tab="command"]');
             if (commandTab) commandTab.classList.add('active');
+
+            // 同步侧边栏状态
+            syncSidebarWithTab('我的GUI');
 
             // 重置调试详情面板状态
             const statusSection = document.getElementById('taskStatusSection');
@@ -5437,6 +6437,21 @@
             if (placeholder) placeholder.style.display = '';
             const browserPreview = document.querySelector('.browser-preview-section');
             if (browserPreview) browserPreview.classList.remove('show');
+
+            // 清空并隐藏执行结果区域（已合并到状态栏）
+            const executionResultText3 = document.getElementById('executionResultText');
+            const executionResultToggle3 = document.getElementById('executionResultToggle');
+            const executionResultFiles3 = document.getElementById('executionResultFiles');
+            if (executionResultText3) {
+                executionResultText3.style.display = 'none';
+                executionResultText3.textContent = '';
+                executionResultText3.classList.remove('expanded');
+            }
+            if (executionResultToggle3) executionResultToggle3.style.display = 'none';
+            if (executionResultFiles3) {
+                executionResultFiles3.style.display = 'none';
+                executionResultFiles3.innerHTML = '';
+            }
 
             // 隐藏任务状态区域
             if (statusSection) {
@@ -5484,6 +6499,20 @@
                         item.desc = getPromptText(document.getElementById('debugPromptTextarea'));
                     }
                 }
+                // 将当前选中版本设为使用中，其余版本设为草稿
+                var currentVersion = versionData.find(function(v){ return v.selected; });
+                if (currentVersion) {
+                    versionData.forEach(function(v){
+                        if (v.id === currentVersion.id) {
+                            v.status = '线上';
+                        } else if (v.status === '线上') {
+                            v.status = '草稿';
+                        }
+                    });
+                    renderVersionDropdown();
+                    updateVersionTrigger();
+                    updateDebugEditability(currentVersion.status);
+                }
                 showToast('保存成功');
             });
 
@@ -5495,7 +6524,8 @@
             });
 
             // 清空按钮
-            document.getElementById('debugClearBtn').addEventListener('click', () => {
+            document.getElementById('debugClearBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
                 showClearConfirm();
             });
 
@@ -5783,12 +6813,7 @@
             if (!btn) return;
             btn.style.backgroundColor = '';
             btn.style.borderColor = '';
-            btn.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                调试
-            `;
+            btn.innerHTML = `调试`;
         }
 
         // 将调试按钮切换为"重新调试"状态
@@ -5797,12 +6822,7 @@
             if (!btn) return;
             btn.style.backgroundColor = '';
             btn.style.borderColor = '';
-            btn.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-                重新调试
-            `;
+            btn.innerHTML = `重新调试`;
         }
 
         // 将调试按钮切换为"停止"状态
@@ -5811,12 +6831,7 @@
             if (!btn) return;
             btn.style.backgroundColor = '#FF4D4F';
             btn.style.borderColor = '#FF4D4F';
-            btn.innerHTML = `
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                </svg>
-                停止
-            `;
+            btn.innerHTML = '停止';
         }
 
         // 格式化时间显示 mm:ss
@@ -5871,9 +6886,13 @@
                 renderDebugOperationLog(finalTime);
             }
 
+            // 渲染执行结果（成功案例）
+            renderExecutionResult(true);
+
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
         }
 
         // 显示已停止状态
@@ -5904,31 +6923,37 @@
                 renderDebugOperationLog(finalTime);
             }
 
+            // 隐藏执行结果元素（已停止时不显示结果）
+            const erText = document.getElementById('executionResultText');
+            const erToggle = document.getElementById('executionResultToggle');
+            const erFiles = document.getElementById('executionResultFiles');
+            if (erText) { erText.style.display = 'none'; erText.textContent = ''; erText.classList.remove('expanded'); }
+            if (erToggle) erToggle.style.display = 'none';
+            if (erFiles) { erFiles.style.display = 'none'; erFiles.innerHTML = ''; }
+
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
         }
 
         // 显示执行失败状态
-        function showFailedStatus(finalTime, failReason) {
+        function showFailedStatus(finalTime, failReason, statsDuration) {
             const statusContent = document.getElementById('taskStatusContent');
             if (!statusContent) return;
 
             statusContent.innerHTML = `
-                <div>
-                    <div class="task-status-row">
-                        <div class="task-status-left" style="gap:8px;">
-                            <div class="status-icon failed">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </div>
-                            <span class="status-text failed">指令执行失败</span>
+                <div class="task-status-row">
+                    <div class="task-status-left" style="gap:8px;">
+                        <div class="status-icon failed">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
                         </div>
-                        <span class="timer-text">${formatTime(finalTime)}</span>
+                        <span class="status-text failed">指令执行失败</span>
                     </div>
-                    <div style="margin-top:4px;font-size:12px;color:#FF4D4F;">错误原因：${failReason || '未知错误'}</div>
+                    <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
             
@@ -5938,12 +6963,98 @@
             if (browserPreview) browserPreview.classList.remove('show');
             if (debugOperationLog) {
                 debugOperationLog.classList.add('show');
-                renderDebugOperationLog(finalTime);
+                renderDebugOperationLog(finalTime, statsDuration);
             }
+
+            // 渲染执行结果（失败案例）
+            renderExecutionResult(false, failReason);
 
             // 显示展开/收起按钮
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.add('show');
+            updateResizeBtnPosition();
+        }
+
+        // 展开/收起执行结果文字
+        function toggleExecutionResult() {
+            const text = document.getElementById('executionResultText');
+            const toggle = document.getElementById('executionResultToggle');
+            if (!text || !toggle) return;
+
+            if (text.classList.contains('expanded')) {
+                text.classList.remove('expanded');
+                toggle.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+            } else {
+                text.classList.add('expanded');
+                toggle.innerHTML = '收起 <span style="font-size:10px">▲</span>';
+            }
+        }
+
+        // 渲染执行结果（已合并到 taskStatusSection 内）
+        function renderExecutionResult(isSuccess, failReason) {
+            const textEl = document.getElementById('executionResultText');
+            const filesEl = document.getElementById('executionResultFiles');
+            const toggleEl = document.getElementById('executionResultToggle');
+
+            if (!textEl || !filesEl || !toggleEl) return;
+
+            // 重置展开状态
+            textEl.classList.remove('expanded');
+            toggleEl.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+
+            if (isSuccess) {
+                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。本次操作已生成订舱申请报告及完整操作日志，详细记录了每个步骤的执行时间、页面截图和系统响应状态，可供后续审计追溯使用。';
+
+                filesEl.innerHTML = `
+                    <div class="execution-result-file-card" onclick="downloadFile('订舱申请报告_2024121.pdf')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">订舱申请报告_2024121.pdf</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="execution-result-file-card" onclick="downloadFile('操作日志_完整记录.xlsx')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">操作日志_完整记录.xlsx</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            } else {
+                textEl.textContent = '任务执行失败。无法连接到远程浏览器沙箱环境。错误详情：' + (failReason || '未知错误') + '，请检查网络配置或联系管理员重试。';
+                filesEl.innerHTML = '';
+            }
+
+            // 显示文案内容
+            textEl.style.display = '';
+            filesEl.style.display = '';
+
+            // 检测文案高度，超过2行才显示展开按钮
+            setTimeout(() => {
+                if (textEl && toggleEl) {
+                    const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight) || 22;
+                    const maxTwoLineHeight = lineHeight * 2 + 4;
+                    if (textEl.scrollHeight <= maxTwoLineHeight) {
+                        toggleEl.style.display = 'none';
+                    } else {
+                        toggleEl.style.display = 'inline-block';
+                    }
+                }
+            }, 50);
+        }
+
+        // 文件下载
+        function downloadFile(fileName) {
+            showToast('开始下载: ' + fileName);
         }
 
         // 展开/收起状态
@@ -5973,7 +7084,7 @@
             }
             const rect = layout.getBoundingClientRect();
             const leftWidth = parseFloat(getComputedStyle(layout).getPropertyValue('--left-width')) / 100;
-            btn.style.left = (rect.left + rect.width * leftWidth) + 'px';
+            btn.style.left = (rect.left + rect.width * leftWidth + 4) + 'px';
         }
 
         // 更新展开/收起按钮箭头方向
@@ -6036,11 +7147,18 @@
             debugStartTime = Date.now();
             debugElapsedTime = 0;
 
-            // 隐藏占位区域，显示浏览器窗口，隐藏操作日志
+            // 隐藏占位区域，显示浏览器窗口，隐藏操作日志和执行结果
             document.getElementById('debugPlaceholder').style.display = 'none';
             document.querySelector('.browser-preview-section').classList.add('show');
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
+            // 清空执行结果（已合并到状态栏内）
+            const erText = document.getElementById('executionResultText');
+            const erToggle = document.getElementById('executionResultToggle');
+            const erFiles = document.getElementById('executionResultFiles');
+            if (erText) { erText.style.display = 'none'; erText.textContent = ''; erText.classList.remove('expanded'); }
+            if (erToggle) erToggle.style.display = 'none';
+            if (erFiles) { erFiles.style.display = 'none'; erFiles.innerHTML = ''; }
 
             // 展开右侧面板
             setDebugLayout('35%', '65%');
@@ -6128,8 +7246,8 @@
                 setDebugLayout('35%', '65%');
 
                 if (isFailTest) {
-                    // 任务状态：执行失败（红色）
-                    showFailedStatus(debugElapsedTime, '网络问题');
+                    // 任务状态：执行失败（红色），统计时长为0秒（因为没有任何步骤成功执行）
+                    showFailedStatus(debugElapsedTime, '沙箱环境连接失败', 0);
                 } else {
                     // 任务状态：执行完成（绿色）
                     showCompletedStatus(debugElapsedTime);
@@ -6243,7 +7361,7 @@
 
             // 关闭弹窗
             closeBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
 
             // 点击遮罩关闭
             modal.addEventListener('click', (e) => {
@@ -6286,7 +7404,7 @@
         function resetForm() {
             // 重置所有输入
             document.getElementById('commandName').value = '';
-            document.getElementById('groupSelect').value = '';
+            document.getElementById('groupSelect').value = '默认分组';
             document.getElementById('permissionGroup').value = '';
             document.getElementById('department').value = '';
             document.getElementById('commandDesc').value = '';
@@ -6637,6 +7755,7 @@
                 const timeOffset = i * 7; // 每条记录时间递减约7分钟
                 const recordTime = new Date(baseTime.getTime() - timeOffset * 60000);
                 const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const sandboxType = Math.random() > 0.5 ? '无影GUI' : 'CNGUI';
 
                 records.push({
                     initiator: 'WB02044705',
@@ -6650,6 +7769,7 @@
                     }).replace(/\//g, '-'),
                     resultId: generateRandomId(),
                     prompt: prompts[i],
+                    sandboxType: sandboxType,
                     status: status,
                     id: 955 - i
                 });
@@ -6689,83 +7809,6 @@
             document.body.removeChild(textarea);
         }
 
-        // Prompt Tooltip 全局元素
-        let promptTooltipEl = null;
-
-        function getPromptTooltip() {
-            if (!promptTooltipEl) {
-                promptTooltipEl = document.createElement('div');
-                promptTooltipEl.className = 'prompt-tooltip';
-                document.body.appendChild(promptTooltipEl);
-            }
-            return promptTooltipEl;
-        }
-
-        function bindPromptTooltips() {
-            const tooltip = getPromptTooltip();
-
-            // 确保 tooltip 事件只绑定一次
-            if (!tooltip._hoverBound) {
-                tooltip._hoverBound = true;
-                tooltip.addEventListener('mouseenter', () => {
-                    if (tooltip._hideTimeout) {
-                        clearTimeout(tooltip._hideTimeout);
-                        tooltip._hideTimeout = null;
-                    }
-                });
-                tooltip.addEventListener('mouseleave', () => {
-                    tooltip._hideTimeout = setTimeout(() => {
-                        tooltip.classList.remove('show');
-                    }, 150);
-                });
-            }
-
-            document.querySelectorAll('.prompt-cell').forEach(cell => {
-                cell.addEventListener('mouseenter', (e) => {
-                    const index = parseInt(cell.dataset.index);
-                    const prompt = runRecordsData[index]?.prompt || '';
-                    tooltip.textContent = prompt;
-
-                    if (tooltip._hideTimeout) {
-                        clearTimeout(tooltip._hideTimeout);
-                        tooltip._hideTimeout = null;
-                    }
-
-                    const rect = cell.getBoundingClientRect();
-
-                    // 临时显示以测量高度
-                    tooltip.style.visibility = 'hidden';
-                    tooltip.classList.add('show');
-                    const tooltipHeight = tooltip.offsetHeight;
-                    tooltip.classList.remove('show');
-                    tooltip.style.visibility = '';
-
-                    const spaceBelow = window.innerHeight - rect.bottom - 10;
-                    const spaceAbove = rect.top - 10;
-
-                    let top;
-
-                    if (spaceBelow >= tooltipHeight + 8 || spaceBelow >= spaceAbove) {
-                        top = rect.bottom + 2;
-                        tooltip.classList.remove('bottom-arrow');
-                    } else {
-                        top = rect.top - tooltipHeight - 2;
-                        tooltip.classList.add('bottom-arrow');
-                    }
-
-                    tooltip.style.left = rect.left + 'px';
-                    tooltip.style.top = top + 'px';
-                    tooltip.classList.add('show');
-                });
-
-                cell.addEventListener('mouseleave', () => {
-                    tooltip._hideTimeout = setTimeout(() => {
-                        tooltip.classList.remove('show');
-                    }, 150);
-                });
-            });
-        }
-
         // 渲染运行记录表格
         function renderRunRecordsTable() {
             const tbody = document.getElementById('runRecordsTableBody');
@@ -6774,6 +7817,12 @@
 
             tbody.innerHTML = records.map((record, index) => {
                 const promptPreview = record.prompt.substring(0, 20).replace(/\n/g, ' ') + '...';
+                const isShadowGui = record.sandboxType === '无影GUI';
+                const isFail = record.status.text === '执行失败';
+                const logBtnClass = 'action-link';
+                const logBtnAttrs = isShadowGui
+                    ? `onclick="openOperationLogModal(true, ${isFail})"`
+                    : `onclick="openOperationLogModal(false, ${isFail})"`;
                 return `
                 <tr>
                     <td>${record.initiator}</td>
@@ -6784,9 +7833,10 @@
                             ${copyIconSvg}
                         </span>
                     </td>
-                    <td class="prompt-cell" data-index="${index}">
+                    <td class="prompt-cell" onclick="openPromptViewModal(${index})">
                         ${promptPreview}
                     </td>
+                    <td>${record.sandboxType}</td>
                     <td><span class="${record.status.class}">${record.status.text}</span></td>
                     <td>
                         <span class="copy-cell" onclick="copyToClipboard('${record.id}')">
@@ -6796,15 +7846,11 @@
                     </td>
                     <td>
                         <div class="action-cell">
-                            <span class="action-link" onclick="showToast('查看详情功能开发中')">详情</span>
-                            <span class="action-divider"></span>
-                            <span class="action-link" onclick="openOperationLogModal()">查看日志</span>
+                            <span class="${logBtnClass}" ${logBtnAttrs}>执行结果</span>
                         </div>
                     </td>
                 </tr>
             `}).join('');
-
-            bindPromptTooltips();
         }
 
         // 打开运行记录抽屉
@@ -7067,13 +8113,12 @@
                 llmOutput: `{\n  "thinking": "根据之前的步骤，已成功登录系统并点击了'航空公司订舱'菜单（index 305），当前页面显示该菜单的下拉选项，包括'订舱申请'（index 311）。下一步应点击'订舱申请'以进入订舱申请页面，这是用户请求中明确要求的第二步操作。确认该元素可见且可交互，因此直接点击即可。",\n  "evaluation_previous_goal": "成功点击'航空公司订舱'菜单，下拉菜单已展开，显示包括'订舱申请'在内的多个选项。Verdict: Success",\n  "memory": "已完成登录；已展开'航空公司订舱'菜单；当前需点击'订舱申请'进入订舱申请页面。后续还需输入运单号999-91896501并点击'订舱'按钮。",\n  "next_goal": "点击'订舱申请'链接（index 311）以进入订舱申请页面。",\n  "action": [\n    {\n      "click": {\n        "index": 311\n      }\n    }\n  ]\n}`,
                 screenshot: 'https://picsum.photos/seed/log5/400/250',
                 actionResults: [
-                    { success: true, text: "1. 验证元素: Element '.filter-area' found" },
-                    { success: true, text: "2. 确认页面: Page title matches" }
+                    { success: true, text: "操作结果: 成功点击'订舱申请'链接，进入订舱申请页面" }
                 ]
             },
             {
                 step: 6,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Select the filter option for banned merchants...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7094,16 +8139,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据当前页面状态，已成功进入'订舱申请'页面（步骤7完成）。页面中可见运单号输入框（index 728）和'订舱'按钮（index 724）。下一步需输入运单号 '999-91896501' 到运单号输入框，然后点击'订舱'按钮。由于运单号输入框在iframe内且为shadow DOM元素，但已提供明确索引[728]，可直接使用input操作。确认输入后点击订舱按钮即可完成步骤8-9。",\n  "evaluation_previous_goal": "成功点击'订舱申请'链接，进入订舱申请页面。Verdict: Success",\n  "memory": "已完成登录、展开'航空公司订舱'菜单、点击'订舱申请'；当前在订舱申请页面，运单号输入框索引为728，订舱按钮索引为724；下一步需输入运单号999-91896501并点击订舱。",\n  "next_goal": "输入运单号 '999-91896501' 到运单号输入框（index 728），然后点击'订舱'按钮（index 724）。",\n  "action": [\n    {\n      "input": {\n        "index": 728,\n        "text": "999-91896501",\n        "clear": true\n      }\n    },\n    {\n      "click": {\n        "index": 724\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已进入订舱申请页面，需要在运单号输入框中输入999-91896501。",\n  "evaluation_previous_goal": "成功进入订舱申请页面。Verdict: Success",\n  "next_goal": "在运单号输入框中输入999-91896501",\n  "action": [{"input_text": {"index": 42, "text": "999-91896501"}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log6/400/250',
                 actionResults: [
-                    { success: true, text: "1. 展开下拉: Clicked '.filter-select'" },
-                    { success: true, text: "2. 选择选项: Selected '禁止合作'" }
+                    { success: true, text: "操作结果: 成功进入订舱申请页面，开始填写货物信息" }
                 ]
             },
             {
                 step: 7,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Execute the search query...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7124,16 +8168,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已成功在运单号输入框中输入999-91896501。现在需要点击'订舱'按钮来提交申请。",\n  "evaluation_previous_goal": "成功输入运单号999-91896501。Verdict: Success",\n  "next_goal": "点击'订舱'按钮提交申请",\n  "action": [{"click": {"index": 55}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log7/400/250',
                 actionResults: [
-                    { success: true, text: "1. 点击查询: Clicked '.btn-search'" },
-                    { success: true, text: "2. 等待数据: Table data loaded (15 rows)" }
+                    { success: true, text: "操作结果: 成功输入运单号 999-91896501" }
                 ]
             },
             {
                 step: 8,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list?status=banned',
+                pageUrl: 'http://www.infoccsp.com/booking/apply',
                 systemPrompt: "Extract data from the table rows...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7154,15 +8197,15 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "已点击'订舱'按钮，系统正在处理申请，需要等待页面跳转至确认页面。",\n  "evaluation_previous_goal": "成功点击'订舱'按钮，系统正在处理。Verdict: Success",\n  "next_goal": "等待系统响应并跳转至确认页面",\n  "action": [{"wait": {"time": 3}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log8/400/250',
                 actionResults: [
-                    { success: true, text: "1. 提取数据: Extracted 15 rows from table" }
+                    { success: true, text: "操作结果: 成功点击'订舱'按钮，等待系统响应" }
                 ]
             },
             {
                 step: 9,
-                pageUrl: 'https://risk.cainiao.com/merchantRisk/list?status=banned',
+                pageUrl: 'http://www.infoccsp.com/booking/confirm',
                 systemPrompt: "Format the extracted data and return results...",
                 userPrompt: `你的目标是完成航空物流信息服务平台的登录并进入订舱申请页面。
 === 第一步：登录 ===
@@ -7183,26 +8226,90 @@
 重要提示:
 - 如果验证码输入错误，需要重新输入密码 + 验证码
 - 每个步骤之间等待页面加载完成`,
-                llmOutput: `{\n  "thinking": "根据用户请求和历史步骤，已完成以下操作：1) 登录系统（公司代码、用户名、密码、验证码输入并点击登录）；2) 点击'航空公司订舱'菜单；3) 点击'订舱申请'进入订舱页面；4) 输入运单号999-91896501并点击'订舱'按钮。当前页面已成功加载订舱填表界面，显示运单号已正确填充为999-91896501（前缀999，运单号91896501），且页面标题为'创建/修改订舱'，表明已进入订舱申请的填表阶段。用户请求中第10步要求使用done动作总结完成情况，因此现在应调用done动作确认任务完成。",\n  "evaluation_previous_goal": "成功输入运单号并点击订舱按钮，页面已跳转至订舱填表界面，运单号信息正确显示。Verdict: Success",\n  "memory": "已完成全部登录及导航步骤：登录成功 → 展开'航空公司订舱'菜单 → 点击'订舱申请' → 输入运单号999-91896501 → 点击订舱 → 进入订舱填表界面。当前页面显示运单号已正确拆分为前缀999和运单号91896501，符合用户要求。",\n  "next_goal": "调用done动作总结任务完成情况，设置success为true，并在text中说明已成功完成登录并进入订舱申请填表页面。",\n  "action": [\n    {\n      "done": {\n        "text": "已成功完成航空物流信息服务平台的登录并进入订舱申请页面。具体步骤如下：\\n1. 使用公司代码 CALHGHAG、用户名 calhghag001、密码 cainiao132 及验证码 kqji 完成登录；\\n2. 点击'航空公司订舱'菜单，选择'订舱申请'；\\n3. 在运单号输入栏输入 999-91896501 并点击'订舱'按钮；\\n4. 页面已成功跳转至订舱填表界面，运单号已正确解析为前缀 '999' 和运单号 '91896501'，当前处于可填写详细订舱信息的状态。\\n所有用户请求步骤均已按要求完成。",\n        "success": true,\n        "files_to_display": []\n      }\n    }\n  ]\n}`,
+                llmOutput: `{\n  "thinking": "订舱申请已成功提交，系统已返回确认页面并显示订舱编号。任务已完成，需要使用done动作返回最终结果。",\n  "evaluation_previous_goal": "订舱申请提交成功，获得订舱编号BKG-2024121901。Verdict: Success",\n  "next_goal": "任务完成，返回订舱结果",\n  "action": [{"done": {"text": "订舱申请已成功提交。订舱编号: BKG-2024121901，运单号: 999-91896501。"}}]\n}`,
                 screenshot: 'https://picsum.photos/seed/log9/400/250',
                 actionResults: [
-                    { success: true, text: "1. 格式化输出: Converted to JSON (15 records)" },
-                    { success: true, text: "2. 任务完成: Task finished successfully" }
+                    { success: true, text: "操作结果: 订舱申请提交成功，获得订舱编号 BKG-2024121901" }
                 ]
             }
         ];
 
+        // 完全失败测试案例数据：第1步即失败（沙箱环境连接失败），步骤2-9未执行
+        const failCaseUserPrompt = "你的目标是访问商家风险系统并提取禁止合作的跨境物流商家名单。\n=== 第一步：登录系统 ===\n1. 访问风险系统登录页\n2. 输入账号密码\n3. 点击登录按钮\n\n=== 第二步：提取数据 ===\n4. 在登录后的页面，选择业务线为跨境物流事业部\n5. 设置当前风险等级为禁止合作\n6. 设置处置状态为已完结\n7. 点击查询按钮\n8. 提取查询结果中的商家名单\n9. 使用 done 动作总结完成情况\n\n重要提示:\n- 每个步骤之间等待页面加载完成";
+        const operationLogDataFullFail = [
+            {
+                step: 1,
+                pageUrl: 'https://risk.cainiao.com/merchantRisk/list',
+                systemPrompt: "You are an AI agent designed to operate in an interface using automated browser tasks. Your ultimate goal is accomplishing the given task.",
+                userPrompt: "你的目标是访问商家风险系统并提取禁止合作的跨境物流商家名单。\n=== 第一步：登录系统 ===\n1. 访问风险系统登录页\n2. 输入账号密码\n3. 点击登录按钮\n\n=== 第二步：提取数据 ===\n4. 在登录后的页面，选择业务线为跨境物流事业部\n5. 设置当前风险等级为禁止合作\n6. 设置处置状态为已完结\n7. 点击查询按钮\n8. 提取查询结果中的商家名单\n9. 使用 done 动作总结完成情况\n\n重要提示:\n- 每个步骤之间等待页面加载完成",
+                llmOutput: `{
+  "evaluation_previous_goal": "Start",
+  "next_goal": "初始化浏览器环境",
+  "action": [
+    {
+      "navigate": {
+        "url": "https://risk.cainiao.com/merchantRisk/list"
+      }
+    }
+  ],
+  "error": "沙箱环境连接失败: 网络超时，无法访问远程浏览器实例。可能原因: 1) 网络不稳定 2) 沙箱服务未就绪 3) 防火墙限制"
+}`,
+                screenshot: 'https://picsum.photos/seed/log-fail1/400/250',
+                actionResults: [
+                    { success: false, text: "操作结果: 沙箱环境连接失败" },
+                    { success: false, text: "失败原因: 无法建立与远程浏览器沙箱的连接，网络请求超时(errno: ETIMEDOUT)，请检查网络配置或重试" }
+                ]
+            },
+            { step: 2, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 3, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 4, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 5, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 6, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 7, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 8, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] },
+            { step: 9, pageUrl: '', systemPrompt: '', userPrompt: failCaseUserPrompt, llmOutput: '', screenshot: '', actionResults: [] }
+        ];
+
         // 渲染内嵌操作日志内容
-        function renderDebugOperationLog(finalTime) {
+        function renderDebugOperationLog(finalTime, statsDuration) {
             const container = document.getElementById('debugLogCards');
-            const totalSteps = operationLogData.length;
-            const totalActions = operationLogData.reduce((sum, item) => sum + item.actionResults.length, 0);
+            const data = currentDebugId === 11 ? operationLogDataFullFail : operationLogData;
+            const totalSteps = data.length;
+            const completedSteps = data.filter(item => item.actionResults.length > 0 && item.actionResults.every(r => r.success)).length;
 
             document.getElementById('debugLogTotalSteps').textContent = totalSteps;
-            document.getElementById('debugLogTotalActions').textContent = totalActions;
-            document.getElementById('debugLogDuration').textContent = (finalTime || 0) + '秒';
+            document.getElementById('debugLogTotalActions').textContent = completedSteps;
+            document.getElementById('debugLogDuration').textContent = (statsDuration !== undefined ? statsDuration : (finalTime || 0)) + '秒';
 
-            container.innerHTML = operationLogData.map(item => {
+            // 计算连续未执行步骤的范围
+            let firstUnexecutedIdx = -1;
+            let lastUnexecutedIdx = -1;
+            data.forEach((item, idx) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+                if (isUnexecuted) {
+                    if (firstUnexecutedIdx === -1) firstUnexecutedIdx = idx;
+                    lastUnexecutedIdx = idx;
+                }
+            });
+
+            container.innerHTML = data.map((item, index) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+
+                // 如果是第一个未执行步骤，渲染合并板块
+                if (index === firstUnexecutedIdx) {
+                    const startStep = data[firstUnexecutedIdx].step;
+                    const endStep = data[lastUnexecutedIdx].step;
+                    const stepText = startStep === endStep ? `步骤 ${startStep} 未执行` : `步骤 ${startStep}-${endStep} 未执行`;
+                    return `<div class="operation-log-card unexecuted-merged">
+                        <div class="unexecuted-merged-text">${stepText}</div>
+                    </div>`;
+                }
+                // 如果是后续未执行步骤，跳过
+                if (isUnexecuted && index > firstUnexecutedIdx) {
+                    return '';
+                }
+
+                const placeholderClass = index === 2 ? 'log-empty-placeholder-boxed' : 'log-empty-placeholder';
                 const actionResultsHtml = item.actionResults.map(result => {
                     const itemClass = result.success ? 'success' : 'failed';
                     const icon = result.success ? '✅' : '❌';
@@ -7218,36 +8325,29 @@
                 <div class="operation-log-card">
                     <div class="operation-log-card-header">
                         <span class="operation-log-card-step">步骤 ${item.step}/${totalSteps}</span>
-                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl)}')" title="${escapeHtml(item.pageUrl)}">${escapeHtml(item.pageUrl)}</span>
+                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl || '-') }')" title="${escapeHtml(item.pageUrl || '-')}">${escapeHtml(item.pageUrl || '-')}</span>
                     </div>
                     <div class="operation-log-card-body">
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle collapsed">▶</span>
-                                    <span class="log-block-tag user">用户提示词</span>
-                                </div>
-                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
-                            </div>
-                            <div class="log-block">
-                                <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>
                                     <span class="log-block-tag llm">思考+执行过程</span>
                                 </div>
-                                <div class="log-block-content">${escapeHtml(item.llmOutput)}</div>
+                                <div class="${isUnexecuted ? 'log-block-content-unexecuted collapsed' : 'log-block-content log-llm-content'}">${item.llmOutput ? escapeHtml(item.llmOutput) : `<span class="${placeholderClass}">未执行</span>`}</div>
                             </div>
                         </div>
                         <div class="operation-log-card-right">
                             <div class="log-screenshot-container">
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <span class="log-screenshot-label">页面截图</span>
-                                    <a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>
+                                    ${item.screenshot ? `<a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>` : ''}
                                 </div>
-                                <img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">
+                                ${item.screenshot ? `<img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">` : `<span class="${placeholderClass}">暂无截图</span>`}
                             </div>
                             <div class="log-action-results">
                                 <span class="log-action-results-title">执行结果</span>
-                                ${actionResultsHtml}
+                                ${actionResultsHtml || `<span class="${placeholderClass}">未执行</span>`}
                             </div>
                         </div>
                     </div>
@@ -7260,12 +8360,46 @@
         function renderOperationLogCards() {
             const container = document.getElementById('operationLogCards');
             const totalSteps = operationLogData.length;
-            const totalActions = operationLogData.reduce((sum, item) => sum + item.actionResults.length, 0);
+            const completedSteps = operationLogData.filter(item => item.actionResults.length > 0 && item.actionResults.every(r => r.success)).length;
 
             document.getElementById('logTotalSteps').textContent = totalSteps;
-            document.getElementById('logTotalActions').textContent = totalActions;
+            document.getElementById('logTotalActions').textContent = completedSteps;
 
-            container.innerHTML = operationLogData.map(item => {
+            // 无影GUI模式：隐藏日志详情，显示提示
+            if (window.currentLogModalIsShadowGui) {
+                container.innerHTML = '<div class="no-log-notice">无影GUI暂不支持查看日志</div>';
+                return;
+            }
+
+            // 计算连续未执行步骤的范围
+            let firstUnexecutedIdx = -1;
+            let lastUnexecutedIdx = -1;
+            operationLogData.forEach((item, idx) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+                if (isUnexecuted) {
+                    if (firstUnexecutedIdx === -1) firstUnexecutedIdx = idx;
+                    lastUnexecutedIdx = idx;
+                }
+            });
+
+            container.innerHTML = operationLogData.map((item, index) => {
+                const isUnexecuted = !item.llmOutput && !item.screenshot && item.actionResults.length === 0;
+
+                // 如果是第一个未执行步骤，渲染合并板块
+                if (index === firstUnexecutedIdx) {
+                    const startStep = operationLogData[firstUnexecutedIdx].step;
+                    const endStep = operationLogData[lastUnexecutedIdx].step;
+                    const stepText = startStep === endStep ? `步骤 ${startStep} 未执行` : `步骤 ${startStep}-${endStep} 未执行`;
+                    return `<div class="operation-log-card unexecuted-merged">
+                        <div class="unexecuted-merged-text">${stepText}</div>
+                    </div>`;
+                }
+                // 如果是后续未执行步骤，跳过
+                if (isUnexecuted && index > firstUnexecutedIdx) {
+                    return '';
+                }
+
+                const placeholderClass = index === 2 ? 'log-empty-placeholder-boxed' : 'log-empty-placeholder';
                 const actionResultsHtml = item.actionResults.map(result => {
                     const itemClass = result.success ? 'success' : 'failed';
                     const icon = result.success ? '✅' : '❌';
@@ -7281,36 +8415,29 @@
                 <div class="operation-log-card">
                     <div class="operation-log-card-header">
                         <span class="operation-log-card-step">步骤 ${item.step}/${totalSteps}</span>
-                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl)}')" title="${escapeHtml(item.pageUrl)}">${escapeHtml(item.pageUrl)}</span>
+                        <span class="operation-log-card-url" onclick="showToast('${escapeHtml(item.pageUrl || '-') }')" title="${escapeHtml(item.pageUrl || '-')}">${escapeHtml(item.pageUrl || '-')}</span>
                     </div>
                     <div class="operation-log-card-body">
                         <div class="operation-log-card-left">
                             <div class="log-block">
                                 <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle collapsed">▶</span>
-                                    <span class="log-block-tag user">用户提示词</span>
-                                </div>
-                                <div class="log-block-content collapsed">${escapeHtml(item.userPrompt)}</div>
-                            </div>
-                            <div class="log-block">
-                                <div class="log-block-header" onclick="toggleLogBlock(this)">
-                                    <span class="log-block-toggle">▼</span>
+                                    <span class="log-block-toggle ${isUnexecuted ? 'collapsed' : ''}">${isUnexecuted ? '▶' : '▼'}</span>
                                     <span class="log-block-tag llm">思考+执行过程</span>
                                 </div>
-                                <div class="log-block-content">${escapeHtml(item.llmOutput)}</div>
+                                <div class="${isUnexecuted ? 'log-block-content-unexecuted collapsed' : 'log-block-content log-llm-content'}">${item.llmOutput ? escapeHtml(item.llmOutput) : `<span class="${placeholderClass}">未执行</span>`}</div>
                             </div>
                         </div>
                         <div class="operation-log-card-right">
                             <div class="log-screenshot-container">
                                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                     <span class="log-screenshot-label">页面截图</span>
-                                    <a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>
+                                    ${item.screenshot ? `<a class="log-screenshot-download" onclick="event.stopPropagation(); openImageZoom('${item.screenshot}'); setTimeout(downloadImage, 350);" title="下载图片">⬇ 下载图片</a>` : ''}
                                 </div>
-                                <img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">
+                                ${item.screenshot ? `<img class="log-screenshot-img" src="${item.screenshot}" alt="步骤${item.step}截图" onclick="openImageZoom('${item.screenshot}')" title="点击查看大图">` : `<span class="${placeholderClass}">暂无截图</span>`}
                             </div>
                             <div class="log-action-results">
                                 <span class="log-action-results-title">执行结果</span>
-                                ${actionResultsHtml}
+                                ${actionResultsHtml || `<span class="${placeholderClass}">未执行</span>`}
                             </div>
                         </div>
                     </div>
@@ -7368,8 +8495,112 @@
             }, 300);
         }
 
+        // 展开/收起弹窗执行结果文案
+        function toggleModalResultText() {
+            const text = document.getElementById('modalResultText');
+            const toggle = document.getElementById('modalResultToggle');
+            if (!text || !toggle) return;
+
+            if (text.classList.contains('expanded')) {
+                text.classList.remove('expanded');
+                toggle.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+            } else {
+                text.classList.add('expanded');
+                toggle.innerHTML = '收起 <span style="font-size:10px">▲</span>';
+            }
+        }
+
+        // 渲染弹窗执行输出结果
+        function renderModalExecutionResult(isFail) {
+            const statusIcon = document.getElementById('modalResultStatusIcon');
+            const statusText = document.getElementById('modalResultStatusText');
+            const textEl = document.getElementById('modalResultText');
+            const toggleEl = document.getElementById('modalResultToggle');
+            const filesEl = document.getElementById('modalResultFiles');
+
+            if (!statusIcon || !statusText || !textEl || !toggleEl || !filesEl) return;
+
+            // 重置展开状态
+            textEl.classList.remove('expanded');
+            toggleEl.style.display = 'none';
+            toggleEl.innerHTML = '展开 <span style="font-size:10px">▼</span>';
+
+            // 判断失败：显式传入或 currentDebugId === 11
+            const isFailedCase = isFail === true || window.currentDebugId === 11;
+
+            if (isFailedCase) {
+                statusIcon.textContent = '❌';
+                statusText.textContent = '执行失败';
+                statusText.classList.remove('success');
+                statusText.classList.add('failed');
+
+                // 提取失败原因（从 operationLogDataFullFail 第1步的 error 中）
+                let failReason = '无法连接到远程浏览器沙箱环境，网络请求超时，请检查网络配置或联系管理员重试。';
+                const failData = (typeof operationLogDataFullFail !== 'undefined') ? operationLogDataFullFail[0] : null;
+                if (failData && failData.llmOutput) {
+                    try {
+                        const parsed = JSON.parse(failData.llmOutput);
+                        if (parsed.error) {
+                            failReason = parsed.error;
+                        }
+                    } catch (e) {
+                        // 解析失败时使用默认文案
+                    }
+                }
+                textEl.textContent = '任务执行失败。' + failReason;
+                filesEl.innerHTML = '';
+            } else {
+                statusIcon.textContent = '✅';
+                statusText.textContent = '执行完成';
+                statusText.classList.remove('failed');
+                statusText.classList.add('success');
+
+                textEl.textContent = '任务执行完成。已成功登录航空物流信息服务平台并完成订舱申请流程。共完成9个操作步骤：登录系统→进入订舱页面→填写货物信息→选择航线→确认提交→获取订舱编号。所有步骤均执行成功，无异常。本次操作已生成订舱申请报告及完整操作日志，详细记录了每个步骤的执行时间、页面截图和系统响应状态，可供后续审计追溯使用。';
+
+                filesEl.innerHTML = `
+                    <div class="execution-result-file-card" onclick="downloadFile('订舱申请报告_2024121.pdf')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">订舱申请报告_2024121.pdf</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="execution-result-file-card" onclick="downloadFile('操作日志_完整记录.xlsx')">
+                        <span class="execution-result-file-icon">📄</span>
+                        <span class="execution-result-file-name">操作日志_完整记录.xlsx</span>
+                        <div class="execution-result-file-download">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 检测文案高度，超过2行才显示展开按钮
+            setTimeout(() => {
+                if (textEl && toggleEl) {
+                    const lineHeight = parseFloat(getComputedStyle(textEl).lineHeight) || 22;
+                    const maxTwoLineHeight = lineHeight * 2 + 4;
+                    if (textEl.scrollHeight <= maxTwoLineHeight) {
+                        toggleEl.style.display = 'none';
+                    } else {
+                        toggleEl.style.display = 'inline-block';
+                    }
+                }
+            }, 50);
+        }
+
         // 打开操作日志弹窗
-        function openOperationLogModal() {
+        function openOperationLogModal(isShadowGui, isFail) {
+            window.currentLogModalIsShadowGui = isShadowGui || false;
+            renderModalExecutionResult(isFail);
             renderOperationLogCards();
             document.getElementById('operationLogModal').classList.add('active');
         }
@@ -7377,6 +8608,7 @@
         // 关闭操作日志弹窗
         function closeOperationLogModal() {
             document.getElementById('operationLogModal').classList.remove('active');
+            window.currentLogModalIsShadowGui = false;
         }
 
         // 初始化操作日志弹窗事件
@@ -7394,6 +8626,50 @@
             });
         }
 
+        // 打开 Prompt 内容查看弹窗
+        function openPromptViewModal(index) {
+            const prompt = runRecordsData[index]?.prompt || '';
+            document.getElementById('promptViewModalBody').textContent = prompt;
+            document.getElementById('promptViewModal').classList.add('active');
+        }
+
+        // 关闭 Prompt 内容查看弹窗
+        function closePromptViewModal() {
+            document.getElementById('promptViewModal').classList.remove('active');
+        }
+
+        // 初始化 Prompt 内容查看弹窗事件
+        function initPromptViewModal() {
+            const modal = document.getElementById('promptViewModal');
+            const closeBtn = document.getElementById('promptViewModalClose');
+            const copyBtn = document.getElementById('promptViewModalCopy');
+
+            closeBtn.addEventListener('click', closePromptViewModal);
+
+            copyBtn.addEventListener('click', () => {
+                const text = document.getElementById('promptViewModalBody').textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('已复制到剪贴板');
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = '已复制';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.classList.remove('copied');
+                    }, 1500);
+                }).catch(() => {
+                    showToast('复制失败，请手动复制');
+                });
+            });
+
+            // 点击遮罩关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closePromptViewModal();
+                }
+            });
+        }
+
         // ============================================
         // 初始化
         // ============================================
@@ -7401,6 +8677,7 @@
             renderCards(commandData);
             renderTemplateCards(templateData);
             initTabs();
+            initExecutionRecordPage();
             initSearch();
             initTemplateSearch();
             initNewGroupOption();
@@ -7411,6 +8688,7 @@
             initCopyModal();
             initRunRecordsDrawer();
             initOperationLogModal();
+            initPromptViewModal();
             initVariablesModal();
 
             // 监听调试布局变化，自动更新展开/收起按钮位置
@@ -7423,6 +8701,292 @@
             }
             window.addEventListener('scroll', updateResizeBtnPosition, { passive: true });
         });
+        // 版本选择器
+        var versionData = [
+            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', selected: false,
+              sandbox: 'browser',
+              prompt: '专业的跨境物流数据抓取 Agent，访问看板提取数据。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/dashboard' },
+                { name: 'output_format', value: 'json' },
+                { name: 'max_retry', value: '3' }
+              ]
+            },
+            { id: 10882, version: 'V3', status: '线上', updateTime: '2026-04-27 13:39:26',
+              sandbox: 'code',
+              prompt: '跨境物流数据抓取 Agent V3，支持多平台数据采集与格式化输出。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v3/data' },
+                { name: 'data_source', value: 'multi-platform' },
+                { name: 'timeout', value: '30000' }
+              ]
+            },
+            { id: 10881, version: 'V2', status: '草稿', updateTime: '2026-04-27 12:10:12',
+              sandbox: 'browser',
+              prompt: '物流数据采集 Agent V2，从指定页面抓取物流信息并生成报告。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v2' },
+                { name: 'report_type', value: 'summary' }
+              ]
+            },
+            { id: 10878, version: 'V1', status: '草稿', updateTime: '2026-04-27 11:45:58',
+              sandbox: 'code',
+              prompt: '基础物流数据抓取脚本，从单一数据源获取物流跟踪信息。',
+              variables: [
+                { name: 'api_endpoint', value: 'https://api.logistics.com/track' },
+                { name: 'api_key', value: 'sk-xxxx-demo' }
+              ]
+            }
+        ];
+        // 默认选中 updateTime 最新的版本
+        (function(){
+            var latest = versionData.slice().sort(function(a, b){
+                return new Date(b.updateTime) - new Date(a.updateTime);
+            })[0];
+            if (latest) {
+                versionData.forEach(function(v){ v.selected = (v.id === latest.id); });
+            }
+        })();
+        function getVersionTagClass(s){return s==='草稿'?'version-tag--draft':'version-tag--online';}
+        function renderVersionDropdown(){var d=document.getElementById('versionDropdown');if(!d)return;var displayStatus=function(s){return s==='线上'?'使用中':s;};var itemsHtml=versionData.map(function(item){return '<div class="version-item'+(item.selected?' version-item--selected':'')+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="version-tag '+getVersionTagClass(item.status)+'">'+displayStatus(item.status)+': '+item.version+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span><span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span></div><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';}).join('');var addBtnHtml='<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;}
+        function updateVersionTrigger(){var s=versionData.find(function(v){return v.selected;});if(!s)return;var t=document.getElementById('versionTriggerTag');if(t){var ds=s.status==='线上'?'使用中':s.status;t.textContent=ds+': '+s.version;t.className='version-tag '+getVersionTagClass(s.status);}}
+        function renderDebugVariableTags(variables) {
+            variables = variables || [];
+            var wrapper = document.getElementById('debugVariableTagsWrapper');
+            if (wrapper) {
+                var groups = wrapper.querySelectorAll('.debug-variable-group');
+                var customGroup = groups[groups.length - 1];
+                var list = customGroup ? customGroup.querySelector('.debug-variable-tags-list') : null;
+                if (list) {
+                    list.innerHTML = variables.map(function(v) {
+                        return '<span class="debug-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
+                    }).join('');
+                    list.querySelectorAll('.debug-variable-tag').forEach(function(tag) {
+                        tag.addEventListener('click', function() {
+                            insertVariableIntoTextarea(tag.dataset.variable, 'debugPromptTextarea');
+                        });
+                    });
+                }
+            }
+            var fsWrapper = document.getElementById('fullscreenVariableTagsWrapper');
+            if (fsWrapper) {
+                var fsGroups = fsWrapper.querySelectorAll('.debug-variable-group');
+                var fsCustomGroup = fsGroups[fsGroups.length - 1];
+                var fsList = fsCustomGroup ? fsCustomGroup.querySelector('.debug-variable-tags-list') : null;
+                if (fsList) {
+                    fsList.innerHTML = variables.map(function(v) {
+                        return '<span class="debug-variable-tag fullscreen-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
+                    }).join('');
+                    fsList.querySelectorAll('.fullscreen-variable-tag').forEach(function(tag) {
+                        tag.addEventListener('click', function() {
+                            insertVariableIntoTextarea(tag.dataset.variable, 'promptFullscreenTextarea');
+                        });
+                    });
+                }
+            }
+        }
+        function updateDebugEditability(status) {
+            var textarea = document.getElementById('debugPromptTextarea');
+            if (textarea) {
+                textarea.contentEditable = 'true';
+            }
+            var select = document.getElementById('sandboxSelect');
+            if (select) {
+                select.disabled = false;
+            }
+            var wrapper = document.getElementById('debugVariableTagsWrapper');
+            if (wrapper) {
+                wrapper.style.opacity = '1';
+                wrapper.style.pointerEvents = 'auto';
+            }
+            var varBtn = document.getElementById('debugVariablesBtn');
+            if (varBtn) {
+                varBtn.disabled = false;
+                varBtn.style.opacity = '1';
+                varBtn.style.cursor = 'pointer';
+            }
+        }
+        function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var ds=c.status==='线上'?'使用中':c.status;showToast('已切换到 '+ds+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status);}}
+        function addNewVersion(){
+            var current = versionData.find(function(v){return v.selected;});
+            if(!current){showToast('未找到当前选中的版本');return;}
+            var maxNum = versionData.reduce(function(max, v){
+                var num = parseInt(v.version.replace(/^V/i, ''), 10);
+                return isNaN(num) ? max : Math.max(max, num);
+            }, 0);
+            var newVersionNum = maxNum + 1;
+            var newVersionStr = 'V' + newVersionNum;
+            var now = new Date();
+            var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+            var newVersion = {
+                id: Date.now(),
+                version: newVersionStr,
+                status: '草稿',
+                updateTime: timeStr,
+                selected: false,
+                sandbox: current.sandbox,
+                prompt: current.prompt,
+                variables: current.variables ? current.variables.map(function(v){return {name: v.name, value: v.value};}) : []
+            };
+            versionData.unshift(newVersion);
+            selectVersion(newVersion.id);
+        }
+        function showVersionDeleteConfirm(id, btnEl) {
+            // 移除已有的确认浮窗
+            document.querySelectorAll('.version-delete-confirm').forEach(function(el){ el.remove(); });
+            var item = versionData.find(function(v){ return v.id === id; });
+            if (!item) return;
+            var confirmEl = document.createElement('div');
+            confirmEl.className = 'version-delete-confirm';
+            confirmEl.innerHTML = '<span>确认删除?</span><button class="version-delete-confirm-yes" onclick="event.stopPropagation();deleteVersion('+id+')">确定</button><button class="version-delete-confirm-no" onclick="event.stopPropagation();cancelVersionDelete(this)">取消</button>';
+            document.body.appendChild(confirmEl);
+            // 计算位置：删除按钮上方
+            var rect = btnEl.getBoundingClientRect();
+            var confirmW = confirmEl.offsetWidth;
+            var confirmH = confirmEl.offsetHeight;
+            confirmEl.style.top = (rect.top - confirmH - 8) + 'px';
+            confirmEl.style.left = (rect.right - confirmW + 10) + 'px';
+        }
+        function cancelVersionDelete(btnEl) {
+            var confirm = btnEl.closest('.version-delete-confirm');
+            if (confirm) {
+                confirm.remove();
+            }
+        }
+        function deleteVersion(id) {
+            if (versionData.length <= 1) {
+                showToast('至少保留一个版本');
+                return;
+            }
+            var idx = versionData.findIndex(function(v){ return v.id === id; });
+            if (idx === -1) return;
+            var wasSelected = versionData[idx].selected;
+            versionData.splice(idx, 1);
+            if (wasSelected && versionData.length > 0) {
+                selectVersion(versionData[0].id);
+            } else {
+                renderVersionDropdown();
+            }
+            showToast('版本已删除');
+        }
+        function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');var r=t.getBoundingClientRect();d.style.top=(r.bottom+6)+'px';var l=r.left,w=340;if(l+w>window.innerWidth-10){l=r.right-w;}if(l<10)l=10;d.style.left=l+'px';}else{d.classList.remove('show');t.classList.remove('active');document.querySelectorAll('.version-delete-confirm').forEach(function(el){el.remove();});}}
+        document.addEventListener('click',function(e){var s=document.getElementById('versionSelector');var dd=document.getElementById('versionDropdown');if(s&&!s.contains(e.target)&&(!dd||!dd.contains(e.target)))toggleVersionDropdown(false);});
+        renderVersionDropdown();updateVersionTrigger();
+
+        // ============================================
+        // 执行记录页面功能
+        // ============================================
+        function generateExecutionRecordData() {
+            const sources = ['flow_engine', 'digitalEmployee', 'template_command'];
+            const results = [
+                '-',
+                '{"actionTraceId": "713c05b850804ed7804818ee88daeea6", "mawbNo": "999-91311371", "airCompany": "CZ", "status": "completed"}',
+                '{"requestId": "8d5542bf-e922-4e68-8796-7cae845fafe2", "awbNo": "157-54215033", "carrier": "QR", "awbDes": "PVG"}',
+                '{"totalRecords": 156, "successCount": 150, "failCount": 6, "reportUrl": "https://report.example.com/20260427"}',
+                '{"screenshots": ["baidu_home.png", "search_result.png", "product_page.png"], "count": 3}',
+                '{"batchId": "B20260427001", "itemsProcessed": 89, "itemsFailed": 2, "duration": 45.2}',
+                '{"auditId": "AUD20260427", "accountsAudited": 42, "violationsFound": 3, "reportGenerated": true}',
+                '{"carbonReduction": 12.5, "electricWaybills": 8900, "recycleBoxes": 340}'
+            ];
+            const commands = [
+                '### 商家风险系统数据提取任务提示词 #### 目标 登录【商家风险系统】，提取"禁止合作"的跨境物流商家名单，进行去重和数量校验后，以 JSON 格式输出结果。',
+                '1、打开www.baidu.com 2、截图三张返回',
+                '# 角色定义 你是一个专业的无影BUA agent，具备关于浏览器操作的深层技能。请基于用户的具体需求和相关工具，严格按照以下指令逻辑执行...',
+                '批量查询跨境物流轨迹信息，提取最新节点状态并汇总报表',
+                '登录商家结算中心，下载本月账单并与ERP数据自动核对',
+                '审计指定部门账号权限配置，识别超权限账号并生成整改清单',
+                '抓取近7天用户投诉工单，按类型聚合统计TOP10问题',
+                '汇总各区域电子面单使用率、循环箱流转次数等碳排数据'
+            ];
+            const errors = [
+                '-',
+                '-',
+                '-',
+                '-',
+                '连接超时，请检查网络配置后重试',
+                '-',
+                '-',
+                '部分数据缺失，已跳过空值记录'
+            ];
+
+            const baseTime = new Date('2026-04-27T15:20:00');
+            const records = [];
+
+            for (let i = 0; i < 8; i++) {
+                const createOffset = i * 3 + Math.floor(Math.random() * 2);
+                const createTime = new Date(baseTime.getTime() - createOffset * 60000);
+                const endOffset = createOffset - Math.floor(Math.random() * 2) - 1;
+                const endTime = endOffset >= 0 ? new Date(baseTime.getTime() - endOffset * 60000) : createTime;
+
+                records.push({
+                    createTime: formatExecutionRecordTime(createTime),
+                    endTime: formatExecutionRecordTime(endTime),
+                    source: sources[Math.floor(Math.random() * sources.length)],
+                    result: results[i],
+                    command: commands[i],
+                    error: errors[i]
+                });
+            }
+
+            return records;
+        }
+
+        function formatExecutionRecordTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            const second = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        }
+
+        function renderExecutionRecordTable() {
+            const tbody = document.getElementById('executionRecordTableBody');
+            if (!tbody) return;
+            const records = generateExecutionRecordData();
+
+            tbody.innerHTML = records.map(record => {
+                const resultClass = record.result === '-' ? '' : 'cell-ellipsis-wide';
+                const cmdClass = record.command.length > 40 ? 'cell-ellipsis' : '';
+                return `
+                    <tr>
+                        <td>${record.createTime}</td>
+                        <td>${record.endTime}</td>
+                        <td>${record.source}</td>
+                        <td><div class="${resultClass}" title="${record.result.replace(/"/g, '&quot;')}">${record.result}</div></td>
+                        <td><div class="${cmdClass}" title="${record.command.replace(/"/g, '&quot;')}">${record.command}</div></td>
+                        <td>${record.error}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function initExecutionRecordPage() {
+            renderExecutionRecordTable();
+
+            const searchBtn = document.getElementById('erSearchBtn');
+            const resetBtn = document.getElementById('erResetBtn');
+
+            if (searchBtn) {
+                searchBtn.addEventListener('click', () => {
+                    renderExecutionRecordTable();
+                });
+            }
+
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    document.getElementById('erKeywordFilter').value = '';
+                    document.getElementById('erTaskIdFilter').value = '';
+                    document.getElementById('erSourceFilter').value = '';
+                    document.getElementById('erStatusFilter').value = '';
+                    document.getElementById('erStartDate').value = '';
+                    document.getElementById('erEndDate').value = '';
+                    renderExecutionRecordTable();
+                });
+            }
+        }
+
     </script>
 </body>
 </html>

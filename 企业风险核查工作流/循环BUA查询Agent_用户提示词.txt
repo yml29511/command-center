@@ -1,0 +1,7 @@
+【核心参数】
+  ${batchList.item}
+
+【变量匹配说明】
+user:     ${user}
+pass:     ${pass}
+queryUrl: ${queryUrl}

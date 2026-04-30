@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑岗位AI员工信息</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.45);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* 弹窗 */
+        .modal {
+            background-color: #fff;
+            border-radius: 12px;
+            width: 680px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            animation: modalIn 0.25s ease-out;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 弹窗头部 */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px 12px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            letter-spacing: 0.2px;
+        }
+
+        .close-btn {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 6px;
+            color: #999;
+            transition: all 0.2s;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+
+        /* 表单主体 */
+        .modal-body {
+            padding: 4px 24px 20px;
+        }
+
+        .form-item {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .required-star {
+            color: #f5222d;
+            margin-right: 4px;
+        }
+
+        /* 文本输入框 */
+        .text-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+        }
+
+        .text-input::placeholder {
+            color: #bfbfbf;
+        }
+
+        /* 头像区域 */
+        .avatar-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .avatar-preview {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background-color: #1677ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .avatar-icon {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* 机器人头像 - 两个白色圆点眼睛 */
+        .robot-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .robot-eye {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .robot-eye.left {
+            left: 30%;
+        }
+
+        .robot-eye.right {
+            right: 30%;
+        }
+
+        .avatar-right {
+            flex: 1;
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .link-btn {
+            color: #1677ff;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .link-btn:hover {
+            color: #4096ff;
+        }
+
+        .url-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .url-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 36px 0 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #333;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .url-input:focus {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+        }
+
+        .url-check {
+            position: absolute;
+            right: 10px;
+            color: #52c41a;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 6px;
+        }
+
+        /* 多选标签 */
+        .tag-select-wrapper {
+            position: relative;
+        }
+
+        .tag-select {
+            min-height: 36px;
+            padding: 4px 60px 4px 8px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tag-select:hover,
+        .tag-select.active {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+        }
+
+        .tag-item {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 13px;
+            color: #333;
+            gap: 4px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            color: #999;
+            font-size: 14px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .tag-remove:hover {
+            background-color: #e0e0e0;
+            color: #666;
+        }
+
+        .tag-count {
+            position: absolute;
+            right: 28px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 13px;
+            color: #999;
+        }
+
+        .tag-arrow {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #999;
+            transition: transform 0.2s;
+        }
+
+        .tag-select.active .tag-arrow {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        /* 下拉选项面板 */
+        .dropdown-panel {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .dropdown-panel.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-item.selected {
+            color: #1677ff;
+            background-color: #e6f4ff;
+        }
+
+        .check-icon {
+            font-size: 14px;
+        }
+
+        /* 下拉选择框 */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-input {
+            width: 100%;
+            height: 36px;
+            padding: 0 32px 0 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .select-input:focus {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #999;
+            pointer-events: none;
+        }
+
+        .select-extra {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .select-extra .link-btn {
+            white-space: nowrap;
+        }
+
+        /* 标签添加 */
+        .add-tag-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 14px;
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            color: #1677ff;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .add-tag-btn:hover {
+            border-color: #1677ff;
+            color: #4096ff;
+            background-color: #f0f7ff;
+        }
+
+        .tag-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .tag-pill .tag-remove {
+            font-size: 12px;
+        }
+
+        /* 文本区域 */
+        .textarea-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px 12px;
+            border: 1px solid #d9d9d9;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #333;
+            outline: none;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .textarea-input:focus {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(22, 119, 255, 0.1);
+        }
+
+        .textarea-input::placeholder {
+            color: #bfbfbf;
+        }
+
+        /* 底部按钮 */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px 20px;
+        }
+
+        .btn {
+            height: 36px;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .btn-cancel {
+            background-color: #fff;
+            border: 1px solid #d9d9d9;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            border-color: #1677ff;
+            color: #1677ff;
+        }
+
+        .btn-confirm {
+            background-color: #2b2b2b;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background-color: #4a4a4a;
+        }
+
+        /* 行内布局 */
+        .inline-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .inline-row .select-wrapper {
+            flex: 1;
+        }
+
+        /* 隐藏的文件上传 */
+        .file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 遮罩层 + 弹窗 -->
+    <div class="overlay" id="overlay">
+        <div class="modal" id="modal">
+            <!-- 头部 -->
+            <div class="modal-header">
+                <div class="modal-title">编辑岗位AI员工信息</div>
+                <div class="close-btn" id="closeBtn">&times;</div>
+            </div>
+
+            <!-- 表单主体 -->
+            <div class="modal-body">
+                <!-- AI员工名称 -->
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required-star">*</span>AI员工名称
+                    </label>
+                    <input type="text" class="text-input" id="employeeName" value="商家风险处理" placeholder="请输入AI员工名称">
+                </div>
+
+                <!-- 头像 -->
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required-star">*</span>头像
+                    </label>
+                    <div class="avatar-section">
+                        <div class="avatar-preview">
+                            <img id="avatarImg" src="https://img.alicdn.com/imgextra/i4/O1CN01ZJHGpQ1DmfdWKrGXe_!!6000000000025-2-tps-128-128.png" 
+                                 alt="头像" style="width: 100%; height: 100%; object-fit: cover;" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="avatar-icon" style="display: none;">
+                                <div class="robot-face">
+                                    <div class="robot-eye left"></div>
+                                    <div class="robot-eye right"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="avatar-right">
+                            <div class="avatar-actions">
+                                <a class="link-btn" id="aiGenBtn">AI生图</a>
+                                <a class="link-btn" id="manualUploadBtn">手动上传</a>
+                                <input type="file" class="file-input" id="fileInput" accept="image/*">
+                            </div>
+                            <div class="url-input-wrapper">
+                                <input type="text" class="url-input" id="avatarUrl" 
+                                       value="https://img.alicdn.com/imgextra/i4/O1CN01ZJHGpQ1DmfdWKrGXe_!!6000000000025-2-tps-128-128.png"
+                                       placeholder="请输入图片URL">
+                                <span class="url-check">&#10003;</span>
+                            </div>
+                            <div class="hint-text">支持jpg、png、gif 等格式，建议尺寸 128*128px</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 师兄 -->
+                <div class="form-item">
+                    <label class="form-label">
+                        <span class="required-star">*</span>师兄
+                    </label>
+                    <div class="tag-select-wrapper">
+                        <div class="tag-select" id="seniorSelect">
+                            <span class="tag-item" data-value="余梦玲">余梦玲<span class="tag-remove">&times;</span></span>
+                            <span class="tag-item" data-value="豆雨">豆雨<span class="tag-remove">&times;</span></span>
+                            <span class="tag-item" data-value="豆糕">豆糕<span class="tag-remove">&times;</span></span>
+                            <span class="tag-item" data-value="书娟">书娟<span class="tag-remove">&times;</span></span>
+                            <span class="tag-item" data-value="季凡">季凡<span class="tag-remove">&times;</span></span>
+                            <span class="tag-count" id="tagCount">5/5</span>
+                            <span class="tag-arrow">&#9662;</span>
+                        </div>
+                        <div class="dropdown-panel" id="seniorDropdown">
+                            <div class="dropdown-item selected" data-value="余梦玲">余梦玲<span class="check-icon">&#10003;</span></div>
+                            <div class="dropdown-item selected" data-value="豆雨">豆雨<span class="check-icon">&#10003;</span></div>
+                            <div class="dropdown-item selected" data-value="豆糕">豆糕<span class="check-icon">&#10003;</span></div>
+                            <div class="dropdown-item selected" data-value="书娟">书娟<span class="check-icon">&#10003;</span></div>
+                            <div class="dropdown-item selected" data-value="季凡">季凡<span class="check-icon">&#10003;</span></div>
+                            <div class="dropdown-item" data-value="张三">张三<span class="check-icon"></span></div>
+                            <div class="dropdown-item" data-value="李四">李四<span class="check-icon"></span></div>
+                            <div class="dropdown-item" data-value="王五">王五<span class="check-icon"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主管 -->
+                <div class="form-item">
+                    <label class="form-label">主管</label>
+                    <div class="inline-row">
+                        <div class="select-wrapper">
+                            <select class="select-input" id="supervisorSelect">
+                                <option value="季凡" selected>季凡</option>
+                                <option value="余梦玲">余梦玲</option>
+                                <option value="豆雨">豆雨</option>
+                                <option value="豆糕">豆糕</option>
+                                <option value="书娟">书娟</option>
+                                <option value="张三">张三</option>
+                                <option value="李四">李四</option>
+                            </select>
+                            <span class="select-arrow">&#9662;</span>
+                        </div>
+                        <a class="link-btn" id="transferBtn">主管转交</a>
+                    </div>
+                </div>
+
+                <!-- 所属部门 -->
+                <div class="form-item">
+                    <label class="form-label">所属部门</label>
+                    <div class="select-wrapper">
+                        <select class="select-input" id="deptSelect">
+                            <option value="风管&公共事务&品牌市场部-跨境物流风管" selected>风管&公共事务&品牌市场部-跨境物流风管</option>
+                            <option value="技术部-前端开发组">技术部-前端开发组</option>
+                            <option value="技术部-后端开发组">技术部-后端开发组</option>
+                            <option value="产品部-产品设计组">产品部-产品设计组</option>
+                            <option value="运营部-用户运营组">运营部-用户运营组</option>
+                        </select>
+                        <span class="select-arrow">&#9662;</span>
+                    </div>
+                </div>
+
+                <!-- 标签 -->
+                <div class="form-item">
+                    <label class="form-label">标签</label>
+                    <div class="tag-display" id="tagDisplay">
+                        <button class="add-tag-btn" id="addTagBtn">
+                            <span>+</span>添加
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 描述 -->
+                <div class="form-item">
+                    <label class="form-label">描述</label>
+                    <textarea class="textarea-input" id="description" placeholder="请输入描述信息"></textarea>
+                </div>
+            </div>
+
+            <!-- 底部按钮 -->
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelBtn">取消</button>
+                <button class="btn btn-confirm" id="confirmBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM 元素
+            const overlay = document.getElementById('overlay');
+            const modal = document.getElementById('modal');
+            const closeBtn = document.getElementById('closeBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const seniorSelect = document.getElementById('seniorSelect');
+            const seniorDropdown = document.getElementById('seniorDropdown');
+            const addTagBtn = document.getElementById('addTagBtn');
+            const tagDisplay = document.getElementById('tagDisplay');
+            const avatarUrl = document.getElementById('avatarUrl');
+            const avatarImg = document.getElementById('avatarImg');
+            const fileInput = document.getElementById('fileInput');
+            const manualUploadBtn = document.getElementById('manualUploadBtn');
+            const aiGenBtn = document.getElementById('aiGenBtn');
+            const transferBtn = document.getElementById('transferBtn');
+
+            // 关闭弹窗
+            function closeModal() {
+                overlay.style.display = 'none';
+            }
+
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) closeModal();
+            });
+
+            // 确定按钮
+            confirmBtn.addEventListener('click', function() {
+                const data = {
+                    name: document.getElementById('employeeName').value,
+                    avatar: avatarUrl.value,
+                    seniors: Array.from(seniorSelect.querySelectorAll('.tag-item')).map(t => t.dataset.value),
+                    supervisor: document.getElementById('supervisorSelect').value,
+                    department: document.getElementById('deptSelect').value,
+                    tags: Array.from(tagDisplay.querySelectorAll('.tag-pill')).map(t => t.dataset.value),
+                    description: document.getElementById('description').value
+                };
+                console.log('表单数据:', data);
+                alert('已保存！（查看控制台获取详细数据）');
+                closeModal();
+            });
+
+            // 头像URL变化
+            avatarUrl.addEventListener('change', function() {
+                avatarImg.src = this.value;
+                avatarImg.style.display = '';
+                avatarImg.nextElementSibling.style.display = 'none';
+            });
+
+            // 手动上传
+            manualUploadBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    avatarImg.src = url;
+                    avatarImg.style.display = '';
+                    avatarImg.nextElementSibling.style.display = 'none';
+                    avatarUrl.value = '（本地文件: ' + file.name + '）';
+                }
+            });
+
+            // AI生图
+            aiGenBtn.addEventListener('click', function() {
+                alert('AI生图功能需要接入图像生成服务');
+            });
+
+            // 主管转交
+            transferBtn.addEventListener('click', function() {
+                alert('主管转交功能');
+            });
+
+            // 师兄多选下拉
+            let selectedSeniors = ['余梦玲', '豆雨', '豆糕', '书娟', '季凡'];
+            const maxSeniors = 5;
+
+            function updateSeniorDisplay() {
+                seniorSelect.innerHTML = '';
+                selectedSeniors.forEach(name => {
+                    const tag = document.createElement('span');
+                    tag.className = 'tag-item';
+                    tag.dataset.value = name;
+                    tag.innerHTML = name + '<span class="tag-remove">&times;</span>';
+                    seniorSelect.appendChild(tag);
+                });
+                const count = document.createElement('span');
+                count.className = 'tag-count';
+                count.id = 'tagCount';
+                count.textContent = selectedSeniors.length + '/' + maxSeniors;
+                seniorSelect.appendChild(count);
+                const arrow = document.createElement('span');
+                arrow.className = 'tag-arrow';
+                arrow.innerHTML = '&#9662;';
+                seniorSelect.appendChild(arrow);
+                bindTagRemove();
+            }
+
+            function bindTagRemove() {
+                seniorSelect.querySelectorAll('.tag-remove').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const tag = this.parentElement;
+                        const name = tag.dataset.value;
+                        selectedSeniors = selectedSeniors.filter(s => s !== name);
+                        updateSeniorDisplay();
+                        updateDropdownState();
+                    });
+                });
+            }
+
+            function updateDropdownState() {
+                seniorDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+                    const val = item.dataset.value;
+                    const check = item.querySelector('.check-icon');
+                    if (selectedSeniors.includes(val)) {
+                        item.classList.add('selected');
+                        if (check) check.innerHTML = '&#10003;';
+                    } else {
+                        item.classList.remove('selected');
+                        if (check) check.innerHTML = '';
+                    }
+                });
+                document.getElementById('tagCount').textContent = selectedSeniors.length + '/' + maxSeniors;
+            }
+
+            seniorSelect.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) return;
+                seniorSelect.classList.toggle('active');
+                seniorDropdown.classList.toggle('show');
+            });
+
+            seniorDropdown.addEventListener('click', function(e) {
+                const item = e.target.closest('.dropdown-item');
+                if (!item) return;
+                const val = item.dataset.value;
+                if (selectedSeniors.includes(val)) {
+                    selectedSeniors = selectedSeniors.filter(s => s !== val);
+                } else {
+                    if (selectedSeniors.length >= maxSeniors) {
+                        alert('最多选择 ' + maxSeniors + ' 位师兄');
+                        return;
+                    }
+                    selectedSeniors.push(val);
+                }
+                updateSeniorDisplay();
+                updateDropdownState();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!seniorSelect.contains(e.target) && !seniorDropdown.contains(e.target)) {
+                    seniorSelect.classList.remove('active');
+                    seniorDropdown.classList.remove('show');
+                }
+            });
+
+            bindTagRemove();
+
+            // 标签添加
+            let tags = [];
+            addTagBtn.addEventListener('click', function() {
+                const name = prompt('请输入标签名称:');
+                if (name && name.trim()) {
+                    const trimmed = name.trim();
+                    if (tags.includes(trimmed)) {
+                        alert('标签已存在');
+                        return;
+                    }
+                    tags.push(trimmed);
+                    const pill = document.createElement('span');
+                    pill.className = 'tag-pill';
+                    pill.dataset.value = trimmed;
+                    pill.innerHTML = trimmed + '<span class="tag-remove">&times;</span>';
+                    tagDisplay.insertBefore(pill, addTagBtn);
+                }
+            });
+
+            tagDisplay.addEventListener('click', function(e) {
+                if (e.target.classList.contains('tag-remove')) {
+                    const pill = e.target.parentElement;
+                    const val = pill.dataset.value;
+                    tags = tags.filter(t => t !== val);
+                    pill.remove();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

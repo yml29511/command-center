@@ -2177,12 +2177,6 @@
             pointer-events: none;
         }
 
-        .debug-prompt-textarea[contenteditable="false"] {
-            background-color: #E8E8E8;
-            color: #999;
-            cursor: not-allowed;
-        }
-
         /* Prompt 全屏展开按钮 */
         .prompt-expand-btn {
             background: none;
@@ -4197,20 +4191,58 @@
         .version-trigger .version-tag { background-color: transparent; padding: 0; border-radius: 0; font-size: 13px; }
         .version-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; line-height: 1.4; }
         .version-tag--draft { background-color: #FFF7E6; color: #D48806; }
-        .version-tag--online { background-color: #F6FFED; color: #52C41A; }
+        .version-tag--online { background-color: #F3EEFF; color: #7C3AED; }
         .version-tag--version { background-color: #F0F0F0; color: #666666; }
         .version-trigger .version-arrow { display: none; }
         .version-arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
         .version-trigger.active .version-arrow { transform: rotate(180deg); }
-        .version-dropdown { position: fixed; width: 340px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 1200; display: none; overflow: hidden; padding: 6px 0; }
-        .version-dropdown.show { display: block; }
-        .version-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background-color 0.15s ease; }
+        .version-dropdown { position: fixed; width: 340px; max-height: 320px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); z-index: 1200; display: none; overflow: visible; padding: 6px 0; flex-direction: column; }
+        .version-dropdown.show { display: flex; }
+        .version-dropdown-list { flex: 1; overflow-y: auto; min-height: 0; }
+        .version-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; transition: background-color 0.15s ease; position: relative; }
         .version-item:hover { background-color: #F5F5F5; }
-        .version-check { width: 18px; flex-shrink: 0; font-size: 14px; color: var(--primary-color); text-align: center; }
+        .version-item--selected { background-color: rgba(124, 58, 237, 0.06); }
+        .version-item--selected:hover { background-color: rgba(124, 58, 237, 0.1); }
+        .version-item .version-delete-btn { visibility: hidden; color: #1890FF; font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 4px; white-space: nowrap; width: 40px; text-align: center; }
+        .version-item:hover .version-delete-btn { visibility: visible; }
+        .version-item .version-delete-btn:hover { background-color: rgba(24, 144, 255, 0.08); }
+        .version-delete-confirm { position: fixed; background: #fff; border-radius: 8px; padding: 10px 14px; box-shadow: 0 3px 12px rgba(0,0,0,0.15); z-index: 1300; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .version-delete-confirm::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); box-shadow: 2px 2px 4px rgba(0,0,0,0.08); }
+        .version-delete-confirm span { font-size: 12px; color: #333; }
+        .version-delete-confirm-yes { font-size: 12px; color: #fff; background: #1890FF; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+        .version-delete-confirm-no { font-size: 12px; color: #666; background: #f0f0f0; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
         .version-item-info { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .version-item-info .version-tag { flex-shrink: 0; }
+        .version-tag-col { width: 100px; text-align: right; flex-shrink: 0; }
         .version-item-meta { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-        .version-item-id { font-size: 13px; color: #1890FF; }
+        .version-item-meta-row { display: flex; align-items: center; justify-content: space-between; }
+        .version-item-id { font-size: 13px; color: #999; }
         .version-item-time { font-size: 12px; color: #999; }
+
+        /* 新增版本按钮 */
+        .version-add-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 10px 16px;
+            border-top: 1px solid var(--border-light);
+            color: #7c3aed;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .version-add-btn:hover {
+            background-color: rgba(124, 58, 237, 0.06);
+        }
+
+        /* 不可编辑状态 */
+        .debug-prompt-textarea[contenteditable="false"] {
+            background-color: #f5f5f5;
+            color: #999;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -6246,14 +6278,16 @@
             // 更新面包屑导航为当前指令名称
             document.getElementById('breadcrumbCommandName').textContent = item.name || '未命名指令';
 
-            // 设置 Prompt 内容（如果描述为空，使用示例内容）
+            // 根据当前选中的版本设置 Prompt、沙箱和变量
+            const selectedVersion = versionData.find(v => v.selected);
             const textarea = document.getElementById('debugPromptTextarea');
             if (textarea) {
-                textarea.textContent = item.desc || samplePrompt;
+                textarea.textContent = (selectedVersion && selectedVersion.prompt) ? selectedVersion.prompt : (item.desc || samplePrompt);
             }
-
-            // 重置沙箱类型为默认值
-            setSandboxType('browser');
+            setSandboxType((selectedVersion && selectedVersion.sandbox) ? selectedVersion.sandbox : 'browser');
+            if (selectedVersion && selectedVersion.variables) {
+                renderDebugVariableTags(selectedVersion.variables);
+            }
 
             // 重置调试详情面板状态
             resetDebugBtn();
@@ -6277,8 +6311,8 @@
             // 恢复布局为原始比例
             setDebugLayout('70%', '28%');
 
-            // 恢复 Prompt 可编辑
-            if (textarea) textarea.contentEditable = 'true';
+            // 根据选中版本状态设置编辑权限
+            updateDebugEditability(selectedVersion ? selectedVersion.status : '草稿');
 
             // 移除只显示Prompt状态
             const leftColumn = document.querySelector('.debug-left-column');
@@ -6464,6 +6498,20 @@
                         // 保存 Prompt 内容
                         item.desc = getPromptText(document.getElementById('debugPromptTextarea'));
                     }
+                }
+                // 将当前选中版本设为使用中，其余版本设为草稿
+                var currentVersion = versionData.find(function(v){ return v.selected; });
+                if (currentVersion) {
+                    versionData.forEach(function(v){
+                        if (v.id === currentVersion.id) {
+                            v.status = '线上';
+                        } else if (v.status === '线上') {
+                            v.status = '草稿';
+                        }
+                    });
+                    renderVersionDropdown();
+                    updateVersionTrigger();
+                    updateDebugEditability(currentVersion.status);
                 }
                 showToast('保存成功');
             });
@@ -8655,17 +8703,174 @@
         });
         // 版本选择器
         var versionData = [
-            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', selected: true },
-            { id: 10882, version: 'V3', status: '线上', updateTime: '2026-04-27 13:39:26' },
-            { id: 10881, version: 'V2', status: '版本', updateTime: '2026-04-27 12:10:12' },
-            { id: 10878, version: 'V1', status: '版本', updateTime: '2026-04-27 11:45:58' }
+            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', selected: false,
+              sandbox: 'browser',
+              prompt: '专业的跨境物流数据抓取 Agent，访问看板提取数据。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/dashboard' },
+                { name: 'output_format', value: 'json' },
+                { name: 'max_retry', value: '3' }
+              ]
+            },
+            { id: 10882, version: 'V3', status: '线上', updateTime: '2026-04-27 13:39:26',
+              sandbox: 'code',
+              prompt: '跨境物流数据抓取 Agent V3，支持多平台数据采集与格式化输出。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v3/data' },
+                { name: 'data_source', value: 'multi-platform' },
+                { name: 'timeout', value: '30000' }
+              ]
+            },
+            { id: 10881, version: 'V2', status: '草稿', updateTime: '2026-04-27 12:10:12',
+              sandbox: 'browser',
+              prompt: '物流数据采集 Agent V2，从指定页面抓取物流信息并生成报告。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v2' },
+                { name: 'report_type', value: 'summary' }
+              ]
+            },
+            { id: 10878, version: 'V1', status: '草稿', updateTime: '2026-04-27 11:45:58',
+              sandbox: 'code',
+              prompt: '基础物流数据抓取脚本，从单一数据源获取物流跟踪信息。',
+              variables: [
+                { name: 'api_endpoint', value: 'https://api.logistics.com/track' },
+                { name: 'api_key', value: 'sk-xxxx-demo' }
+              ]
+            }
         ];
-        function getVersionTagClass(s){return s==='草稿'?'version-tag--draft':s==='线上'?'version-tag--online':'version-tag--version';}
-        function renderVersionDropdown(){var d=document.getElementById('versionDropdown');if(!d)return;d.innerHTML=versionData.map(function(item){return '<div class="version-item" onclick="selectVersion('+item.id+')"><div class="version-check">'+(item.selected?'✓':'')+'</div><div class="version-item-info"><span class="version-tag '+getVersionTagClass(item.status)+'">'+item.status+': '+item.version+'</span><div class="version-item-meta"><span class="version-item-id">版本Id: '+item.id+'</span><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';}).join('');}
-        function updateVersionTrigger(){var s=versionData.find(function(v){return v.selected;});if(!s)return;var t=document.getElementById('versionTriggerTag');if(t){t.textContent=s.status+': '+s.version;t.className='version-tag '+getVersionTagClass(s.status);}}
-        function selectVersion(id){versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);var c=versionData.find(function(v){return v.id===id;});if(c)showToast('已切换到 '+c.status+': '+c.version);}
-        function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');var r=t.getBoundingClientRect();d.style.top=(r.bottom+6)+'px';var l=r.left,w=340;if(l+w>window.innerWidth-10){l=r.right-w;}if(l<10)l=10;d.style.left=l+'px';}else{d.classList.remove('show');t.classList.remove('active');}}
-        document.addEventListener('click',function(e){var s=document.getElementById('versionSelector');if(s&&!s.contains(e.target))toggleVersionDropdown(false);});
+        // 默认选中 updateTime 最新的版本
+        (function(){
+            var latest = versionData.slice().sort(function(a, b){
+                return new Date(b.updateTime) - new Date(a.updateTime);
+            })[0];
+            if (latest) {
+                versionData.forEach(function(v){ v.selected = (v.id === latest.id); });
+            }
+        })();
+        function getVersionTagClass(s){return s==='草稿'?'version-tag--draft':'version-tag--online';}
+        function renderVersionDropdown(){var d=document.getElementById('versionDropdown');if(!d)return;var displayStatus=function(s){return s==='线上'?'使用中':s;};var itemsHtml=versionData.map(function(item){return '<div class="version-item'+(item.selected?' version-item--selected':'')+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="version-tag '+getVersionTagClass(item.status)+'">'+displayStatus(item.status)+': '+item.version+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span><span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span></div><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';}).join('');var addBtnHtml='<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;}
+        function updateVersionTrigger(){var s=versionData.find(function(v){return v.selected;});if(!s)return;var t=document.getElementById('versionTriggerTag');if(t){var ds=s.status==='线上'?'使用中':s.status;t.textContent=ds+': '+s.version;t.className='version-tag '+getVersionTagClass(s.status);}}
+        function renderDebugVariableTags(variables) {
+            variables = variables || [];
+            var wrapper = document.getElementById('debugVariableTagsWrapper');
+            if (wrapper) {
+                var groups = wrapper.querySelectorAll('.debug-variable-group');
+                var customGroup = groups[groups.length - 1];
+                var list = customGroup ? customGroup.querySelector('.debug-variable-tags-list') : null;
+                if (list) {
+                    list.innerHTML = variables.map(function(v) {
+                        return '<span class="debug-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
+                    }).join('');
+                    list.querySelectorAll('.debug-variable-tag').forEach(function(tag) {
+                        tag.addEventListener('click', function() {
+                            insertVariableIntoTextarea(tag.dataset.variable, 'debugPromptTextarea');
+                        });
+                    });
+                }
+            }
+            var fsWrapper = document.getElementById('fullscreenVariableTagsWrapper');
+            if (fsWrapper) {
+                var fsGroups = fsWrapper.querySelectorAll('.debug-variable-group');
+                var fsCustomGroup = fsGroups[fsGroups.length - 1];
+                var fsList = fsCustomGroup ? fsCustomGroup.querySelector('.debug-variable-tags-list') : null;
+                if (fsList) {
+                    fsList.innerHTML = variables.map(function(v) {
+                        return '<span class="debug-variable-tag fullscreen-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
+                    }).join('');
+                    fsList.querySelectorAll('.fullscreen-variable-tag').forEach(function(tag) {
+                        tag.addEventListener('click', function() {
+                            insertVariableIntoTextarea(tag.dataset.variable, 'promptFullscreenTextarea');
+                        });
+                    });
+                }
+            }
+        }
+        function updateDebugEditability(status) {
+            var textarea = document.getElementById('debugPromptTextarea');
+            if (textarea) {
+                textarea.contentEditable = 'true';
+            }
+            var select = document.getElementById('sandboxSelect');
+            if (select) {
+                select.disabled = false;
+            }
+            var wrapper = document.getElementById('debugVariableTagsWrapper');
+            if (wrapper) {
+                wrapper.style.opacity = '1';
+                wrapper.style.pointerEvents = 'auto';
+            }
+            var varBtn = document.getElementById('debugVariablesBtn');
+            if (varBtn) {
+                varBtn.disabled = false;
+                varBtn.style.opacity = '1';
+                varBtn.style.cursor = 'pointer';
+            }
+        }
+        function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var ds=c.status==='线上'?'使用中':c.status;showToast('已切换到 '+ds+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status);}}
+        function addNewVersion(){
+            var current = versionData.find(function(v){return v.selected;});
+            if(!current){showToast('未找到当前选中的版本');return;}
+            var maxNum = versionData.reduce(function(max, v){
+                var num = parseInt(v.version.replace(/^V/i, ''), 10);
+                return isNaN(num) ? max : Math.max(max, num);
+            }, 0);
+            var newVersionNum = maxNum + 1;
+            var newVersionStr = 'V' + newVersionNum;
+            var now = new Date();
+            var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') + ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+            var newVersion = {
+                id: Date.now(),
+                version: newVersionStr,
+                status: '草稿',
+                updateTime: timeStr,
+                selected: false,
+                sandbox: current.sandbox,
+                prompt: current.prompt,
+                variables: current.variables ? current.variables.map(function(v){return {name: v.name, value: v.value};}) : []
+            };
+            versionData.unshift(newVersion);
+            selectVersion(newVersion.id);
+        }
+        function showVersionDeleteConfirm(id, btnEl) {
+            // 移除已有的确认浮窗
+            document.querySelectorAll('.version-delete-confirm').forEach(function(el){ el.remove(); });
+            var item = versionData.find(function(v){ return v.id === id; });
+            if (!item) return;
+            var confirmEl = document.createElement('div');
+            confirmEl.className = 'version-delete-confirm';
+            confirmEl.innerHTML = '<span>确认删除?</span><button class="version-delete-confirm-yes" onclick="event.stopPropagation();deleteVersion('+id+')">确定</button><button class="version-delete-confirm-no" onclick="event.stopPropagation();cancelVersionDelete(this)">取消</button>';
+            document.body.appendChild(confirmEl);
+            // 计算位置：删除按钮上方
+            var rect = btnEl.getBoundingClientRect();
+            var confirmW = confirmEl.offsetWidth;
+            var confirmH = confirmEl.offsetHeight;
+            confirmEl.style.top = (rect.top - confirmH - 8) + 'px';
+            confirmEl.style.left = (rect.right - confirmW + 10) + 'px';
+        }
+        function cancelVersionDelete(btnEl) {
+            var confirm = btnEl.closest('.version-delete-confirm');
+            if (confirm) {
+                confirm.remove();
+            }
+        }
+        function deleteVersion(id) {
+            if (versionData.length <= 1) {
+                showToast('至少保留一个版本');
+                return;
+            }
+            var idx = versionData.findIndex(function(v){ return v.id === id; });
+            if (idx === -1) return;
+            var wasSelected = versionData[idx].selected;
+            versionData.splice(idx, 1);
+            if (wasSelected && versionData.length > 0) {
+                selectVersion(versionData[0].id);
+            } else {
+                renderVersionDropdown();
+            }
+            showToast('版本已删除');
+        }
+        function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');var r=t.getBoundingClientRect();d.style.top=(r.bottom+6)+'px';var l=r.left,w=340;if(l+w>window.innerWidth-10){l=r.right-w;}if(l<10)l=10;d.style.left=l+'px';}else{d.classList.remove('show');t.classList.remove('active');document.querySelectorAll('.version-delete-confirm').forEach(function(el){el.remove();});}}
+        document.addEventListener('click',function(e){var s=document.getElementById('versionSelector');var dd=document.getElementById('versionDropdown');if(s&&!s.contains(e.target)&&(!dd||!dd.contains(e.target)))toggleVersionDropdown(false);});
         renderVersionDropdown();updateVersionTrigger();
 
         // ============================================
