@@ -281,7 +281,7 @@
         }
 
         .tab-nav-inner {
-            max-width: 1440px;
+            max-width: 2560px;
             margin: 0 auto;
             display: flex;
             gap: 32px;
@@ -321,7 +321,7 @@
            主内容区域
            ============================================ */
         .main-container {
-            max-width: 1440px;
+            max-width: 2560px;
             margin: 0 auto;
             margin-left: var(--sidebar-width);
             padding: 24px;
@@ -605,7 +605,7 @@
         }
 
         .command-card {
-            width: 260px;
+            width: 340px;
             flex-shrink: 0;
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
@@ -967,70 +967,6 @@
             outline: none;
             font-family: var(--font-family);
         }
-
-        /* 账权变量样式 */
-        .auth-variables-form {
-            padding: 4px 0;
-        }
-
-        .auth-variables-form .form-group {
-            margin-bottom: 20px;
-        }
-
-        .auth-variables-form .form-select {
-            width: 100%;
-            max-width: 300px;
-        }
-
-        .auth-variables-table .col-check {
-            width: 60px;
-            text-align: center;
-        }
-
-        .auth-variables-table .col-category {
-            width: 120px;
-        }
-
-        .auth-variables-table .col-fields {
-            width: auto;
-        }
-
-        .auth-variables-table tbody td {
-            vertical-align: middle;
-        }
-
-        .auth-variables-table input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary-color);
-            cursor: pointer;
-        }
-
-        .auth-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 8px;
-            background: #F3EEFF;
-            color: #7C3AED;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-            margin-right: 6px;
-            margin-bottom: 4px;
-            white-space: nowrap;
-        }
-
-        .auth-badge:last-child {
-            margin-right: 0;
-        }
-
-        .auth-badge-a { background: #F3EEFF; color: #7C3AED; }
-        .auth-badge-b { background: #EFF6FF; color: #2563EB; }
-        .auth-badge-c { background: #ECFDF5; color: #059669; }
-        .auth-badge-d { background: #FFF7ED; color: #EA580C; }
-        .auth-badge-e { background: #FEF2F2; color: #DC2626; }
-        .auth-badge-f { background: #ECFEFF; color: #0891B2; }
-        .auth-badge-g { background: #FEFCE8; color: #CA8A04; }
 
         .variables-table input:focus {
             border-color: var(--primary-color);
@@ -2378,83 +2314,6 @@
             color: #fff;
         }
 
-        .debug-variable-tag-a { background-color: #F3EEFF; color: #7C3AED; border-color: #DDD6FE; }
-        .debug-variable-tag-a:hover { background-color: #7C3AED; border-color: #7C3AED; color: #fff; }
-        .debug-variable-tag-b { background-color: #EFF6FF; color: #2563EB; border-color: #BFDBFE; }
-        .debug-variable-tag-b:hover { background-color: #2563EB; border-color: #2563EB; color: #fff; }
-        .debug-variable-tag-c { background-color: #ECFDF5; color: #059669; border-color: #A7F3D0; }
-        .debug-variable-tag-c:hover { background-color: #059669; border-color: #059669; color: #fff; }
-        .debug-variable-tag-d { background-color: #FFF7ED; color: #EA580C; border-color: #FED7AA; }
-        .debug-variable-tag-d:hover { background-color: #EA580C; border-color: #EA580C; color: #fff; }
-        .debug-variable-tag-e { background-color: #FEF2F2; color: #DC2626; border-color: #FECACA; }
-        .debug-variable-tag-e:hover { background-color: #DC2626; border-color: #DC2626; color: #fff; }
-        .debug-variable-tag-f { background-color: #ECFEFF; color: #0891B2; border-color: #A5F3FC; }
-        .debug-variable-tag-f:hover { background-color: #0891B2; border-color: #0891B2; color: #fff; }
-        .debug-variable-tag-g { background-color: #FEFCE8; color: #CA8A04; border-color: #FDE68A; }
-        .debug-variable-tag-g:hover { background-color: #CA8A04; border-color: #CA8A04; color: #fff; }
-
-        /* 变量标签溢出收起 */
-        .debug-variable-tag.tag-hidden {
-            display: none !important;
-        }
-
-        .debug-variable-overflow-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 10px;
-            font-size: 11px;
-            color: var(--text-secondary);
-            background-color: #F5F5F5;
-            border: 1px dashed #C8C8C8;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-            user-select: none;
-            flex-shrink: 0;
-        }
-
-        .debug-variable-overflow-btn:hover {
-            background-color: #E8E8E8;
-            border-color: #A0A0A0;
-            color: var(--text-primary);
-        }
-
-        .debug-variable-popover {
-            position: fixed;
-            z-index: 6000;
-            background: #fff;
-            border: 1px solid #E0E0E0;
-            border-radius: 12px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
-            padding: 12px 14px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-width: 340px;
-            animation: popoverFadeIn 0.15s ease;
-        }
-
-        @keyframes popoverFadeIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .debug-variable-popover-arrow {
-            position: absolute;
-            top: -6px;
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            border: 1px solid #E0E0E0;
-            border-right: none;
-            border-bottom: none;
-            transform: rotate(45deg);
-        }
-
-        .debug-variable-popover .debug-variable-tag {
-            /* popover 内标签与外部一致 */
-        }
-
         /* Prompt 全屏遮罩层 */
         .prompt-fullscreen-overlay {
             position: fixed;
@@ -3424,7 +3283,6 @@
             background-color: #FAFAFA;
             font-weight: 600;
             color: var(--text-primary);
-            white-space: nowrap;
         }
 
         .drawer-table td {
@@ -4390,7 +4248,6 @@
         .version-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; line-height: 1.4; }
         .version-tag--draft { background-color: #FFF7E6; color: #D48806; }
         .version-tag--online { background-color: #F3EEFF; color: #7C3AED; }
-        .version-tag--active { background-color: #F3EEFF; color: #7C3AED; }
         .version-tag--version { background-color: #F0F0F0; color: #666666; }
         .version-trigger .version-arrow { display: none; }
         .version-arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
@@ -4402,63 +4259,21 @@
         .version-item:hover { background-color: #F5F5F5; }
         .version-item--selected { background-color: rgba(124, 58, 237, 0.06); }
         .version-item--selected:hover { background-color: rgba(124, 58, 237, 0.1); }
-        .version-item .version-delete-btn { opacity: 0; visibility: hidden; transition: all 0.2s; padding: 3px 10px; font-size: 11px; border: 1px solid #FCA5A5; border-radius: 4px; background: #FEF2F2; color: #DC2626; cursor: pointer; white-space: nowrap; }
-        .version-item:hover .version-delete-btn { opacity: 1; visibility: visible; }
-        .version-item .version-delete-btn:hover { background: #DC2626; color: #fff; border-color: #DC2626; }
+        .version-item .version-delete-btn { visibility: hidden; color: #1890FF; font-size: 12px; cursor: pointer; padding: 2px 6px; border-radius: 4px; white-space: nowrap; width: 40px; text-align: center; }
+        .version-item:hover .version-delete-btn { visibility: visible; }
+        .version-item .version-delete-btn:hover { background-color: rgba(24, 144, 255, 0.08); }
         .version-delete-confirm { position: fixed; background: #fff; border-radius: 8px; padding: 10px 14px; box-shadow: 0 3px 12px rgba(0,0,0,0.15); z-index: 1300; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
-        .version-delete-confirm::after { content: ''; position: absolute; top: -6px; right: 20px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); box-shadow: -2px -2px 4px rgba(0,0,0,0.08); }
+        .version-delete-confirm::after { content: ''; position: absolute; bottom: -6px; right: 20px; width: 12px; height: 12px; background: #fff; transform: rotate(45deg); box-shadow: 2px 2px 4px rgba(0,0,0,0.08); }
         .version-delete-confirm span { font-size: 12px; color: #333; }
-        .version-delete-confirm-yes { font-size: 12px; color: #fff; background: #7C3AED; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
+        .version-delete-confirm-yes { font-size: 12px; color: #fff; background: #1890FF; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
         .version-delete-confirm-no { font-size: 12px; color: #666; background: #f0f0f0; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
         .version-item-info { flex: 1; display: flex; align-items: center; gap: 10px; }
         .version-item-info .version-tag { flex-shrink: 0; }
         .version-tag-col { width: 100px; text-align: right; flex-shrink: 0; }
         .version-item-meta { flex: 1; display: flex; flex-direction: column; gap: 2px; }
         .version-item-meta-row { display: flex; align-items: center; justify-content: space-between; }
-                .version-item-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
         .version-item-id { font-size: 13px; color: #999; }
-        .version-item-editor { font-size: 12px; color: #999; }
         .version-item-time { font-size: 12px; color: #999; }
-        .version-active-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 2px 10px;
-            background: #F3EEFF;
-            color: #7C3AED;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 12px;
-            border: 1px solid #DDD6FE;
-            white-space: nowrap;
-        }
-        .version-item--active {
-            border-left: 3px solid #7C3AED;
-        }
-        .version-item--active .version-tag {
-            background: #F3EEFF !important;
-            color: #7C3AED !important;
-        }
-        .version-set-active-btn {
-            padding: 3px 10px;
-            font-size: 11px;
-            color: #7C3AED;
-            background: #F3EEFF;
-            border: 1px solid #DDD6FE;
-            border-radius: 4px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s;
-            opacity: 0;
-            visibility: hidden;
-        }
-        .version-item:hover .version-set-active-btn {
-            opacity: 1;
-            visibility: visible;
-        }
-        .version-set-active-btn:hover {
-            background: #7C3AED;
-            color: #fff;
-        }
 
         /* 新增版本按钮 */
         .version-add-btn {
@@ -4691,7 +4506,6 @@
                             <div class="debug-combined-title-wrapper">
                                 <div class="debug-combined-indicator"></div>
                                 <span class="debug-combined-title">指令详情</span>
-                                <span class="version-active-badge" id="versionActiveBadge">生效中: V3</span>
                                 <svg class="debug-settings-icon" id="debugSettingsIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" title="设置">
                                     <circle cx="12" cy="12" r="3"></circle>
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -4760,41 +4574,23 @@
                                     <div class="debug-variable-group">
                                         <div class="debug-variable-group-title">系统变量</div>
                                         <div class="debug-variable-tags-list">
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="当前日期">当前日期</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="当前时间">当前时间</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="用户名">用户名</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="指令名称">指令名称</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="用户工号">用户工号</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="会话ID">会话ID</span>
+                                            <span class="debug-variable-tag" data-variable="当前日期">当前日期</span>
+                                            <span class="debug-variable-tag" data-variable="当前时间">当前时间</span>
+                                            <span class="debug-variable-tag" data-variable="用户名">用户名</span>
+                                            <span class="debug-variable-tag" data-variable="指令名称">指令名称</span>
+                                            <span class="debug-variable-tag" data-variable="用户工号">用户工号</span>
+                                            <span class="debug-variable-tag" data-variable="会话ID">会话ID</span>
                                         </div>
                                     </div>
                                     <div class="debug-variable-group">
                                         <div class="debug-variable-group-title">自定义变量</div>
                                         <div class="debug-variable-tags-list">
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="商家名称">商家名称</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="订单编号">订单编号</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="查询条件">查询条件</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="目标URL">目标URL</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="问题">问题</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="消息ID">消息ID</span>
-                                        </div>
-                                    </div>
-                                        <div class="debug-variable-group" id="debug-var-group-rookie">
-                                            <div class="debug-variable-group-title">菜鸟账权</div>
-                                            <div class="debug-variable-tags-list">
-                                                <span class="debug-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC账号">跨境AI员工（CIC账号）</span>
-                                                <span class="debug-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC密码">跨境AI员工（CIC密码）</span>
-                                                <span class="debug-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC账号">数字AI员工（CBC账号）</span>
-                                                <span class="debug-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC密码">数字AI员工（CBC密码）</span>
-                                            </div>
-                                        </div>
-                                    <div class="debug-variable-group" id="debug-var-group-public">
-                                        <div class="debug-variable-group-title">公共账密（网站名称）</div>
-                                        <div class="debug-variable-tags-list">
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="FedEx账号">FedEx账号</span>
-                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="FedEx密码">FedEx密码</span>
-                                            <span class="debug-variable-tag debug-variable-tag-a" data-variable="UPS账号">UPS账号</span>
-                                            <span class="debug-variable-tag debug-variable-tag-a" data-variable="UPS密码">UPS密码</span>
+                                            <span class="debug-variable-tag" data-variable="商家名称">商家名称</span>
+                                            <span class="debug-variable-tag" data-variable="订单编号">订单编号</span>
+                                            <span class="debug-variable-tag" data-variable="查询条件">查询条件</span>
+                                            <span class="debug-variable-tag" data-variable="目标URL">目标URL</span>
+                                            <span class="debug-variable-tag" data-variable="问题">问题</span>
+                                            <span class="debug-variable-tag" data-variable="消息ID">消息ID</span>
                                         </div>
                                     </div>
                                 </div>
@@ -5017,41 +4813,23 @@
                         <div class="debug-variable-group">
                             <div class="debug-variable-group-title">系统变量</div>
                             <div class="debug-variable-tags-list">
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="当前日期">当前日期</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="当前时间">当前时间</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="用户名">用户名</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="指令名称">指令名称</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="用户工号">用户工号</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="会话ID">会话ID</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="当前日期">当前日期</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="当前时间">当前时间</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="用户名">用户名</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="指令名称">指令名称</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="用户工号">用户工号</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="会话ID">会话ID</span>
                             </div>
                         </div>
                         <div class="debug-variable-group">
                             <div class="debug-variable-group-title">自定义变量</div>
                             <div class="debug-variable-tags-list">
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="商家名称">商家名称</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="订单编号">订单编号</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="查询条件">查询条件</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="目标URL">目标URL</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="问题">问题</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="消息ID">消息ID</span>
-                            </div>
-                        </div>
-                        <div class="debug-variable-group" id="fullscreen-var-group-rookie">
-                            <div class="debug-variable-group-title">菜鸟账权</div>
-                            <div class="debug-variable-tags-list">
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC账号">跨境AI员工（CIC账号）</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC密码">跨境AI员工（CIC密码）</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC账号">数字AI员工（CBC账号）</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC密码">数字AI员工（CBC密码）</span>
-                            </div>
-                        </div>
-                        <div class="debug-variable-group" id="fullscreen-var-group-public">
-                            <div class="debug-variable-group-title">公共账密（网站名称）</div>
-                            <div class="debug-variable-tags-list">
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="FedEx账号">FedEx账号</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="FedEx密码">FedEx密码</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="UPS账号">UPS账号</span>
-                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="UPS密码">UPS密码</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="商家名称">商家名称</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="订单编号">订单编号</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="查询条件">查询条件</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="目标URL">目标URL</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="问题">问题</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag" data-variable="消息ID">消息ID</span>
                             </div>
                         </div>
                     </div>
@@ -5164,7 +4942,6 @@
                     <tr>
                         <th>发起人</th>
                         <th>创建时间</th>
-                        <th>版本号</th>
                         <th>运行结果id</th>
                         <th>prompt</th>
                         <th>沙箱类型</th>
@@ -5199,13 +4976,12 @@
             <div class="modal-body">
                 <!-- Tab 切换 -->
                 <div class="variables-tabs">
-                    <div class="variables-tab active" data-tab="auth">账权变量</div>
-                    <div class="variables-tab" data-tab="system">系统变量</div>
+                    <div class="variables-tab active" data-tab="system">系统变量</div>
                     <div class="variables-tab" data-tab="custom">自定义变量</div>
                 </div>
 
                 <!-- 系统变量 Tab -->
-                <div class="variables-tab-content" id="systemVariablesTab">
+                <div class="variables-tab-content active" id="systemVariablesTab">
                     <table class="variables-table">
                         <thead>
                             <tr>
@@ -5259,54 +5035,9 @@
                         新增一行数据
                     </button>
                 </div>
-
-                <!-- 账权变量 Tab -->
-                <div class="variables-tab-content active" id="authVariablesTab">
-                    <div class="auth-variables-form">
-                        <div class="form-group">
-                            <label class="form-label">使用AI员工账权</label>
-                            <select class="form-select" id="authAccountSelect">
-                                <option value="crossborder" selected>跨境AI员工</option>
-                                <option value="digital">数字AI员工</option>
-                            </select>
-                        </div>
-                        <table class="variables-table auth-variables-table">
-                            <thead>
-                                <tr>
-                                    <th class="col-check">选择</th>
-                                    <th class="col-category">类别</th>
-                                    <th class="col-fields">变量字段</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="text-align: center;"><input type="checkbox" class="auth-checkbox" data-category="rookie"></td>
-                                    <td>菜鸟账权</td>
-                                    <td>
-                                        <span class="auth-badge auth-badge-b">跨境AI员工（CIC账号）</span>
-                                        <span class="auth-badge auth-badge-b">跨境AI员工（CIC密码）</span>
-                                        <span class="auth-badge auth-badge-a">数字AI员工（CBC账号）</span>
-                                        <span class="auth-badge auth-badge-a">数字AI员工（CBC密码）</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="text-align: center;"><input type="checkbox" class="auth-checkbox" data-category="public" checked></td>
-                                    <td>公共账密</td>
-                                    <td>
-                                        <span class="auth-badge auth-badge-b">FedEx账号</span>
-                                        <span class="auth-badge auth-badge-b">FedEx密码</span>
-                                        <span class="auth-badge auth-badge-a">UPS账号</span>
-                                        <span class="auth-badge auth-badge-a">UPS密码</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-modal btn-modal-default" id="variablesCancelBtn">取消</button>
-                <button class="btn-modal btn-modal-primary" id="variablesConfirmBtn">确定</button>
+                <button class="btn-modal btn-modal-default" id="variablesCloseBtn">关闭</button>
             </div>
         </div>
     </div>
@@ -6606,169 +6337,6 @@
             }
         }
 
-        // ========== 变量标签溢出收起功能 ==========
-
-        // 关闭当前打开的气泡弹窗
-        function closeVariableOverflowPopover() {
-            const popover = document.querySelector('.debug-variable-popover');
-            if (popover) popover.remove();
-        }
-
-        // 显示溢出变量的气泡弹窗
-        function showOverflowPopover(btn, overflowTags, editorId) {
-            closeVariableOverflowPopover();
-
-            const popover = document.createElement('div');
-            popover.className = 'debug-variable-popover';
-
-            // 小箭头
-            const arrow = document.createElement('div');
-            arrow.className = 'debug-variable-popover-arrow';
-            popover.appendChild(arrow);
-
-            overflowTags.forEach(tag => {
-                const clone = document.createElement('span');
-                clone.className = 'debug-variable-tag';
-                clone.textContent = tag.textContent;
-                clone.dataset.variable = tag.dataset.variable;
-                if (tag.classList.contains('fullscreen-variable-tag')) {
-                    clone.classList.add('fullscreen-variable-tag');
-                }
-                clone.addEventListener('click', () => {
-                    insertVariableIntoTextarea(clone.dataset.variable, editorId);
-                });
-                popover.appendChild(clone);
-            });
-
-            document.body.appendChild(popover);
-
-            // 定位弹窗
-            const btnRect = btn.getBoundingClientRect();
-            const popoverRect = popover.getBoundingClientRect();
-
-            let top = btnRect.bottom + 8;
-            let left = btnRect.left;
-
-            // 上方空间不足则弹到上方
-            if (top + popoverRect.height > window.innerHeight - 12) {
-                top = btnRect.top - popoverRect.height - 8;
-            }
-            // 右侧溢出
-            if (left + popoverRect.width > window.innerWidth - 12) {
-                left = window.innerWidth - popoverRect.width - 12;
-            }
-            if (left < 12) left = 12;
-
-            popover.style.top = top + 'px';
-            popover.style.left = left + 'px';
-
-            // 定位小箭头
-            const arrowLeft = Math.max(8, Math.min(btnRect.left - left + btnRect.width / 2 - 6, popoverRect.width - 20));
-            arrow.style.left = arrowLeft + 'px';
-
-            // 点击外部关闭
-            const closePopover = (e) => {
-                if (!popover.contains(e.target) && e.target !== btn) {
-                    popover.remove();
-                    document.removeEventListener('mousedown', closePopover);
-                }
-            };
-            setTimeout(() => {
-                document.addEventListener('mousedown', closePopover);
-            }, 0);
-        }
-
-        // 对变量分组做溢出检测，隐藏超出一行的标签并显示"..."按钮
-        function trimVariableOverflow(containerSelector, editorId) {
-            const container = document.querySelector(containerSelector);
-            if (!container) return;
-
-            // 仅在展开状态下执行
-            if (!container.classList.contains('expanded')) return;
-
-            const groups = container.querySelectorAll('.debug-variable-group');
-            groups.forEach(group => {
-                const list = group.querySelector('.debug-variable-tags-list');
-                if (!list) return;
-
-                // 重置之前的溢出处理
-                list.querySelectorAll('.debug-variable-tag.tag-hidden').forEach(t => {
-                    t.classList.remove('tag-hidden');
-                });
-                const existingBtn = list.querySelector('.debug-variable-overflow-btn');
-                if (existingBtn) existingBtn.remove();
-
-                const tags = Array.from(list.querySelectorAll('.debug-variable-tag'));
-                if (tags.length === 0) return;
-
-                // 识别第一行与溢出标签
-                const firstTop = tags[0].getBoundingClientRect().top;
-                const tolerance = 4;
-                const overflowTags = [];
-                const visibleTags = [];
-
-                tags.forEach(tag => {
-                    if (tag.getBoundingClientRect().top - firstTop > tolerance) {
-                        overflowTags.push(tag);
-                    } else {
-                        visibleTags.push(tag);
-                    }
-                });
-
-                if (overflowTags.length === 0) return; // 无溢出
-
-                // 先隐藏溢出标签
-                overflowTags.forEach(t => t.classList.add('tag-hidden'));
-
-                // 添加 "..." 按钮
-                const moreBtn = document.createElement('span');
-                moreBtn.className = 'debug-variable-overflow-btn';
-                moreBtn.textContent = '...';
-                list.appendChild(moreBtn);
-
-                // 检查 "..." 是否溢出到第二行，若溢出则逐步收起更多标签
-                let attempts = 0;
-                while (attempts < visibleTags.length) {
-                    const btnTop = moreBtn.getBoundingClientRect().top;
-                    if (btnTop - firstTop <= tolerance) break;
-                    // 从可见列表末尾取出一个归入溢出
-                    const lastVisible = visibleTags.pop();
-                    if (!lastVisible) break;
-                    lastVisible.classList.add('tag-hidden');
-                    overflowTags.unshift(lastVisible);
-                    attempts++;
-                }
-
-                // 绑定 "..." 点击事件
-                moreBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const eid = moreBtn.closest('.fullscreen-variable-tags-wrapper') ? 'promptFullscreenTextarea' : editorId;
-                    showOverflowPopover(moreBtn, overflowTags, eid);
-                });
-            });
-        }
-
-        // 重置溢出处理（折叠时调用）
-        function resetVariableOverflow(containerSelector) {
-            const container = document.querySelector(containerSelector);
-            if (!container) return;
-            container.querySelectorAll('.debug-variable-tag.tag-hidden').forEach(t => {
-                t.classList.remove('tag-hidden');
-            });
-            container.querySelectorAll('.debug-variable-overflow-btn').forEach(b => b.remove());
-        }
-
-        // 对两个变量区域都做溢出检测
-        function trimAllVariableOverflow() {
-            trimVariableOverflow('#debugVariableTagsWrapper', 'debugPromptTextarea');
-            trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea');
-        }
-
-        function resetAllVariableOverflow() {
-            resetVariableOverflow('#debugVariableTagsWrapper');
-            resetVariableOverflow('#fullscreenVariableTagsWrapper');
-        }
-
         // 示例 Prompt 内容（当描述太短时使用）
         const samplePrompt = `1. 打开店小秘ERP登录地址，https://www.dianxiaomi.com/index.htm
 2. 此时执行【GUI暂停，人工介入】，等待用户登录
@@ -7005,58 +6573,28 @@
 
             // 保存按钮
             document.getElementById('debugSaveBtn').addEventListener('click', () => {
-                var currentVersion = versionData.find(function(v){ return v.selected; });
-                if (!currentVersion) return;
-
-                // 获取当前编辑器内容
-                var textarea = document.getElementById('debugPromptTextarea');
-                var currentPrompt = textarea ? getPromptText(textarea) : '';
-
-                if (currentVersion.id === activeVersionId) {
-                    // 当前编辑的是生效版本，需要创建新草稿
-                    if(confirm('当前编辑的是生效版本，是否基于 ' + currentVersion.version + ' 创建新草稿？')) {
-                        // 创建新版本
-                        var maxNum = versionData.reduce(function(max, v){
-                            var num = parseInt(v.version.replace(/^V/i, ''), 10);
-                            return isNaN(num) ? max : Math.max(max, num);
-                        }, 0);
-                        var newVersionStr = 'V' + (maxNum + 1);
-                        var now = new Date();
-                        var timeStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-
-                        var newVersion = {
-                            id: Date.now(),
-                            version: newVersionStr,
-                            status: '草稿',
-                            updateTime: timeStr,
-                            editor: '小王',
-                            selected: false,
-                            sandbox: currentVersion.sandbox,
-                            prompt: currentPrompt,
-                            variables: currentVersion.variables ? currentVersion.variables.map(function(v){return{name:v.name,value:v.value};}) : []
-                        };
-                        versionData.unshift(newVersion);
-                        selectVersion(newVersion.id);
-                        showToast('已保存为草稿: ' + newVersionStr);
-                    }
-                } else {
-                    // 当前是草稿版本，直接更新内容
-                    currentVersion.prompt = currentPrompt;
-                    currentVersion.updateTime = (function(){
-                        var now = new Date();
-                        return now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-                    })();
-                    renderVersionDropdown();
-                    showToast('草稿已保存: ' + currentVersion.version);
-                }
-
-                // 保存到commandData（保持原有逻辑）
                 if (currentDebugId) {
                     const item = commandData.find(cmd => cmd.id === currentDebugId);
-                    if (item && textarea) {
-                        item.desc = getPromptText(textarea) || '';
+                    if (item) {
+                        // 保存 Prompt 内容
+                        item.desc = getPromptText(document.getElementById('debugPromptTextarea'));
                     }
                 }
+                // 将当前选中版本设为使用中，其余版本设为草稿
+                var currentVersion = versionData.find(function(v){ return v.selected; });
+                if (currentVersion) {
+                    versionData.forEach(function(v){
+                        if (v.id === currentVersion.id) {
+                            v.status = '线上';
+                        } else if (v.status === '线上') {
+                            v.status = '草稿';
+                        }
+                    });
+                    renderVersionDropdown();
+                    updateVersionTrigger();
+                    updateDebugEditability(currentVersion.status);
+                }
+                showToast('保存成功');
             });
 
             // 设置图标点击事件
@@ -7087,13 +6625,6 @@
                     if (label) {
                         label.textContent = variableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
                     }
-                    if (variableTagsWrapper.classList.contains('expanded')) {
-                        // 等待展开动画结束后检测溢出
-                        setTimeout(() => trimVariableOverflow('#debugVariableTagsWrapper', 'debugPromptTextarea'), 360);
-                    } else {
-                        resetVariableOverflow('#debugVariableTagsWrapper');
-                        closeVariableOverflowPopover();
-                    }
                 });
             }
 
@@ -7114,12 +6645,6 @@
                     const label = fullscreenVariableTagsToggle.querySelector('span');
                     if (label) {
                         label.textContent = fullscreenVariableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
-                    }
-                    if (fullscreenVariableTagsWrapper.classList.contains('expanded')) {
-                        setTimeout(() => trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea'), 360);
-                    } else {
-                        resetVariableOverflow('#fullscreenVariableTagsWrapper');
-                        closeVariableOverflowPopover();
                     }
                 });
             }
@@ -7320,9 +6845,6 @@
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
             fullscreenTextarea.focus();
-
-            // 全屏打开后检测变量标签溢出
-            setTimeout(() => trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea'), 400);
         }
 
         function closePromptFullscreen() {
@@ -8442,7 +7964,6 @@
                         minute: '2-digit',
                         second: '2-digit'
                     }).replace(/\//g, '-'),
-                    version: 'V' + (Math.floor(Math.random() * 4) + 1),
                     resultId: generateRandomId(),
                     prompt: prompts[i],
                     sandboxType: sandboxType,
@@ -8503,7 +8024,6 @@
                 <tr>
                     <td>${record.initiator}</td>
                     <td>${record.createTime}</td>
-                    <td>${record.version}</td>
                     <td>
                         <span class="copy-cell" onclick="copyToClipboard('${record.resultId}')">
                             ${record.resultId}
@@ -8564,8 +8084,8 @@
             customVariables = [{ name: '', desc: '', defaultValue: '' }];
             renderCustomVariablesTable();
 
-            // 切换到账权变量Tab（默认显示）
-            switchVariablesTab('auth');
+            // 切换到系统变量Tab
+            switchVariablesTab('system');
 
             document.getElementById('variablesModal').classList.add('active');
         }
@@ -8590,10 +8110,8 @@
 
             if (tabName === 'system') {
                 document.getElementById('systemVariablesTab').classList.add('active');
-            } else if (tabName === 'custom') {
+            } else {
                 document.getElementById('customVariablesTab').classList.add('active');
-            } else if (tabName === 'auth') {
-                document.getElementById('authVariablesTab').classList.add('active');
             }
         }
 
@@ -8639,15 +8157,10 @@
         function initVariablesModal() {
             const modal = document.getElementById('variablesModal');
             const closeBtn = document.getElementById('variablesModalClose');
-            const cancelBtn = document.getElementById('variablesCancelBtn');
-            const confirmBtn = document.getElementById('variablesConfirmBtn');
+            const closeBtn2 = document.getElementById('variablesCloseBtn');
 
             closeBtn.addEventListener('click', closeVariablesModal);
-            cancelBtn.addEventListener('click', closeVariablesModal);
-            confirmBtn.addEventListener('click', () => {
-                updateAuthVariableVisibility();
-                closeVariablesModal();
-            });
+            closeBtn2.addEventListener('click', closeVariablesModal);
 
             // 点击遮罩关闭
             modal.addEventListener('click', (e) => {
@@ -8666,27 +8179,6 @@
             // 新增行按钮
             document.getElementById('addCustomVariableBtn').addEventListener('click', addCustomVariableRow);
         }
-
-        // 根据账权变量checkbox状态控制调试页面变量区域的显隐
-        function updateAuthVariableVisibility() {
-            const rookieChecked = document.querySelector('.auth-checkbox[data-category="rookie"]').checked;
-            const publicChecked = document.querySelector('.auth-checkbox[data-category="public"]').checked;
-
-            // 普通模式变量区域
-            const debugRookie = document.getElementById('debug-var-group-rookie');
-            const debugPublic = document.getElementById('debug-var-group-public');
-            if (debugRookie) debugRookie.style.display = rookieChecked ? '' : 'none';
-            if (debugPublic) debugPublic.style.display = publicChecked ? '' : 'none';
-
-            // 全屏编辑模式变量区域
-            const fullscreenRookie = document.getElementById('fullscreen-var-group-rookie');
-            const fullscreenPublic = document.getElementById('fullscreen-var-group-public');
-            if (fullscreenRookie) fullscreenRookie.style.display = rookieChecked ? '' : 'none';
-            if (fullscreenPublic) fullscreenPublic.style.display = publicChecked ? '' : 'none';
-        }
-
-        // 初始化时根据默认勾选状态设置显隐
-        updateAuthVariableVisibility();
 
         // ============================================
         // 操作日志弹窗功能
@@ -9401,8 +8893,6 @@
             if (layoutEl) {
                 const resizeObserver = new ResizeObserver(() => {
                     updateResizeBtnPosition();
-                    // 布局变化时重新检测变量标签溢出
-                    trimAllVariableOverflow();
                 });
                 resizeObserver.observe(layoutEl);
             }
@@ -9410,7 +8900,7 @@
         });
         // 版本选择器
         var versionData = [
-            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', editor: '小王', selected: false,
+            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', selected: false,
               sandbox: 'browser',
               prompt: '专业的跨境物流数据抓取 Agent，访问看板提取数据。',
               variables: [
@@ -9419,7 +8909,7 @@
                 { name: 'max_retry', value: '3' }
               ]
             },
-            { id: 10882, version: 'V3', status: '线上', updateTime: '2026-04-27 13:39:26', editor: '小李',
+            { id: 10882, version: 'V3', status: '线上', updateTime: '2026-04-27 13:39:26',
               sandbox: 'code',
               prompt: '跨境物流数据抓取 Agent V3，支持多平台数据采集与格式化输出。',
               variables: [
@@ -9428,7 +8918,7 @@
                 { name: 'timeout', value: '30000' }
               ]
             },
-            { id: 10881, version: 'V2', status: '草稿', updateTime: '2026-04-27 12:10:12', editor: '小张',
+            { id: 10881, version: 'V2', status: '草稿', updateTime: '2026-04-27 12:10:12',
               sandbox: 'browser',
               prompt: '物流数据采集 Agent V2，从指定页面抓取物流信息并生成报告。',
               variables: [
@@ -9436,7 +8926,7 @@
                 { name: 'report_type', value: 'summary' }
               ]
             },
-            { id: 10878, version: 'V1', status: '草稿', updateTime: '2026-04-27 11:45:58', editor: '小王',
+            { id: 10878, version: 'V1', status: '草稿', updateTime: '2026-04-27 11:45:58',
               sandbox: 'code',
               prompt: '基础物流数据抓取脚本，从单一数据源获取物流跟踪信息。',
               variables: [
@@ -9445,8 +8935,7 @@
               ]
             }
         ];
-        var activeVersionId = null; // 当前线上生效的版本ID
-        // 默认选中 updateTime 最新的版本，并设置 activeVersionId
+        // 默认选中 updateTime 最新的版本
         (function(){
             var latest = versionData.slice().sort(function(a, b){
                 return new Date(b.updateTime) - new Date(a.updateTime);
@@ -9454,75 +8943,20 @@
             if (latest) {
                 versionData.forEach(function(v){ v.selected = (v.id === latest.id); });
             }
-            // 找到status==='线上'的版本作为生效版本
-            var onlineVersion = versionData.find(function(v){ return v.status === '线上'; });
-            if(onlineVersion) {
-                activeVersionId = onlineVersion.id;
-            }
         })();
         function getVersionTagClass(s){return s==='草稿'?'version-tag--draft':'version-tag--online';}
-        function updateActiveBadge() {
-            var badge = document.getElementById('versionActiveBadge');
-            if (!badge) return;
-            var activeV = versionData.find(function(v){ return v.id === activeVersionId; });
-            if (activeV) {
-                badge.textContent = '生效中: ' + activeV.version;
-                badge.style.display = 'inline-flex';
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-        function renderVersionDropdown(){
-            var d=document.getElementById('versionDropdown');
-            if(!d)return;
-            var displayStatus=function(s){return s==='线上'?'使用中':s;};
-            var itemsHtml=versionData.map(function(item){
-                var isActive = item.id === activeVersionId;
-                var cls = 'version-item';
-                if(item.selected) cls += ' version-item--selected';
-                if(isActive) cls += ' version-item--active';
-                var tagLabel = isActive ? '生效中: '+item.version : (item.status==='线上'?'使用中':item.status)+': '+item.version;
-                var tagCls = isActive ? 'version-tag version-tag--active' : 'version-tag '+getVersionTagClass(item.status);
-                var deleteBtnHtml = isActive ? '' : '<span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span>';
-                var activateBtnHtml = isActive ? '' : '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>';
-                return '<div class="'+cls+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="'+tagCls+'">'+tagLabel+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span>'+'<span class="version-item-actions">'+deleteBtnHtml+activateBtnHtml+'</span></div><span class="version-item-editor">编辑人：'+(item.editor||'小王')+'</span><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';
-            }).join('');
-            var addBtnHtml='<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';
-            d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;
-        }
-        function updateVersionTrigger(){
-            var s=versionData.find(function(v){return v.selected;});
-            if(!s)return;
-            var t=document.getElementById('versionTriggerTag');
-            if(t){
-                if(s.id===activeVersionId){
-                    t.textContent='生效中: '+s.version;
-                    t.className='version-tag version-tag--active';
-                } else {
-                    t.textContent='草稿: '+s.version;
-                    t.className='version-tag version-tag--draft';
-                }
-            }
-        }
+        function renderVersionDropdown(){var d=document.getElementById('versionDropdown');if(!d)return;var displayStatus=function(s){return s==='线上'?'使用中':s;};var itemsHtml=versionData.map(function(item){return '<div class="version-item'+(item.selected?' version-item--selected':'')+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="version-tag '+getVersionTagClass(item.status)+'">'+displayStatus(item.status)+': '+item.version+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span><span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span></div><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';}).join('');var addBtnHtml='<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;}
+        function updateVersionTrigger(){var s=versionData.find(function(v){return v.selected;});if(!s)return;var t=document.getElementById('versionTriggerTag');if(t){var ds=s.status==='线上'?'使用中':s.status;t.textContent=ds+': '+s.version;t.className='version-tag '+getVersionTagClass(s.status);}}
         function renderDebugVariableTags(variables) {
             variables = variables || [];
             var wrapper = document.getElementById('debugVariableTagsWrapper');
             if (wrapper) {
-                // 先重置溢出状态
-                resetVariableOverflow('#debugVariableTagsWrapper');
                 var groups = wrapper.querySelectorAll('.debug-variable-group');
-                var customGroup = null;
-                for (var i = 0; i < groups.length; i++) {
-                    var title = groups[i].querySelector('.debug-variable-group-title');
-                    if (title && title.textContent.trim() === '自定义变量') {
-                        customGroup = groups[i];
-                        break;
-                    }
-                }
+                var customGroup = groups[groups.length - 1];
                 var list = customGroup ? customGroup.querySelector('.debug-variable-tags-list') : null;
                 if (list) {
                     list.innerHTML = variables.map(function(v) {
-                        return '<span class="debug-variable-tag debug-variable-tag-b" data-variable="' + v.name + '">' + v.name + '</span>';
+                        return '<span class="debug-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
                     }).join('');
                     list.querySelectorAll('.debug-variable-tag').forEach(function(tag) {
                         tag.addEventListener('click', function() {
@@ -9530,36 +8964,21 @@
                         });
                     });
                 }
-                // 更新后重新检测溢出
-                if (wrapper.classList.contains('expanded')) {
-                    setTimeout(function() { trimVariableOverflow('#debugVariableTagsWrapper', 'debugPromptTextarea'); }, 50);
-                }
             }
             var fsWrapper = document.getElementById('fullscreenVariableTagsWrapper');
             if (fsWrapper) {
-                resetVariableOverflow('#fullscreenVariableTagsWrapper');
                 var fsGroups = fsWrapper.querySelectorAll('.debug-variable-group');
-                var fsCustomGroup = null;
-                for (var j = 0; j < fsGroups.length; j++) {
-                    var fsTitle = fsGroups[j].querySelector('.debug-variable-group-title');
-                    if (fsTitle && fsTitle.textContent.trim() === '自定义变量') {
-                        fsCustomGroup = fsGroups[j];
-                        break;
-                    }
-                }
+                var fsCustomGroup = fsGroups[fsGroups.length - 1];
                 var fsList = fsCustomGroup ? fsCustomGroup.querySelector('.debug-variable-tags-list') : null;
                 if (fsList) {
                     fsList.innerHTML = variables.map(function(v) {
-                        return '<span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="' + v.name + '">' + v.name + '</span>';
+                        return '<span class="debug-variable-tag fullscreen-variable-tag" data-variable="' + v.name + '">' + v.name + '</span>';
                     }).join('');
                     fsList.querySelectorAll('.fullscreen-variable-tag').forEach(function(tag) {
                         tag.addEventListener('click', function() {
                             insertVariableIntoTextarea(tag.dataset.variable, 'promptFullscreenTextarea');
                         });
                     });
-                }
-                if (fsWrapper.classList.contains('expanded')) {
-                    setTimeout(function() { trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea'); }, 50);
                 }
             }
         }
@@ -9584,7 +9003,7 @@
                 varBtn.style.cursor = 'pointer';
             }
         }
-        function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var label=c.id===activeVersionId?'生效中':(c.status==='线上'?'使用中':c.status);showToast('已切换到 '+label+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status);}}
+        function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var ds=c.status==='线上'?'使用中':c.status;showToast('已切换到 '+ds+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status);}}
         function addNewVersion(){
             var current = versionData.find(function(v){return v.selected;});
             if(!current){showToast('未找到当前选中的版本');return;}
@@ -9601,7 +9020,6 @@
                 version: newVersionStr,
                 status: '草稿',
                 updateTime: timeStr,
-                editor: '小王',
                 selected: false,
                 sandbox: current.sandbox,
                 prompt: current.prompt,
@@ -9613,20 +9031,17 @@
         function showVersionDeleteConfirm(id, btnEl) {
             // 移除已有的确认浮窗
             document.querySelectorAll('.version-delete-confirm').forEach(function(el){ el.remove(); });
-            // 关闭已存在的设为生效确认浮窗
-            var activateConfirm = document.querySelector('.version-activate-confirm');
-            if(activateConfirm) activateConfirm.remove();
             var item = versionData.find(function(v){ return v.id === id; });
             if (!item) return;
             var confirmEl = document.createElement('div');
             confirmEl.className = 'version-delete-confirm';
             confirmEl.innerHTML = '<span>确认删除?</span><button class="version-delete-confirm-yes" onclick="event.stopPropagation();deleteVersion('+id+')">确定</button><button class="version-delete-confirm-no" onclick="event.stopPropagation();cancelVersionDelete(this)">取消</button>';
             document.body.appendChild(confirmEl);
-            // 计算位置：删除按钮下方
+            // 计算位置：删除按钮上方
             var rect = btnEl.getBoundingClientRect();
             var confirmW = confirmEl.offsetWidth;
             var confirmH = confirmEl.offsetHeight;
-            confirmEl.style.top = (rect.bottom + 8) + 'px';
+            confirmEl.style.top = (rect.top - confirmH - 8) + 'px';
             confirmEl.style.left = (rect.right - confirmW + 10) + 'px';
         }
         function cancelVersionDelete(btnEl) {
@@ -9640,11 +9055,6 @@
                 showToast('至少保留一个版本');
                 return;
             }
-            // 不允许删除生效版本
-            if (id === activeVersionId) {
-                showToast('生效版本不可删除');
-                return;
-            }
             var idx = versionData.findIndex(function(v){ return v.id === id; });
             if (idx === -1) return;
             var wasSelected = versionData[idx].selected;
@@ -9656,68 +9066,9 @@
             }
             showToast('版本已删除');
         }
-        function showActivateConfirm(id, btnEl) {
-            // 移除已有的确认浮窗
-            var old = document.querySelector('.version-activate-confirm');
-            if(old) old.remove();
-            // 关闭已存在的删除确认浮窗
-            document.querySelectorAll('.version-delete-confirm').forEach(function(el){ el.remove(); });
-
-            var target = versionData.find(function(v){ return v.id === id; });
-            var current = versionData.find(function(v){ return v.id === activeVersionId; });
-            if(!target) return;
-
-            var confirmDiv = document.createElement('div');
-            confirmDiv.className = 'version-activate-confirm';
-            confirmDiv.style.cssText = 'position:fixed;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:16px;z-index:1300;min-width:240px;';
-
-            var currentLabel = current ? current.version : '无';
-            confirmDiv.innerHTML = '<div style="font-size:13px;color:#333;margin-bottom:12px;">确定将线上版本从 <b>'+currentLabel+'</b> 切换为 <b>'+target.version+'</b> 吗？</div>'
-                + '<div style="display:flex;justify-content:flex-end;gap:8px;">'
-                + '<button onclick="this.closest(\'.version-activate-confirm\').remove()" style="padding:4px 12px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;font-size:12px;">取消</button>'
-                + '<button onclick="activateVersion('+id+');this.closest(\'.version-activate-confirm\').remove()" style="padding:4px 12px;border:none;border-radius:4px;background:#7C3AED;color:#fff;cursor:pointer;font-size:12px;">确定</button>'
-                + '</div>';
-
-            document.body.appendChild(confirmDiv);
-
-            // 定位在按钮附近
-            var rect = btnEl.getBoundingClientRect();
-            confirmDiv.style.top = (rect.bottom + 8) + 'px';
-            confirmDiv.style.left = Math.max(10, rect.left - 100) + 'px';
-
-            // 点击外部关闭
-            setTimeout(function(){
-                document.addEventListener('click', function closeActivate(e){
-                    if(!confirmDiv.contains(e.target) && e.target !== btnEl){
-                        confirmDiv.remove();
-                        document.removeEventListener('click', closeActivate);
-                    }
-                });
-            }, 100);
-        }
-        function activateVersion(id) {
-            var target = versionData.find(function(v){ return v.id === id; });
-            if(!target) return;
-
-            // 原线上版本改为草稿
-            versionData.forEach(function(v){
-                if(v.id === activeVersionId) v.status = '草稿';
-            });
-
-            // 新版本设为线上
-            target.status = '线上';
-            activeVersionId = id;
-
-            // 更新UI
-            updateActiveBadge();
-            renderVersionDropdown();
-            updateVersionTrigger();
-
-            showToast('版本 ' + target.version + ' 已生效');
-        }
         function toggleVersionDropdown(show){var t=document.getElementById('versionTrigger'),d=document.getElementById('versionDropdown');if(!t||!d)return;var s=show!==undefined?show:!d.classList.contains('show');if(s){d.classList.add('show');t.classList.add('active');var r=t.getBoundingClientRect();d.style.top=(r.bottom+6)+'px';var l=r.left,w=340;if(l+w>window.innerWidth-10){l=r.right-w;}if(l<10)l=10;d.style.left=l+'px';}else{d.classList.remove('show');t.classList.remove('active');document.querySelectorAll('.version-delete-confirm').forEach(function(el){el.remove();});}}
         document.addEventListener('click',function(e){var s=document.getElementById('versionSelector');var dd=document.getElementById('versionDropdown');if(s&&!s.contains(e.target)&&(!dd||!dd.contains(e.target)))toggleVersionDropdown(false);});
-        renderVersionDropdown();updateVersionTrigger();updateActiveBadge();
+        renderVersionDropdown();updateVersionTrigger();
 
         // ============================================
         // 执行记录页面功能

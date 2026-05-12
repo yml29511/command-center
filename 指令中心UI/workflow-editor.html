@@ -512,6 +512,55 @@
             font-size: 15px;
         }
 
+        /* 提示图标 */
+        .info-icon {
+            font-size: 14px;
+            color: var(--text-3);
+            cursor: help;
+            margin-left: 6px;
+            transition: color 0.15s;
+            position: relative;
+        }
+        .info-icon:hover {
+            color: var(--primary);
+        }
+
+        /* 自定义气泡提示 */
+        .tooltip {
+            position: fixed;
+            bottom: auto;
+            left: auto;
+            transform: translate(-50%, -100%);
+            margin-top: -12px;
+            background: #1A1A2E;
+            color: #FFFFFF;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            white-space: normal;
+            width: max-content;
+            max-width: 280px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 99999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1A1A2E transparent transparent transparent;
+        }
+        .info-icon:hover .tooltip {
+            opacity: 1;
+        }
+
         /* Command name area */
         .cmd-name-link {
             color: var(--primary);
@@ -745,6 +794,12 @@
         .link-select:focus {
             border-color: var(--primary);
         }
+        .link-select:disabled,
+        .link-select.empty-state {
+            color: var(--text-3);
+            cursor: not-allowed;
+            background-color: #F9FAFB;
+        }
 
         .link-hint {
             font-size: 12px;
@@ -782,6 +837,28 @@
         .fab-btn:hover {
             transform: scale(1.08);
             box-shadow: 0 6px 20px rgba(101, 61, 214, 0.45);
+        }
+
+        /* 测试按钮 */
+        .test-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            background: var(--accent);
+            color: var(--text-white);
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(23, 191, 181, 0.3);
+            z-index: 200;
+            transition: all 0.15s;
+        }
+        .test-btn:hover {
+            background: #14A59C;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -1045,14 +1122,21 @@
                     <span class="section-icon">🚀</span>
                     执行模式
                 </div>
-                <div class="exec-mode-value">AgentBay/无影BUA</div>
+                <div class="exec-mode-value">CNBUA</div>
             </div>
 
             <!-- 执行衔接 -->
             <div class="drawer-section">
                 <div class="drawer-section-title">
-                    <span class="section-icon">🔗</span>
+                    <span class="section-icon"></span>
                     执行衔接
+                    <span class="info-icon" id="execLinkInfoIcon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </span>
                 </div>
                 <div class="link-toggle-row">
                     <span class="link-toggle-label">接续前置BUA执行</span>
@@ -1066,7 +1150,7 @@
                         <option>浏览器操作-1（风险系统数据抓取）</option>
                         <option>浏览器操作-2（商家状态核验）</option>
                     </select>
-                    <div class="link-hint">开启后，本节点将在人工确认完成后，接续所选BUA节点的浏览器会话继续执行</div>
+                    <div class="link-hint">开启后，本节点将接续所选BUA节点的浏览器操作继续执行</div>
                 </div>
             </div>
 
@@ -1128,6 +1212,9 @@
 <!-- FAB -->
 <button class="fab-btn">💬</button>
 
+<!-- 测试按钮 -->
+<button class="test-btn" onclick="toggleTestMode()" id="testModeBtn">🧪 切换：无前置节点状态</button>
+
 <script>
     // 字符数统计
     const textarea = document.getElementById('cmdContent');
@@ -1155,7 +1242,82 @@
         const collapseEl = document.getElementById('buaLinkCollapse');
         switchEl.classList.toggle('active');
         collapseEl.classList.toggle('open');
+        
+        // 检查是否有前置浏览器节点
+        if (switchEl.classList.contains('active')) {
+            checkPreBuaNodes();
+        }
     }
+    
+    // 检测前置BUA节点
+    function checkPreBuaNodes() {
+        const selectEl = document.getElementById('preBuaSelect');
+        const options = selectEl.querySelectorAll('option');
+        
+        // 模拟：如果前置没有浏览器节点，显示提示
+        // 实际应该根据工作流中的节点动态判断
+        const hasPreBuaNodes = options.length > 0;
+        
+        if (!hasPreBuaNodes) {
+            selectEl.innerHTML = '<option disabled selected>前置暂无CNBUA节点可以选择</option>';
+            selectEl.classList.add('empty-state');
+            selectEl.disabled = true;
+        } else {
+            selectEl.classList.remove('empty-state');
+            selectEl.disabled = false;
+            selectEl.style.color = 'var(--text-1)';
+        }
+    }
+    
+    // 测试模式切换
+    let testMode = false; // false = 有前置节点, true = 无前置节点
+    const originalOptions = [
+        '<option>浏览器操作-1（风险系统数据抓取）</option>',
+        '<option>浏览器操作-2（商家状态核验）</option>'
+    ];
+    
+    function toggleTestMode() {
+        testMode = !testMode;
+        const selectEl = document.getElementById('preBuaSelect');
+        const btn = document.getElementById('testModeBtn');
+        
+        if (testMode) {
+            // 切换到无前置节点状态
+            selectEl.innerHTML = '';
+            btn.textContent = '🧪 切换：有前置节点状态';
+            btn.style.background = '#FF9800';
+        } else {
+            // 切换回有前置节点状态
+            selectEl.innerHTML = originalOptions.join('');
+            btn.textContent = '🧪 切换：无前置节点状态';
+            btn.style.background = 'var(--accent)';
+        }
+        
+        // 如果开关是打开的，立即检测并显示对应状态
+        const switchEl = document.getElementById('buaLinkSwitch');
+        if (switchEl.classList.contains('active')) {
+            checkPreBuaNodes();
+        }
+    }
+    
+    // 初始化提示气泡
+    function initTooltip() {
+        const icon = document.getElementById('execLinkInfoIcon');
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = '当前仅支持CNBUA执行浏览器操作衔接';
+        icon.appendChild(tooltip);
+        
+        // 鼠标悬浮时动态计算位置
+        icon.addEventListener('mouseenter', function() {
+            const rect = icon.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 + 'px';
+            tooltip.style.top = rect.top + 'px';
+        });
+    }
+    
+    // 页面加载时初始化
+    window.addEventListener('DOMContentLoaded', initTooltip);
 </script>
 </body>
 </html>
