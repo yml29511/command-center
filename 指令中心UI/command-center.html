@@ -10504,10 +10504,11 @@
             </button>
         </div>
         <div class="modal-body">
-            <p class="timeout-warning-text">本模板执行时间配置超过10分钟。<br>请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="timeout-warning-link" href="#" target="_blank">使用说明</a>。</p>
+            <p class="timeout-warning-text">本模板执行时间配置超过10分钟。<br>请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="timeout-warning-link" href="#" target="_blank">使用说明</a>。<br>请确认是否保存？</p>
         </div>
-        <div class="modal-footer">
-            <button class="btn-modal btn-modal-primary" id="timeoutWarningConfirm">我知道了</button>
+        <div class="modal-footer" style="justify-content: flex-end; gap: 12px;">
+            <button class="btn-modal btn-modal-default" id="timeoutWarningCancel">取消</button>
+            <button class="btn-modal btn-modal-primary" id="timeoutWarningConfirm">确认</button>
         </div>
     </div>
 </div>
@@ -10588,30 +10589,89 @@
         if (!modal) return;
         modal.classList.add('active');
     }
-
+    
     function closeTimeoutWarningModal() {
         const modal = document.getElementById('timeoutWarningModal');
         if (!modal) return;
         modal.classList.remove('active');
     }
-
+    
+    // 超时弹窗确认后执行保存
+    function executeSaveAfterTimeoutWarning() {
+        closeTimeoutWarningModal();
+        // 执行保存按钮的后续逻辑（跳过超时检查）
+        var currentVersion = versionData.find(function(v){ return v.selected; });
+        if (!currentVersion) return;
+    
+        var textarea = document.getElementById('debugPromptTextarea');
+        var currentPrompt = textarea ? getPromptText(textarea) : '';
+    
+        if (currentVersion.id === activeVersionId) {
+            if(confirm('当前编辑的是生效版本，是否基于 ' + currentVersion.version + ' 创建新草稿？')) {
+                var maxNum = versionData.reduce(function(max, v){
+                    var num = parseInt(v.version.replace(/^V/i, ''), 10);
+                    return isNaN(num) ? max : Math.max(max, num);
+                }, 0);
+                var newVersionStr = 'V' + (maxNum + 1);
+                var now = new Date();
+                var timeStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+    
+                var newVersion = {
+                    id: Date.now(),
+                    version: newVersionStr,
+                    status: '草稿',
+                    updateTime: timeStr,
+                    editor: '小王',
+                    selected: false,
+                    sandbox: currentVersion.sandbox,
+                    prompt: currentPrompt,
+                    variables: currentVersion.variables ? currentVersion.variables.map(function(v){return{name:v.name,value:v.value};}) : []
+                };
+                versionData.unshift(newVersion);
+                selectVersion(newVersion.id);
+                showToast('已保存为草稿: ' + newVersionStr);
+            }
+        } else {
+            currentVersion.prompt = currentPrompt;
+            currentVersion.updateTime = (function(){
+                var now = new Date();
+                return now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+            })();
+            renderVersionDropdown();
+            showToast('草稿已保存: ' + currentVersion.version);
+        }
+    
+        if (currentDebugId) {
+            const item = commandData.find(cmd => cmd.id === currentDebugId);
+            if (item && textarea) {
+                item.desc = getPromptText(textarea) || '';
+            }
+        }
+    }
+    
     (function() {
         const modal = document.getElementById('timeoutWarningModal');
         const closeBtn = document.getElementById('timeoutWarningClose');
+        const cancelBtn = document.getElementById('timeoutWarningCancel');
         const confirmBtn = document.getElementById('timeoutWarningConfirm');
-
+    
         if (!modal) return;
-
-        // 关闭按钮
+    
+        // 关闭按钮(×)
         if (closeBtn) {
             closeBtn.addEventListener('click', closeTimeoutWarningModal);
         }
-
-        // “我知道了”按钮
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', closeTimeoutWarningModal);
+    
+        // 取消按钮
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', closeTimeoutWarningModal);
         }
-
+    
+        // 确认按钮 - 执行保存
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', executeSaveAfterTimeoutWarning);
+        }
+    
         // 点击遮罩关闭
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
