@@ -14,6 +14,8 @@
 
 **`${rawInput}` 可能的输入示例（非标准情况）：**
 
+**示例 1 - 对象数组格式：**
+
 ```json
 {
   "taskId": "UNIQUE_TASK_20260420",
@@ -26,10 +28,32 @@
     "riskLevel": "禁止合作",
     "total": 5,
     "companies": [
-      {"ID": 1, "companyName": "示例物流公司A有限公司", "riskType": "欺诈风险"},
-      {"ID": 2, "companyName": "示例物流公司B有限公司", "riskType": "合规风险"}
+      {"ID": 1, "companyName": "示例物流公司A有限公司"},
+      {"ID": 2, "companyName": "示例物流公司B有限公司"}
     ]
   }
+}
+```
+
+**示例 2 - 字符串数组格式（上游BUA风险系统实际输出）：**
+
+```json
+{
+  "target_date": "2026-04-04",
+  "total": 5,
+  "companies": ["示例物流公司A有限公司", "示例物流公司B有限公司", "示例物流公司C有限公司"]
+}
+```
+
+**示例 3 - 无数据情况：**
+
+```json
+{
+  "target_date": "2026-04-04",
+  "total": 0,
+  "companies": [],
+  "status": "no_data",
+  "message": "未查询到数据"
 }
 ```
 
@@ -72,7 +96,15 @@
 |----------|---------------|
 | id | id, ID, 序号 |
 | company_name | company_name, companyName, name, 企业名称 |
-| risk_type | risk_type, riskType, risk, 风险类型 |
+
+**字符串数组转换规则：**
+
+如果企业列表是字符串数组（如 `["公司A", "公司B"]`）而非对象数组，需进行格式转换：
+
+1. 遍历字符串数组，为每个企业名称创建对象
+2. 自动生成递增的 `id`（从1开始）
+3. 将字符串值赋给 `company_name` 字段
+4. 转换后格式：`[{"id": 1, "company_name": "公司A"}, {"id": 2, "company_name": "公司B"}]`
 
 **status 值映射：**
 
@@ -91,7 +123,8 @@
 3. 如果有 `data` 且 `data` 本身是数组 → 将 `data` 作为 `company_list`。
 4. 依次查找顶层或 `data` 下的 `company_list` / `companyList` / `companies` / `list` / `data` / `企业名单` 等key。
 5. **递归搜索**：如果上述都找不到，在整个JSON中深度搜索第一个数组类型的值，且其元素包含 `company_name` 或 `name` 字段 → 作为 `company_list`。
-6. 如果仍找不到任何企业列表 → 判定为失败，输出失败JSON。
+6. **字符串数组处理**：如果找到的数组是字符串数组（如 `["公司A", "公司B"]`），按「字符串数组转换规则」转换为对象数组。
+7. 如果仍找不到任何企业列表 → 判定为失败，输出失败JSON。
 
 ### Step 4: 补全与校验
 
@@ -99,8 +132,7 @@
 2. `total_companies` 始终设为 `company_list` 实际长度。
 3. 校验 `company_list` 中每个元素：
    - 至少存在可映射为 `company_name` 的字段（如 `companyName` / `name` / `企业名称`），否则记录内部警告但不丢弃该条目。
-   - 不存在 `risk_type` 映射字段时，保留为空字符串 ""，不丢弃。
-4. 确保 `company_list` 中每个元素最终都包含 `id`、`company_name`、`risk_type` 三个字段。
+4. 确保 `company_list` 中每个元素最终都包含 `id`、`company_name` 两个字段。
 
 ### Step 5: 组装输出
 
@@ -118,7 +150,7 @@
     "risk_level": "...",
     "total_companies": 5,
     "company_list": [
-      {"id": 1, "company_name": "...", "risk_type": "..."}
+      {"id": 1, "company_name": "..."}
     ]
   }
 }
@@ -128,7 +160,7 @@
 
 输出必须为**纯JSON字符串**，严禁包含Markdown代码块标记（如 ` ```json`）、解释性文字、前言或后缀。
 
-**成功输出示例：**
+**成功输出示例 1 - 标准对象数组：**
 
 ```json
 {
@@ -142,8 +174,30 @@
     "risk_level": "禁止合作",
     "total_companies": 5,
     "company_list": [
-      {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
-      {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
+      {"id": 1, "company_name": "示例物流公司A有限公司"},
+      {"id": 2, "company_name": "示例物流公司B有限公司"}
+    ]
+  }
+}
+```
+
+**成功输出示例 2 - 字符串数组转换后：**
+
+```json
+{
+  "task_id": "AUTO_20260427100000",
+  "timestamp": "2026-04-27T10:00:00Z",
+  "status": "success",
+  "message": "格式转换完成",
+  "data": {
+    "target_date": "2026-04-04",
+    "business_line": "",
+    "risk_level": "",
+    "total_companies": 3,
+    "company_list": [
+      {"id": 1, "company_name": "示例物流公司A有限公司"},
+      {"id": 2, "company_name": "示例物流公司B有限公司"},
+      {"id": 3, "company_name": "示例物流公司C有限公司"}
     ]
   }
 }
@@ -170,7 +224,7 @@
 ## Constraints
 
 1. **纯JSON输出**：输出必须是可被 `json.loads()` 直接解析的纯JSON字符串，禁止任何额外文本、注释或Markdown格式。
-2. **不修改业务数据**：企业名称、风险类型等业务数据内容必须原样保留，仅做字段名映射和结构转换，不得增删改内容。
+2. **不修改业务数据**：企业名称等业务数据内容必须原样保留，仅做字段名映射和结构转换，不得增删改内容。
 3. **字段映射大小写不敏感**：匹配源字段时不区分大小写（如 `companyName` 和 `companyname` 均视为匹配）。
 4. **输入无法解析兜底**：如果输入完全无法解析为JSON，输出status为 `"error"` 的标准格式（见失败示例）。
 5. **不负责拆分名单**：不执行批次拆分操作，拆分交由下游名单拆分Agent处理。

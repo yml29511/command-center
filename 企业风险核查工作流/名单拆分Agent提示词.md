@@ -11,9 +11,11 @@
 | 变量名 | 类型 | 说明 | 示例 |
 |--------|------|------|------|
 | `${upstreamOutput}` | JSON对象 | 上游Agent的完整JSON输出（包含task_id、status、message、data等） | 见下方示例 |
-| `${batchSize}` | 整数 | 每组最大数量，默认10 | `10` |
+| `${batchSize}` | 整数 | 每组最大数量，默认8 | `8` |
 
 **`${upstreamOutput}` 输入示例：**
+
+**示例 1 - 包含完整信息：**
 
 ```json
 {
@@ -27,8 +29,30 @@
     "risk_level": "禁止合作",
     "total_companies": 5,
     "company_list": [
-      {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
-      {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
+      {"id": 1, "company_name": "示例物流公司A有限公司"},
+      {"id": 2, "company_name": "示例物流公司B有限公司"}
+    ]
+  }
+}
+```
+
+**示例 2 - 上游BUA风险系统场景：**
+
+```json
+{
+  "task_id": "AUTO_20260427100000",
+  "timestamp": "2026-04-27T10:00:00Z",
+  "status": "success",
+  "message": "格式转换完成",
+  "data": {
+    "target_date": "2026-04-04",
+    "business_line": "",
+    "risk_level": "",
+    "total_companies": 3,
+    "company_list": [
+      {"id": 1, "company_name": "示例物流公司A有限公司"},
+      {"id": 2, "company_name": "示例物流公司B有限公司"},
+      {"id": 3, "company_name": "示例物流公司C有限公司"}
     ]
   }
 }
@@ -42,7 +66,7 @@
 2. 校验 `status` 字段：
    - 如果 `status` 不是 `"success"`，直接输出错误信息（见 Constraints 第6条）。
 3. 从 `data.company_list` 提取企业名单数组。
-4. 解析 `${batchSize}`，如未提供或非法则使用默认值 **10**。
+4. 解析 `${batchSize}`，如未提供或非法则使用默认值 **8**。
 5. 提取以下元数据：`task_id`、`target_date`、`business_line`、`risk_level`，在组装输出时将其复制到每个 batch 对象中。
 
 ### Step 2: 分批拆分
@@ -60,7 +84,7 @@
 
 输出必须为**纯JSON数组**，严禁包含Markdown代码块标记（如 `\`\`\`json`）、解释性文字、前言或后缀。
 
-**注意：输出的顶层结构直接是数组，不是对象包裹。** 这是为了让下游循环组件能直接遍历。
+**注意：输出的顶层结构直接是数组，不是对象包裹。** 这是为了让下游并发组件能直接遍历。
 
 ```json
 [
@@ -71,8 +95,8 @@
     "business_line": "跨境物流事业部",
     "risk_level": "禁止合作",
     "items": [
-      {"id": 1, "company_name": "示例物流公司A有限公司", "risk_type": "欺诈风险"},
-      {"id": 2, "company_name": "示例物流公司B有限公司", "risk_type": "合规风险"}
+      {"id": 1, "company_name": "示例物流公司A有限公司"},
+      {"id": 2, "company_name": "示例物流公司B有限公司"}
     ]
   }
 ]
@@ -80,7 +104,7 @@
 
 ## Constraints
 
-1. **严禁修改名单内容**：名单中的任何字段（`id`、`company_name`、`risk_type` 等）必须原样保留，不得增删改。
+1. **严禁修改名单内容**：名单中的任何字段（`id`、`company_name` 等）必须原样保留，不得增删改。
 2. **最后一组不补齐**：如最后一组数量不足 `${batchSize}`，按实际数量输出，禁止填充空数据。
 3. **纯JSON数组输出**：输出必须是可被 `json.loads()` 直接解析的纯JSON数组（顶层是 `[...]`），禁止用对象包裹，禁止任何额外文本、注释或Markdown格式。
 4. **职责单一**：仅执行解析、校验、拆分与透传，不调用任何外部工具，不执行查询操作。

@@ -281,8 +281,8 @@
         }
 
         .tab-nav-inner {
-            max-width: 1440px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0;
             display: flex;
             gap: 32px;
         }
@@ -321,8 +321,8 @@
            主内容区域
            ============================================ */
         .main-container {
-            max-width: 1440px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0;
             margin-left: var(--sidebar-width);
             padding: 24px;
             transition: margin-left 0.3s ease;
@@ -551,10 +551,7 @@
         }
 
         .group-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
+            display: none;
         }
 
         .group-indicator {
@@ -574,39 +571,34 @@
         }
 
         .group-cards-wrapper {
-            overflow-x: auto;
-            padding-bottom: 8px;
-            /* 自定义滚动条样式 */
-            scrollbar-width: thin;
-            scrollbar-color: var(--border-color) transparent;
-        }
-
-        .group-cards-wrapper::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .group-cards-wrapper::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .group-cards-wrapper::-webkit-scrollbar-thumb {
-            background-color: var(--border-color);
-            border-radius: 3px;
-        }
-
-        .group-cards-wrapper::-webkit-scrollbar-thumb:hover {
-            background-color: var(--text-tertiary);
+            overflow-x: visible;
+            padding-bottom: 0;
         }
 
         .group-cards {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 16px;
-            min-width: min-content;
+        }
+
+        @media (min-width: 500px) {
+            .group-cards { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 800px) {
+            .group-cards { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1200px) {
+            .group-cards { grid-template-columns: repeat(4, 1fr); }
+        }
+        @media (min-width: 1600px) {
+            .group-cards { grid-template-columns: repeat(5, 1fr); }
+        }
+        @media (min-width: 2000px) {
+            .group-cards { grid-template-columns: repeat(6, 1fr); }
         }
 
         .command-card {
-            width: 260px;
-            flex-shrink: 0;
+            width: auto;
             background-color: var(--card-bg);
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
@@ -616,8 +608,6 @@
             flex-direction: column;
             transition: box-shadow var(--transition-normal), transform var(--transition-fast);
             cursor: pointer;
-            position: relative;
-            overflow: visible;
         }
 
         .command-card:hover {
@@ -1008,29 +998,6 @@
             cursor: pointer;
         }
 
-        .rookie-auth-info-cell {
-            padding: 12px 16px;
-        }
-
-        .rookie-auth-header {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 6px;
-        }
-
-        .rookie-auth-label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-        }
-
-        .rookie-auth-desc {
-            font-size: 12px;
-            color: #999;
-            line-height: 1.5;
-        }
-
         .auth-badge {
             display: inline-flex;
             align-items: center;
@@ -1056,89 +1023,6 @@
         .auth-badge-e { background: #FEF2F2; color: #DC2626; }
         .auth-badge-f { background: #ECFEFF; color: #0891B2; }
         .auth-badge-g { background: #FEFCE8; color: #CA8A04; }
-
-        /* 菜鸟账权 radio 单选按钮样式 */
-        .rookie-radio-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            margin-right: 16px;
-            cursor: pointer;
-            font-size: 13px;
-            color: var(--text-primary);
-        }
-
-        .rookie-radio {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 16px !important;
-            height: 16px !important;
-            padding: 0 !important;
-            margin: 0;
-            border: 2px solid #ccc;
-            border-radius: 50% !important;
-            outline: none;
-            cursor: pointer;
-            position: relative;
-            flex-shrink: 0;
-            box-sizing: border-box;
-            vertical-align: middle;
-            display: inline-block;
-            transition: border-color 0.2s;
-        }
-
-        .rookie-radio:checked {
-            border-color: #6C5CE7;
-        }
-
-        .rookie-radio:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: #6C5CE7;
-            border-radius: 50%;
-        }
-
-        .rookie-radio-text {
-            font-size: 13px;
-            color: var(--text-primary);
-        }
-
-        .rookie-hint-text {
-            font-size: 12px;
-            color: #999;
-            line-height: 1.6;
-            margin-top: 8px;
-        }
-
-        /* 系统清单文字链样式 */
-        .system-list-link {
-            color: #6C5CE7;
-            cursor: pointer;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .system-list-link:hover {
-            text-decoration: underline;
-        }
-
-        /* 全局 .variables-table input 对 radio 的覆盖 */
-        .variables-table input[type="radio"] {
-            width: 16px !important;
-            height: 16px !important;
-            padding: 0 !important;
-            margin: 0 4px 0 0;
-            flex-shrink: 0;
-            box-sizing: border-box;
-            vertical-align: middle;
-            accent-color: #6C5CE7;
-            cursor: pointer;
-        }
 
         .variables-table input:focus {
             border-color: var(--primary-color);
@@ -1750,46 +1634,6 @@
 
         .task-status-text.completed {
             color: #52C41A;
-        }
-
-        /* 调试提示条 */
-        .debug-tip-banner {
-            display: none;
-            background: #FFFBE6;
-            border: 1px solid #FFE58F;
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin: 8px 0;
-            font-size: 13px;
-            color: #8C6E00;
-            line-height: 1.6;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .debug-tip-banner.show {
-            display: flex;
-        }
-
-        .debug-tip-banner-icon {
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
-            color: #D48806;
-        }
-
-        .debug-tip-banner-text {
-            flex: 1;
-        }
-
-        .debug-tip-banner-text strong {
-            color: #8C6E00;
-            font-weight: 600;
-        }
-
-        .debug-tip-banner-text .quote-highlight {
-            font-weight: 600;
-            color: #AD6800;
         }
 
         /* 浏览器实时画面区域 */
@@ -2489,16 +2333,6 @@
 
         .debug-variable-group:last-child {
             margin-bottom: 0;
-        }
-
-        .debug-rookie-auth-desc {
-            font-size: 12px;
-            color: #444;
-            line-height: 1.5;
-            margin-top: 4px;
-        }
-        .debug-rookie-auth-desc .highlight-purple {
-            color: #6C5CE7;
         }
 
         .debug-variable-group-title {
@@ -3692,16 +3526,14 @@
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 12px;
-            font-weight: normal;
-            text-transform: none;
-            white-space: pre-line;
+            white-space: normal;
             max-width: 260px;
             width: max-content;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 100;
         }
 
         .tooltip-wrapper::before {
@@ -3716,7 +3548,7 @@
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 100;
         }
 
         .tooltip-wrapper:hover::after,
@@ -3727,13 +3559,11 @@
 
         /* 弹窗内的 CSS 伪元素 tooltip 被 overflow 裁切，改用浮动 tooltip */
         .modal-body .tooltip-wrapper::after,
-        .modal-body .tooltip-wrapper::before,
-        .debug-page .tooltip-wrapper::after,
-        .debug-page .tooltip-wrapper::before {
+        .modal-body .tooltip-wrapper::before {
             display: none !important;
         }
 
-        /* 浮动 tooltip（脱离 overflow 裁切范围） */
+        /* 浮动 tooltip（脱离弹窗 overflow 裁切范围） */
         .floating-tooltip {
             position: fixed;
             background: rgba(0, 0, 0, 0.8);
@@ -3741,13 +3571,11 @@
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 12px;
-            font-weight: normal;
-            text-transform: none;
-            white-space: pre-line;
+            white-space: normal;
             max-width: 260px;
             width: max-content;
             pointer-events: none;
-            z-index: 99999;
+            z-index: 10000;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
@@ -4651,20 +4479,17 @@
 
         /* 只读标签样式 */
         .badge-readonly {
-            position: absolute;
-            top: 12px;
-            right: 12px;
             display: inline-flex;
             align-items: center;
-            padding: 2px 8px;
-            background-color: #F3F4F6;
-            color: #6B7280;
+            padding: 2px 6px;
+            background-color: #F3EEFF;
+            color: #7C3AED;
             font-size: 11px;
             font-weight: 500;
-            border-radius: 4px;
+            border-radius: 3px;
+            margin-left: 6px;
             white-space: nowrap;
-            z-index: 2;
-            border: 1px solid #E5E7EB;
+            flex-shrink: 0;
         }
 
         /* 只读模式设置按钮禁用样式 */
@@ -4674,155 +4499,11 @@
             pointer-events: none;
         }
 
-        /* ===== 调试页面只读模式样式 ===== */
-        .debug-readonly-mode .debug-save-btn,
-        .debug-readonly-mode #debugSaveBtn {
-            opacity: 0.5 !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-        }
-        .debug-readonly-mode .version-delete-btn {
-            display: none !important;
-        }
-        .debug-readonly-mode .version-set-active-btn {
-            display: none !important;
-        }
-        .debug-readonly-mode .version-add-btn {
-            display: none !important;
-        }
-        .debug-readonly-mode .debug-clear-btn,
-        .debug-readonly-mode #debugClearBtn {
-            display: none !important;
-        }
-        /* 变量弹窗只读模式 */
-        .variables-modal-readonly .form-select,
-        .variables-modal-readonly input[type="text"],
-        .variables-modal-readonly input[type="checkbox"],
-        .variables-modal-readonly input[type="radio"],
-        .variables-modal-readonly select {
-            pointer-events: none !important;
-            opacity: 0.6 !important;
-        }
-        .variables-modal-readonly .btn-add-row {
-            display: none !important;
-        }
-        .variables-modal-readonly .btn-modal-primary#variablesConfirmBtn {
-            opacity: 0.5 !important;
-            cursor: not-allowed !important;
-            pointer-events: none !important;
-        }
-        .variables-modal-readonly .variables-tab {
-            pointer-events: none !important;
-            opacity: 0.7 !important;
-        }
-        .variables-modal-readonly .col-action {
-            display: none !important;
-        }
-        .variables-modal-readonly .delete-variable-btn {
-            display: none !important;
-        }
-        .variables-modal-readonly .btn-delete-row {
-            display: none !important;
-        }
-        /* 变量弹窗只读提示条 */
-        .variables-readonly-banner {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: #FFF8E1;
-            border: 1px solid #FFE082;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            color: #E65100;
-        }
-        .variables-readonly-banner svg {
-            flex-shrink: 0;
-            width: 16px;
-            height: 16px;
-        }
-        
         /* 只读模式更多菜单删除项禁用样式 */
         .more-menu-item.delete.readonly-disabled {
             opacity: 0.4;
             cursor: not-allowed;
             pointer-events: none;
-        }
-
-        /* 设置弹窗只读模式 */
-        .settings-readonly-banner {
-            background-color: #F9FAFB;
-            border: 1px solid #E5E7EB;
-            border-radius: var(--radius-md);
-            padding: 10px 12px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #6B7280;
-        }
-
-        .settings-readonly-banner svg {
-            width: 16px;
-            height: 16px;
-            color: #9CA3AF;
-            flex-shrink: 0;
-        }
-
-        .modal-container.readonly-mode .form-input,
-        .modal-container.readonly-mode .form-select,
-        .modal-container.readonly-mode .new-group-input,
-        .modal-container.readonly-mode .tag-input,
-        .modal-container.readonly-mode input[type="radio"] {
-            background-color: #F9FAFB;
-            color: #6B7280;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .modal-container.readonly-mode .radio-item {
-            cursor: not-allowed;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-
-        .modal-container.readonly-mode .tag-input-container {
-            background-color: #F9FAFB;
-            cursor: not-allowed;
-        }
-
-        .modal-container.readonly-mode .tag-input-container .tag-item {
-            background-color: #E5E7EB;
-            color: #6B7280;
-        }
-
-        .modal-container.readonly-mode .tag-input-container .tag-remove {
-            display: none;
-        }
-
-        .modal-container.readonly-mode .tag-input-container .tag-input {
-            display: none;
-        }
-
-        .modal-container.readonly-mode .multi-select-tags {
-            background-color: #F9FAFB;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .modal-container.readonly-mode .multi-select-tags .tag-item {
-            background-color: #E5E7EB;
-            color: #6B7280;
-        }
-
-        .modal-container.readonly-mode .multi-select-tags .tag-remove {
-            display: none;
-        }
-
-        .modal-container.readonly-mode #settingsSaveBtn {
-            display: none;
         }
     </style>
 </head>
@@ -5097,7 +4778,17 @@
                             </div>
                             <div class="debug-variable-tags-panel">
                                 <div class="debug-variable-tags-content">
-
+                                    <div class="debug-variable-group">
+                                        <div class="debug-variable-group-title">系统变量</div>
+                                        <div class="debug-variable-tags-list">
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="当前日期">当前日期</span>
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="当前时间">当前时间</span>
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="用户名">用户名</span>
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="指令名称">指令名称</span>
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="用户工号">用户工号</span>
+                                            <span class="debug-variable-tag debug-variable-tag-b" data-variable="会话ID">会话ID</span>
+                                        </div>
+                                    </div>
                                     <div class="debug-variable-group">
                                         <div class="debug-variable-group-title">自定义变量</div>
                                         <div class="debug-variable-tags-list">
@@ -5110,8 +4801,13 @@
                                         </div>
                                     </div>
                                         <div class="debug-variable-group" id="debug-var-group-rookie">
-                                            <div class="debug-variable-group-title" style="display:flex;align-items:center;gap:6px;">菜鸟账权<span class="tooltip-wrapper" data-tooltip="已通过改造的系统地址：&#10;• logistics.cainiao.com&#10;• global.cainiao.com&#10;• fulfillment.cainiao.com" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></div>
-                                            <div class="debug-rookie-auth-desc">当Prompt内需要登录已通过改造的菜鸟内部系统，大模型将使用<span class="highlight-purple">【跨境AI员工CIC账号】</span>进行自动登录，其他系统可通过用户输入的账密登录。</div>
+                                            <div class="debug-variable-group-title">菜鸟账权</div>
+                                            <div class="debug-variable-tags-list">
+                                                <span class="debug-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC账号">跨境AI员工（CIC账号）</span>
+                                                <span class="debug-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC密码">跨境AI员工（CIC密码）</span>
+                                                <span class="debug-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC账号">数字AI员工（CBC账号）</span>
+                                                <span class="debug-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC密码">数字AI员工（CBC密码）</span>
+                                            </div>
                                         </div>
                                     <div class="debug-variable-group" id="debug-var-group-public">
                                         <div class="debug-variable-group-title">公共账密（网站名称）</div>
@@ -5241,17 +4937,6 @@
                                         <div class="operation-log-stat-label">执行时长</div>
                                     </div>
                                 </div>
-
-                                <!-- 调试完成提示条 -->
-                                <div class="debug-tip-banner" id="debugTipBanner">
-                                    <svg class="debug-tip-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <line x1="12" y1="8" x2="12" y2="12"></line>
-                                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                    </svg>
-                                    <span class="debug-tip-banner-text">若返回日志为英文，可尝试在提示词中加入<strong>"请用中文思考"</strong>获取中文思考信息返回。</span>
-                                </div>
-
                                 <div class="operation-log-cards" id="debugLogCards">
                                     <!-- 动态生成 -->
                                 </div>
@@ -5350,7 +5035,17 @@
                 </div>
                 <div class="debug-variable-tags-panel">
                     <div class="debug-variable-tags-content">
-
+                        <div class="debug-variable-group">
+                            <div class="debug-variable-group-title">系统变量</div>
+                            <div class="debug-variable-tags-list">
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="当前日期">当前日期</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="当前时间">当前时间</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="用户名">用户名</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="指令名称">指令名称</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="用户工号">用户工号</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="会话ID">会话ID</span>
+                            </div>
+                        </div>
                         <div class="debug-variable-group">
                             <div class="debug-variable-group-title">自定义变量</div>
                             <div class="debug-variable-tags-list">
@@ -5363,8 +5058,13 @@
                             </div>
                         </div>
                         <div class="debug-variable-group" id="fullscreen-var-group-rookie">
-                            <div class="debug-variable-group-title" style="display:flex;align-items:center;gap:6px;">菜鸟账权<span class="tooltip-wrapper" data-tooltip="已通过改造的系统地址：&#10;• logistics.cainiao.com&#10;• global.cainiao.com&#10;• fulfillment.cainiao.com" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></div>
-                            <div class="debug-rookie-auth-desc">当Prompt内需要登录已通过改造的菜鸟内部系统，大模型将使用<span class="highlight-purple">【跨境AI员工CIC账号】</span>进行自动登录，其他系统可通过用户输入的账密登录。</div>
+                            <div class="debug-variable-group-title">菜鸟账权</div>
+                            <div class="debug-variable-tags-list">
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC账号">跨境AI员工（CIC账号）</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-b" data-variable="跨境AI员工_CIC密码">跨境AI员工（CIC密码）</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC账号">数字AI员工（CBC账号）</span>
+                                <span class="debug-variable-tag fullscreen-variable-tag debug-variable-tag-a" data-variable="数字AI员工_CBC密码">数字AI员工（CBC密码）</span>
+                            </div>
                         </div>
                         <div class="debug-variable-group" id="fullscreen-var-group-public">
                             <div class="debug-variable-group-title">公共账密（网站名称）</div>
@@ -5521,11 +5221,32 @@
                 <!-- Tab 切换 -->
                 <div class="variables-tabs">
                     <div class="variables-tab active" data-tab="auth">账权变量</div>
-
+                    <div class="variables-tab" data-tab="system">系统变量</div>
                     <div class="variables-tab" data-tab="custom">自定义变量</div>
                 </div>
 
-
+                <!-- 系统变量 Tab -->
+                <div class="variables-tab-content" id="systemVariablesTab">
+                    <table class="variables-table">
+                        <thead>
+                            <tr>
+                                <th class="col-name">变量名称</th>
+                                <th class="col-desc">描述</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>question</td><td>问题</td></tr>
+                            <tr><td>sessionId</td><td>会话id</td></tr>
+                            <tr><td>messageId</td><td>消息id</td></tr>
+                            <tr><td>currentTime</td><td>当前时间</td></tr>
+                            <tr><td>empId</td><td>用户工号</td></tr>
+                            <tr><td>empRealName</td><td>用户真名</td></tr>
+                            <tr><td>empStageName</td><td>用户花名</td></tr>
+                            <tr><td>userId</td><td>用户id</td></tr>
+                            <tr><td>agentCode</td><td>智能体code</td></tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <!-- 自定义变量 Tab -->
                 <div class="variables-tab-content" id="customVariablesTab">
@@ -5580,12 +5301,13 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="text-align: center;"><input type="checkbox" class="auth-checkbox" data-category="rookie" checked></td>
+                                    <td style="text-align: center;"><input type="checkbox" class="auth-checkbox" data-category="rookie"></td>
                                     <td>菜鸟账权</td>
                                     <td>
-                                        <label class="rookie-radio-label"><input type="radio" name="rookieAccount" value="cic" class="rookie-radio" checked><span class="rookie-radio-text">CIC账号</span></label>
-                                        <label class="rookie-radio-label"><input type="radio" name="rookieAccount" value="cbc" class="rookie-radio"><span class="rookie-radio-text">CBC账号</span></label>
-                                        <div class="rookie-hint-text">当Prompt内需要登录已通过改造的菜鸟内部系统，大模型将使用选中账号进行自动登录，其他系统可通过用户输入的账密登录。<span class="tooltip-wrapper system-list-link" data-tooltip="已通过改造，可直接通过菜鸟账权登录的系统清单：&#10;• 01**.cainiao.com&#10;• 02**.cainiao.com&#10;• 03**.cainiao.com">系统清单</span></div>
+                                        <span class="auth-badge auth-badge-b">跨境AI员工（CIC账号）</span>
+                                        <span class="auth-badge auth-badge-b">跨境AI员工（CIC密码）</span>
+                                        <span class="auth-badge auth-badge-a">数字AI员工（CBC账号）</span>
+                                        <span class="auth-badge auth-badge-a">数字AI员工（CBC密码）</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -5623,15 +5345,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- 只读模式提示 -->
-                <div class="settings-readonly-banner" id="settingsReadonlyBanner" style="display:none;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                    <span>您对该指令仅有只读权限，无法修改设置</span>
-                </div>
                 <form id="settingsForm">
                     <!-- 指令名称 -->
                     <div class="form-group">
@@ -5915,8 +5628,7 @@
                 admins: ['余梦玲'],
                 permissionGroup: '',
                 department: '',
-                coverImage: null,
-                readOnly: true
+                coverImage: null
             },
             {
                 id: 5,
@@ -6064,30 +5776,19 @@
                 groupedData[group].push(item);
             });
 
-            // 按分组顺序渲染（保持默认分组在前）
-            const sortedGroups = Object.keys(groupedData).sort((a, b) => {
-                if (a === '默认分组') return -1;
-                if (b === '默认分组') return 1;
-                return a.localeCompare(b);
-            });
+            // 将所有卡片平铺，不分组
+            const allItems = data;
 
-            cardContainer.innerHTML = sortedGroups.map(group => {
-                const items = groupedData[group];
-                return `
-                    <div class="group-section" data-group="${escapeHtml(group)}">
-                        <div class="group-header">
-                            <div class="group-indicator"></div>
-                            <span class="group-title">${escapeHtml(group)}</span>
-                            <span class="group-count">(${items.length})</span>
-                        </div>
-                        <div class="group-cards-wrapper">
-                            <div class="group-cards">
-                                ${items.map(item => renderCard(item)).join('')}
-                            </div>
+            cardContainer.innerHTML = `
+                <div class="group-section" data-group="all">
+                    <div class="group-header"></div>
+                    <div class="group-cards-wrapper">
+                        <div class="group-cards">
+                            ${allItems.map(item => renderCard(item)).join('')}
                         </div>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `;
 
             // 绑定卡片操作事件
             bindCardEvents();
@@ -6095,16 +5796,16 @@
 
         // 渲染单个卡片
         function renderCard(item) {
+            var readonlyClass = item.readOnly ? ' readonly-disabled' : '';
             var readonlyBadge = item.readOnly ? '<span class="badge-readonly">只读</span>' : '';
             var deleteReadonlyClass = item.readOnly ? ' readonly-disabled' : '';
             return `
                 <div class="command-card" data-id="${item.id}" data-group="${escapeHtml(item.group || '默认分组')}" ${item.readOnly ? 'data-readonly="true"' : ''}>
-                    ${readonlyBadge}
                     <div class="card-header">
                         <div class="code-icon">
                             ${icons.code}
                         </div>
-                        <div class="card-title">${escapeHtml(item.name)}</div>
+                        <div class="card-title">${escapeHtml(item.name)}${readonlyBadge}</div>
                     </div>
                     <div class="card-desc">${escapeHtml(item.desc)}</div>
                     <div class="card-time" data-tooltip="最近修改时间">
@@ -6112,7 +5813,7 @@
                         <span>${item.time}</span>
                     </div>
                     <div class="card-actions">
-                        <div class="action-btn" data-action="settings">
+                        <div class="action-btn${readonlyClass}" data-action="settings" ${item.readOnly ? 'data-readonly="true"' : ''}>
                             ${icons.settings}
                             <span>设置</span>
                         </div>
@@ -6178,9 +5879,14 @@
                         // 打开调试页面
                         openDebugPage(id);
                     } else if (action === 'settings') {
-                        // 打开设置弹窗（只读卡片也能查看，但弹窗内为只读模式）
+                        // 只读权限检查
                         const settingsItem = commandData.find(cmd => cmd.id === id);
-                        openSettingsModal(id, settingsItem && settingsItem.readOnly);
+                        if (settingsItem && settingsItem.readOnly) {
+                            showToast('您对该指令仅有只读权限，无法修改设置');
+                            return;
+                        }
+                        // 打开设置弹窗
+                        openSettingsModal(id);
                     } else {
                         console.log(`操作: ${action}, ID: ${id}, 名称: ${name}`);
                     }
@@ -6636,34 +6342,10 @@
         // ============================================
         // 设置弹窗功能
         // ============================================
-        function openSettingsModal(id, isReadOnly) {
+        function openSettingsModal(id) {
             settingsTargetId = id;
             const item = commandData.find(cmd => cmd.id === id);
             if (!item) return;
-
-            const modalContainer = document.querySelector('#settingsModal .modal-container');
-            const readonlyBanner = document.getElementById('settingsReadonlyBanner');
-
-            // 设置只读模式
-            if (isReadOnly) {
-                modalContainer.classList.add('readonly-mode');
-                if (readonlyBanner) readonlyBanner.style.display = 'flex';
-                // 禁用表单元素
-                document.getElementById('settingsCommandName').setAttribute('readonly', 'readonly');
-                document.getElementById('settingsGroupSelect').setAttribute('disabled', 'disabled');
-                document.getElementById('settingsNewGroupInput').setAttribute('readonly', 'readonly');
-                document.getElementById('settingsDepartment').setAttribute('disabled', 'disabled');
-                document.querySelectorAll('input[name="settingsGroupMode"]').forEach(radio => radio.setAttribute('disabled', 'disabled'));
-            } else {
-                modalContainer.classList.remove('readonly-mode');
-                if (readonlyBanner) readonlyBanner.style.display = 'none';
-                // 启用表单元素
-                document.getElementById('settingsCommandName').removeAttribute('readonly');
-                document.getElementById('settingsGroupSelect').removeAttribute('disabled');
-                document.getElementById('settingsNewGroupInput').removeAttribute('readonly');
-                document.getElementById('settingsDepartment').removeAttribute('disabled');
-                document.querySelectorAll('input[name="settingsGroupMode"]').forEach(radio => radio.removeAttribute('disabled'));
-            }
 
             // 记住当前卡片所属分组，用于设置下拉框默认值
             const currentGroup = item.group || '默认分组';
@@ -6731,17 +6413,6 @@
         function closeSettingsModal() {
             settingsTargetId = null;
             document.getElementById('settingsModal').classList.remove('active');
-            // 清除只读模式
-            const modalContainer = document.querySelector('#settingsModal .modal-container');
-            modalContainer.classList.remove('readonly-mode');
-            const readonlyBanner = document.getElementById('settingsReadonlyBanner');
-            if (readonlyBanner) readonlyBanner.style.display = 'none';
-            // 恢复表单元素可编辑状态
-            document.getElementById('settingsCommandName').removeAttribute('readonly');
-            document.getElementById('settingsGroupSelect').removeAttribute('disabled');
-            document.getElementById('settingsNewGroupInput').removeAttribute('readonly');
-            document.getElementById('settingsDepartment').removeAttribute('disabled');
-            document.querySelectorAll('input[name="settingsGroupMode"]').forEach(radio => radio.removeAttribute('disabled'));
         }
 
         function saveSettings() {
@@ -6749,12 +6420,6 @@
 
             const item = commandData.find(cmd => cmd.id === settingsTargetId);
             if (!item) return;
-
-            // 只读权限检查
-            if (item.readOnly) {
-                showToast('您对该指令仅有只读权限，无法保存设置');
-                return;
-            }
 
             // 收集数据
             const name = document.getElementById('settingsCommandName').value.trim();
@@ -7150,14 +6815,6 @@
             currentDebugId = id;
             currentDebugReadOnly = item && item.readOnly === true;
 
-            // 设置调试页面只读模式
-            var debugPage = document.getElementById('debugPage');
-            if (currentDebugReadOnly) {
-                debugPage.classList.add('debug-readonly-mode');
-            } else {
-                debugPage.classList.remove('debug-readonly-mode');
-            }
-
             // 更新面包屑导航为当前指令名称
             document.getElementById('breadcrumbCommandName').textContent = item.name || '未命名指令';
 
@@ -7205,17 +6862,13 @@
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.remove('show');
 
-            // 显示占位区域，隐藏浏览器窗口和操作日志，隐藏提示条
+            // 显示占位区域，隐藏浏览器窗口和操作日志
             const placeholder = document.getElementById('debugPlaceholder');
             if (placeholder) placeholder.style.display = '';
             const browserPreview = document.querySelector('.browser-preview-section');
             if (browserPreview) browserPreview.classList.remove('show');
             const debugOperationLog = document.getElementById('debugOperationLog');
             if (debugOperationLog) debugOperationLog.classList.remove('show');
-
-            // 隐藏调试完成提示条
-            const tipBannerReset = document.getElementById('debugTipBanner');
-            if (tipBannerReset) tipBannerReset.classList.remove('show');
 
             // 清空并隐藏执行结果区域（已合并到状态栏）
             const executionResultText = document.getElementById('executionResultText');
@@ -7265,12 +6918,6 @@
         function closeDebugPage() {
             currentDebugId = null;
             currentDebugReadOnly = false;
-
-            // 移除调试页面只读模式
-            var debugPage = document.getElementById('debugPage');
-            if (debugPage) {
-                debugPage.classList.remove('debug-readonly-mode');
-            }
             isRunning = false;
             if (debugAutoCompleteTimer) {
                 clearTimeout(debugAutoCompleteTimer);
@@ -7326,15 +6973,11 @@
             const resizeBtn = document.getElementById('debugResizeBtn');
             if (resizeBtn) resizeBtn.classList.remove('show');
 
-            // 显示占位区域，隐藏浏览器窗口，隐藏提示条
+            // 显示占位区域，隐藏浏览器窗口
             const placeholder = document.getElementById('debugPlaceholder');
             if (placeholder) placeholder.style.display = '';
             const browserPreview = document.querySelector('.browser-preview-section');
             if (browserPreview) browserPreview.classList.remove('show');
-
-            // 隐藏调试完成提示条
-            const tipBannerClose = document.getElementById('debugTipBanner');
-            if (tipBannerClose) tipBannerClose.classList.remove('show');
 
             // 清空并隐藏执行结果区域（已合并到状态栏）
             const executionResultText3 = document.getElementById('executionResultText');
@@ -7451,7 +7094,11 @@
             // 设置图标点击事件
             document.getElementById('debugSettingsIcon').addEventListener('click', () => {
                 if (currentDebugId) {
-                    openSettingsModal(currentDebugId, currentDebugReadOnly);
+                    if (currentDebugReadOnly) {
+                        showToast('当前为只读模式，无法修改设置');
+                        return;
+                    }
+                    openSettingsModal(currentDebugId);
                 }
             });
 
@@ -7467,6 +7114,10 @@
 
             // 变量按钮
             document.getElementById('debugVariablesBtn').addEventListener('click', () => {
+                if (currentDebugReadOnly) {
+                    showToast('当前为只读模式，无法修改变量设置');
+                    return;
+                }
                 openVariablesModal();
             });
 
@@ -7833,13 +7484,6 @@
                 </div>
             `;
             
-            // 隐藏占位区域
-            document.getElementById('debugPlaceholder').style.display = 'none';
-
-            // 显示调试完成提示条
-            const tipBanner = document.getElementById('debugTipBanner');
-            if (tipBanner) tipBanner.classList.add('show');
-
             // 隐藏浏览器预览，显示内嵌操作日志
             const browserPreview = document.getElementById('panelBrowserPreview');
             const debugOperationLog = document.getElementById('debugOperationLog');
@@ -7886,10 +7530,6 @@
                 renderDebugOperationLog(finalTime);
             }
 
-            // 显示调试完成提示条
-            const tipBannerStop = document.getElementById('debugTipBanner');
-            if (tipBannerStop) tipBannerStop.classList.add('show');
-
             // 隐藏执行结果元素（已停止时不显示结果）
             const erText = document.getElementById('executionResultText');
             const erToggle = document.getElementById('executionResultToggle');
@@ -7924,13 +7564,6 @@
                 </div>
             `;
             
-            // 隐藏占位区域
-            document.getElementById('debugPlaceholder').style.display = 'none';
-
-            // 显示调试完成提示条
-            const tipBanner2 = document.getElementById('debugTipBanner');
-            if (tipBanner2) tipBanner2.classList.add('show');
-
             // 隐藏浏览器预览，显示内嵌操作日志
             const browserPreview = document.getElementById('panelBrowserPreview');
             const debugOperationLog = document.getElementById('debugOperationLog');
@@ -8120,10 +7753,6 @@
             isPostDebugMode = false;
             debugStartTime = Date.now();
             debugElapsedTime = 0;
-
-            // 隐藏调试完成提示条
-            const tipBanner = document.getElementById('debugTipBanner');
-            if (tipBanner) tipBanner.classList.remove('show');
 
             // 隐藏占位区域，显示浏览器窗口，隐藏操作日志和执行结果
             document.getElementById('debugPlaceholder').style.display = 'none';
@@ -8979,65 +8608,16 @@
         let customVariables = [];
 
         function openVariablesModal() {
+            if (currentDebugReadOnly) {
+                showToast('当前为只读模式，无法修改变量设置');
+                return;
+            }
             // 重置自定义变量数据（默认1行空数据）
             customVariables = [{ name: '', desc: '', defaultValue: '' }];
             renderCustomVariablesTable();
 
             // 切换到账权变量Tab（默认显示）
             switchVariablesTab('auth');
-
-            // 处理只读模式
-            var modal = document.getElementById('variablesModal');
-            var modalContainer = modal ? modal.querySelector('.modal-container') : null;
-            if (currentDebugReadOnly) {
-                // 添加只读标记 class
-                if (modalContainer) modalContainer.classList.add('variables-modal-readonly');
-
-                // 显示只读提示条（如不存在则插入）
-                var existingBanner = modalContainer ? modalContainer.querySelector('.variables-readonly-banner') : null;
-                if (!existingBanner && modalContainer) {
-                    var banner = document.createElement('div');
-                    banner.className = 'variables-readonly-banner';
-                    banner.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg><span>您对该指令仅有只读权限，无法修改变量设置</span>';
-                    var modalBody = modalContainer.querySelector('.modal-body');
-                    if (modalBody) modalBody.insertBefore(banner, modalBody.firstChild);
-                }
-
-                // 禁用所有表单控件
-                if (modalContainer) {
-                    modalContainer.querySelectorAll('input[type="checkbox"]').forEach(function(el) { el.disabled = true; });
-                    modalContainer.querySelectorAll('input[type="radio"]').forEach(function(el) { el.disabled = true; });
-                    modalContainer.querySelectorAll('input[type="text"]').forEach(function(el) { el.readOnly = true; });
-                    modalContainer.querySelectorAll('select').forEach(function(el) { el.disabled = true; });
-                    modalContainer.querySelectorAll('.btn-add-row').forEach(function(el) { el.style.display = 'none'; });
-                    var confirmBtn = modalContainer.querySelector('#variablesConfirmBtn');
-                    if (confirmBtn) {
-                        confirmBtn.disabled = true;
-                        confirmBtn.style.opacity = '0.5';
-                        confirmBtn.style.cursor = 'not-allowed';
-                    }
-                }
-            } else {
-                // 移除只读标记
-                if (modalContainer) {
-                    modalContainer.classList.remove('variables-modal-readonly');
-                    // 移除只读提示条
-                    var banner = modalContainer.querySelector('.variables-readonly-banner');
-                    if (banner) banner.remove();
-                    // 恢复表单控件
-                    modalContainer.querySelectorAll('input[type="checkbox"]').forEach(function(el) { el.disabled = false; });
-                    modalContainer.querySelectorAll('input[type="radio"]').forEach(function(el) { el.disabled = false; });
-                    modalContainer.querySelectorAll('input[type="text"]').forEach(function(el) { el.readOnly = false; });
-                    modalContainer.querySelectorAll('select').forEach(function(el) { el.disabled = false; });
-                    modalContainer.querySelectorAll('.btn-add-row').forEach(function(el) { el.style.display = ''; });
-                    var confirmBtn = modalContainer.querySelector('#variablesConfirmBtn');
-                    if (confirmBtn) {
-                        confirmBtn.disabled = false;
-                        confirmBtn.style.opacity = '';
-                        confirmBtn.style.cursor = '';
-                    }
-                }
-            }
 
             document.getElementById('variablesModal').classList.add('active');
         }
@@ -9060,7 +8640,9 @@
                 content.classList.remove('active');
             });
 
-            if (tabName === 'custom') {
+            if (tabName === 'system') {
+                document.getElementById('systemVariablesTab').classList.add('active');
+            } else if (tabName === 'custom') {
                 document.getElementById('customVariablesTab').classList.add('active');
             } else if (tabName === 'auth') {
                 document.getElementById('authVariablesTab').classList.add('active');
@@ -9139,40 +8721,24 @@
 
         // 根据账权变量checkbox状态控制调试页面变量区域的显隐
         function updateAuthVariableVisibility() {
-            const publicChecked = document.querySelector('.auth-checkbox[data-category="public"]').checked;
             const rookieChecked = document.querySelector('.auth-checkbox[data-category="rookie"]').checked;
+            const publicChecked = document.querySelector('.auth-checkbox[data-category="public"]').checked;
 
             // 普通模式变量区域
             const debugRookie = document.getElementById('debug-var-group-rookie');
-            if (debugRookie) debugRookie.style.display = rookieChecked ? '' : 'none';
             const debugPublic = document.getElementById('debug-var-group-public');
+            if (debugRookie) debugRookie.style.display = rookieChecked ? '' : 'none';
             if (debugPublic) debugPublic.style.display = publicChecked ? '' : 'none';
 
             // 全屏编辑模式变量区域
             const fullscreenRookie = document.getElementById('fullscreen-var-group-rookie');
-            if (fullscreenRookie) fullscreenRookie.style.display = rookieChecked ? '' : 'none';
             const fullscreenPublic = document.getElementById('fullscreen-var-group-public');
+            if (fullscreenRookie) fullscreenRookie.style.display = rookieChecked ? '' : 'none';
             if (fullscreenPublic) fullscreenPublic.style.display = publicChecked ? '' : 'none';
         }
 
         // 初始化时根据默认勾选状态设置显隐
         updateAuthVariableVisibility();
-
-        // 菜鸟账权radio切换时同步调试页面描述文本
-        function updateRookieAuthDesc() {
-            const selected = document.querySelector('input[name="rookieAccount"]:checked');
-            if (!selected) return;
-            const accountLabel = selected.value === 'cbc' ? 'CBC账号' : 'CIC账号';
-            const descHtml = `当Prompt内需要登录已通过改造的菜鸟内部系统，大模型将使用<span class="highlight-purple">【跨境AI员工${accountLabel}】</span>进行自动登录，其他系统可通过用户输入的账密登录。`;
-            const debugRookieDesc = document.querySelector('#debug-var-group-rookie .debug-rookie-auth-desc');
-            if (debugRookieDesc) debugRookieDesc.innerHTML = descHtml;
-            const fullscreenRookieDesc = document.querySelector('#fullscreen-var-group-rookie .debug-rookie-auth-desc');
-            if (fullscreenRookieDesc) fullscreenRookieDesc.innerHTML = descHtml;
-        }
-
-        document.querySelectorAll('input[name="rookieAccount"]').forEach(radio => {
-            radio.addEventListener('change', updateRookieAuthDesc);
-        });
 
         // ============================================
         // 操作日志弹窗功能
@@ -9969,11 +9535,11 @@
                 if(isActive) cls += ' version-item--active';
                 var tagLabel = isActive ? '生效中: '+item.version : (item.status==='线上'?'使用中':item.status)+': '+item.version;
                 var tagCls = isActive ? 'version-tag version-tag--active' : 'version-tag '+getVersionTagClass(item.status);
-                var deleteBtnHtml = (!isActive && !currentDebugReadOnly) ? '<span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span>' : '';
-                var activateBtnHtml = (!isActive && !currentDebugReadOnly) ? '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>' : '';
+                var deleteBtnHtml = isActive ? '' : '<span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span>';
+                var activateBtnHtml = isActive ? '' : '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>';
                 return '<div class="'+cls+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="'+tagCls+'">'+tagLabel+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span>'+'<span class="version-item-actions">'+deleteBtnHtml+activateBtnHtml+'</span></div><span class="version-item-editor">编辑人：'+(item.editor||'小王')+'</span><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';
             }).join('');
-            var addBtnHtml = currentDebugReadOnly ? '' : '<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';
+            var addBtnHtml='<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';
             d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;
         }
         function updateVersionTrigger(){
@@ -10076,10 +9642,9 @@
             }
             var varBtn = document.getElementById('debugVariablesBtn');
             if (varBtn) {
-                // 只读模式下变量按钮保持可点击，允许打开只读弹窗查看
-                varBtn.style.opacity = '1';
-                varBtn.style.cursor = 'pointer';
-                varBtn.disabled = false;
+                varBtn.disabled = isReadOnly;
+                varBtn.style.opacity = isReadOnly ? '0.5' : '1';
+                varBtn.style.cursor = isReadOnly ? 'not-allowed' : 'pointer';
             }
             var saveBtn = document.getElementById('debugSaveBtn');
             if (saveBtn) {
@@ -10096,10 +9661,6 @@
         }
         function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var label=c.id===activeVersionId?'生效中':(c.status==='线上'?'使用中':c.status);showToast('已切换到 '+label+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status,currentDebugReadOnly);}}
         function addNewVersion(){
-            if (currentDebugReadOnly) {
-                showToast('当前为只读模式，无法新增版本');
-                return;
-            }
             var current = versionData.find(function(v){return v.selected;});
             if(!current){showToast('未找到当前选中的版本');return;}
             var maxNum = versionData.reduce(function(max, v){
@@ -10362,10 +9923,9 @@
             const wrapper = e.target.closest ? e.target.closest('.tooltip-wrapper') : null;
             if (!wrapper) return;
 
-            // modal-body 或 debug-page 内的 tooltip 使用浮动 tooltip（避免被 overflow 裁切）
+            // 只有在 modal-body 内的 tooltip 才使用浮动 tooltip
             const isInModalBody = wrapper.closest('.modal-body');
-            const isInDebugPage = wrapper.closest('.debug-page');
-            if (!isInModalBody && !isInDebugPage) return;
+            if (!isInModalBody) return;
 
             currentWrapper = wrapper;
             const text = wrapper.getAttribute('data-tooltip');
