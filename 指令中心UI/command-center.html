@@ -2376,6 +2376,103 @@
             box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
         }
 
+        /* 超时时间配置 */
+        .timeout-config {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timeout-input-wrap {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--card-bg);
+            height: 32px;
+            box-sizing: border-box;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+            padding: 0 10px;
+            gap: 4px;
+        }
+
+        .timeout-input-wrap:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+        }
+
+        .timeout-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #999 !important;
+            white-space: nowrap;
+        }
+
+        .timeout-input {
+            width: 32px;
+            padding: 0 2px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            text-align: center;
+            outline: none;
+            font-family: var(--font-family);
+            height: 100%;
+            -moz-appearance: textfield;
+        }
+
+        .timeout-input::-webkit-outer-spin-button,
+        .timeout-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .timeout-unit {
+            font-size: 13px;
+            font-weight: 500;
+            color: #999 !important;
+            white-space: nowrap;
+        }
+
+        /* 超时提示弹窗 */
+        #timeoutWarningModal {
+            z-index: 2000;
+        }
+
+        #timeoutWarningModal .modal-container {
+            width: 440px;
+        }
+
+        .timeout-warning-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(101, 61, 214, 0.08);
+            color: var(--primary-color, #6C5CE7);
+            margin-bottom: 16px;
+        }
+
+        .timeout-warning-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .timeout-warning-link {
+            color: var(--primary-color, #6C5CE7);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .timeout-warning-link:hover {
+            text-decoration: underline;
+        }
+
         .debug-prompt-textarea {
             width: 100%;
             height: 500px;
@@ -2453,17 +2550,44 @@
             cursor: pointer;
         }
 
-        .debug-variable-tags-toggle:hover {
+        .btn-var-setting {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1.2;
+            white-space: nowrap;
+            margin-left: 6px;
+        }
+
+        .btn-var-setting:hover {
+            background-color: #E5E7EB;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-var-setting svg {
+            flex-shrink: 0;
+        }
+
+        .debug-variable-toggle-left:hover {
             color: var(--primary-color);
         }
 
-        .debug-variable-tags-toggle svg {
+        .debug-variable-tags-toggle .toggle-chevron {
             width: 14px;
             height: 14px;
             transition: transform 0.3s ease;
         }
 
-        .debug-variable-tags-wrapper.expanded .debug-variable-tags-toggle svg {
+        .debug-variable-tags-wrapper.expanded .debug-variable-tags-toggle .toggle-chevron {
             transform: rotate(180deg);
         }
 
@@ -3509,7 +3633,7 @@
             position: fixed;
             top: 0;
             right: 0;
-            width: 950px;
+            width: 95vw;
             height: 100%;
             background-color: var(--card-bg);
             z-index: 1001;
@@ -5018,6 +5142,7 @@
                 <span class="breadcrumb-item" id="breadcrumbTemplate">我的GUI</span>
                 <span class="breadcrumb-separator">/</span>
                 <span class="breadcrumb-item active" id="breadcrumbCommandName">我的GUI调试页面</span>
+                <span class="version-active-badge" id="versionActiveBadge">生效中: V3</span>
             </div>
 
             <!-- 两栏布局 -->
@@ -5031,7 +5156,6 @@
                             <div class="debug-combined-title-wrapper">
                                 <div class="debug-combined-indicator"></div>
                                 <span class="debug-combined-title">指令详情</span>
-                                <span class="version-active-badge" id="versionActiveBadge">生效中: V3</span>
                                 <svg class="debug-settings-icon" id="debugSettingsIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" title="设置">
                                     <circle cx="12" cy="12" r="3"></circle>
                                     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -5064,19 +5188,18 @@
                             <span class="debug-prompt-title">Prompt 内容</span>
                             <div class="debug-prompt-actions-row">
                             <div class="debug-prompt-actions">
+                                <div class="timeout-config">
+                                    <div class="timeout-input-wrap">
+                                        <span class="timeout-label">执行</span>
+                                        <input type="number" class="timeout-input" id="timeoutInput" value="10" min="1" />
+                                        <span class="timeout-unit">分钟</span>
+
+                                    </div>
+                                </div>
                                 <select class="sandbox-select" id="sandboxSelect">
                                     <option value="browser" selected>无影GUI</option>
                                     <option value="code">CNGUI</option>
                                 </select>
-                                <button class="btn btn-primary-outline" id="debugVariablesBtn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                        <path d="M2 17l10 5 10-5"></path>
-                                        <path d="M2 12l10 5 10-5"></path>
-                                    </svg>
-                                    变量
-                                </button>
-
                             </div>
                         </div>
                         </div>
@@ -5085,10 +5208,11 @@
                         <div class="debug-variable-tags-wrapper" id="debugVariableTagsWrapper">
                             <div class="debug-variable-tags-toggle" id="debugVariableTagsToggle">
                                 <div class="debug-variable-toggle-left">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg class="toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <polyline points="6 9 12 15 18 9"></polyline>
                                     </svg>
                                     <span>展开变量</span>
+                                    <button class="btn-var-setting" id="debugVariablesBtn">设置</button>
                                 </div>
                                 <div class="prompt-actions-right">
                                     <button class="prompt-expand-btn" onclick="event.stopPropagation(); openPromptFullscreen()" title="全屏编辑">⛶ 全屏</button>
@@ -5342,7 +5466,7 @@
             <div class="debug-variable-tags-wrapper fullscreen-variable-tags-wrapper" id="fullscreenVariableTagsWrapper">
                 <div class="debug-variable-tags-toggle" id="fullscreenVariableTagsToggle">
                     <div class="debug-variable-toggle-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="toggle-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                         <span>展开变量</span>
@@ -7150,6 +7274,7 @@
             currentDebugId = id;
             currentDebugReadOnly = item && item.readOnly === true;
 
+
             // 设置调试页面只读模式
             var debugPage = document.getElementById('debugPage');
             if (currentDebugReadOnly) {
@@ -7394,6 +7519,14 @@
                     showToast('当前为只读模式，无法保存');
                     return;
                 }
+
+                // 超时>10时弹窗提示
+                const timeoutInput = document.getElementById('timeoutInput');
+                const val = parseInt(timeoutInput ? timeoutInput.value : '0', 10);
+                if (!isNaN(val) && val > 10) {
+                    openTimeoutWarningModal();
+                    return;
+                }
                 var currentVersion = versionData.find(function(v){ return v.selected; });
                 if (!currentVersion) return;
 
@@ -7466,7 +7599,8 @@
             });
 
             // 变量按钮
-            document.getElementById('debugVariablesBtn').addEventListener('click', () => {
+            document.getElementById('debugVariablesBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
                 openVariablesModal();
             });
 
@@ -7474,20 +7608,23 @@
             const variableTagsToggle = document.getElementById('debugVariableTagsToggle');
             const variableTagsWrapper = document.getElementById('debugVariableTagsWrapper');
             if (variableTagsToggle && variableTagsWrapper) {
-                variableTagsToggle.addEventListener('click', () => {
-                    variableTagsWrapper.classList.toggle('expanded');
-                    const label = variableTagsToggle.querySelector('span');
-                    if (label) {
-                        label.textContent = variableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
-                    }
-                    if (variableTagsWrapper.classList.contains('expanded')) {
-                        // 等待展开动画结束后检测溢出
-                        setTimeout(() => trimVariableOverflow('#debugVariableTagsWrapper', 'debugPromptTextarea'), 360);
-                    } else {
-                        resetVariableOverflow('#debugVariableTagsWrapper');
-                        closeVariableOverflowPopover();
-                    }
-                });
+                const toggleLeft = variableTagsToggle.querySelector('.debug-variable-toggle-left');
+                if (toggleLeft) {
+                    toggleLeft.addEventListener('click', () => {
+                        variableTagsWrapper.classList.toggle('expanded');
+                        const label = toggleLeft.querySelector('span');
+                        if (label) {
+                            label.textContent = variableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
+                        }
+                        if (variableTagsWrapper.classList.contains('expanded')) {
+                            // 等待展开动画结束后检测溢出
+                            setTimeout(() => trimVariableOverflow('#debugVariableTagsWrapper', 'debugPromptTextarea'), 360);
+                        } else {
+                            resetVariableOverflow('#debugVariableTagsWrapper');
+                            closeVariableOverflowPopover();
+                        }
+                    });
+                }
             }
 
             // 变量标签点击插入（详情页）
@@ -7502,19 +7639,22 @@
             const fullscreenVariableTagsToggle = document.getElementById('fullscreenVariableTagsToggle');
             const fullscreenVariableTagsWrapper = document.getElementById('fullscreenVariableTagsWrapper');
             if (fullscreenVariableTagsToggle && fullscreenVariableTagsWrapper) {
-                fullscreenVariableTagsToggle.addEventListener('click', () => {
-                    fullscreenVariableTagsWrapper.classList.toggle('expanded');
-                    const label = fullscreenVariableTagsToggle.querySelector('span');
-                    if (label) {
-                        label.textContent = fullscreenVariableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
-                    }
-                    if (fullscreenVariableTagsWrapper.classList.contains('expanded')) {
-                        setTimeout(() => trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea'), 360);
-                    } else {
-                        resetVariableOverflow('#fullscreenVariableTagsWrapper');
-                        closeVariableOverflowPopover();
-                    }
-                });
+                const fullscreenToggleLeft = fullscreenVariableTagsToggle.querySelector('.debug-variable-toggle-left');
+                if (fullscreenToggleLeft) {
+                    fullscreenToggleLeft.addEventListener('click', () => {
+                        fullscreenVariableTagsWrapper.classList.toggle('expanded');
+                        const label = fullscreenToggleLeft.querySelector('span');
+                        if (label) {
+                            label.textContent = fullscreenVariableTagsWrapper.classList.contains('expanded') ? '收起变量' : '展开变量';
+                        }
+                        if (fullscreenVariableTagsWrapper.classList.contains('expanded')) {
+                            setTimeout(() => trimVariableOverflow('#fullscreenVariableTagsWrapper', 'promptFullscreenTextarea'), 360);
+                        } else {
+                            resetVariableOverflow('#fullscreenVariableTagsWrapper');
+                            closeVariableOverflowPopover();
+                        }
+                    });
+                }
             }
 
             // 变量标签点击插入（全屏弹窗）
@@ -10350,6 +10490,27 @@
     </script>
 <!-- 浮动 tooltip 容器（用于弹窗内，避免被 overflow 裁切） -->
 <div class="floating-tooltip" id="floatingTooltip"></div>
+
+<!-- 超时提示弹窗 -->
+<div class="modal-overlay" id="timeoutWarningModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 class="modal-title">提示</h3>
+            <button class="modal-close" id="timeoutWarningClose">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p class="timeout-warning-text">本模板执行时间配置超过10分钟。<br>请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="timeout-warning-link" href="#" target="_blank">使用说明</a>。</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-modal btn-modal-primary" id="timeoutWarningConfirm">我知道了</button>
+        </div>
+    </div>
+</div>
     <script>
     // 浮动 tooltip 处理（解决弹窗中 tooltip 被 overflow 裁切的问题）
     (function() {
@@ -10419,6 +10580,44 @@
                 currentWrapper = null;
             }
         }, true);
+    })();
+
+    // 超时提示弹窗逻辑
+    function openTimeoutWarningModal() {
+        const modal = document.getElementById('timeoutWarningModal');
+        if (!modal) return;
+        modal.classList.add('active');
+    }
+
+    function closeTimeoutWarningModal() {
+        const modal = document.getElementById('timeoutWarningModal');
+        if (!modal) return;
+        modal.classList.remove('active');
+    }
+
+    (function() {
+        const modal = document.getElementById('timeoutWarningModal');
+        const closeBtn = document.getElementById('timeoutWarningClose');
+        const confirmBtn = document.getElementById('timeoutWarningConfirm');
+
+        if (!modal) return;
+
+        // 关闭按钮
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeTimeoutWarningModal);
+        }
+
+        // “我知道了”按钮
+        if (confirmBtn) {
+            confirmBtn.addEventListener('click', closeTimeoutWarningModal);
+        }
+
+        // 点击遮罩关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeTimeoutWarningModal();
+            }
+        });
     })();
     </script>
 </body>
