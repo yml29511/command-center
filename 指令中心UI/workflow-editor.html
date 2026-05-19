@@ -562,6 +562,12 @@
         }
 
         /* Command name area */
+        .cmd-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
         .cmd-name-link {
             color: var(--primary);
             font-size: 13px;
@@ -570,6 +576,154 @@
             cursor: pointer;
         }
         .cmd-name-link:hover { text-decoration: underline; }
+
+        /* Version tag */
+        .version-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(101, 61, 214, 0.35);
+            background: rgba(101, 61, 214, 0.06);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--primary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            position: relative;
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .version-tag:hover {
+            background: rgba(101, 61, 214, 0.12);
+            border-color: var(--primary);
+        }
+        .version-tag:active {
+            background: rgba(101, 61, 214, 0.18);
+        }
+        .version-tag .version-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #FFFFFF;
+            display: none;
+            box-shadow: 0 1px 3px rgba(239,68,68,0.4);
+        }
+        .version-tag .version-dot.visible {
+            display: block;
+        }
+
+        /* Version dropdown */
+        .version-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            display: none;
+            padding: 6px 0;
+            overflow: hidden;
+        }
+        .version-dropdown.show {
+            display: block;
+        }
+
+        .version-dropdown-upgrade {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #4F46E5;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.15s;
+        }
+        .version-dropdown-upgrade:hover {
+            background: #F5F3FF;
+        }
+
+        .version-dropdown-list {
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .version-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.15s;
+            gap: 12px;
+        }
+        .version-item:hover {
+            background: #F5F3FF;
+        }
+        .version-item.selected {
+            background: rgba(101, 61, 214, 0.06);
+        }
+
+        .version-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .version-item-check {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+            flex-shrink: 0;
+            opacity: 0;
+        }
+        .version-item.selected .version-item-check {
+            opacity: 1;
+        }
+
+        .version-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-1);
+            min-width: 50px;
+        }
+
+        .version-item-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .version-item-editor {
+            font-size: 12px;
+            color: var(--text-3);
+        }
+
+        .version-item-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid;
+        }
+        .version-item-status.draft {
+            background: #FFF7E6;
+            color: #D48806;
+            border-color: #FFE7BA;
+        }
+        .version-item-status.online {
+            background: #F0F5FF;
+            color: #1890FF;
+            border-color: #ADC6FF;
+        }
 
         .cmd-actions {
             display: flex;
@@ -595,9 +749,10 @@
             border-radius: var(--radius-md);
             overflow: hidden;
         }
+        /* 指令内容只读状态：去除聚焦高亮 */
         .cmd-content-wrap:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.1);
+            border-color: var(--border);
+            box-shadow: none;
         }
 
         .cmd-textarea {
@@ -1148,9 +1303,25 @@
                     <span class="section-icon">📝</span>
                     指令名称
                 </div>
-                <a class="cmd-name-link" href="javascript:void(0)">禁止合作商家-risk演示用</a>
+                <div class="cmd-name-row">
+                    <a class="cmd-name-link" href="javascript:void(0)">禁止合作商家-risk演示用</a>
+                    <div class="version-selector" id="versionSelector" style="position: relative;">
+                        <span class="version-tag" id="versionTag" onclick="toggleVersionDropdown()">
+                            Version: 2，升级最新
+                            <span class="version-dot visible" id="versionDot"></span>
+                        </span>
+                        <div class="version-dropdown" id="versionDropdown">
+                            <div class="version-dropdown-upgrade" onclick="upgradeToLatest()">
+                                升级到最新版本 v3
+                            </div>
+                            <div class="version-dropdown-list" id="versionDropdownList">
+                                <!-- 版本列表动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="cmd-actions">
-                    <span class="cmd-action">🔄 刷新指令内容</span>
+                    <span class="cmd-action" style="display:none">🔄 刷新指令内容</span>
                     <span class="cmd-action">🔀 更换指令</span>
                 </div>
             </div>
@@ -1163,9 +1334,8 @@
                         指令内容
                     </span>
                 </div>
-                <div class="cmd-content-wrap">
-                    <button class="fullscreen-edit-btn">⛶ 全屏编辑</button>
-                    <textarea class="cmd-textarea" id="cmdContent">3. 点击【查询】或【搜索】按钮，等待列表加载完成。
+                <div class="cmd-content-wrap" style="cursor: default;">
+                    <textarea class="cmd-textarea" id="cmdContent" readonly style="resize: none; cursor: default;">3. 点击【查询】或【搜索】按钮，等待列表加载完成。
 
 ### Step 3: 结果处理
 
@@ -1179,7 +1349,7 @@
 3. **去重处理**：
    - 对读取到的企业名称列表进行去重，相同名称只保留一条。</textarea>
                     <div class="cmd-content-footer">
-                        <span class="cmd-hint">输入"/"引用变量</span>
+                        <span class="cmd-hint" style="display:none">输入"/"引用变量</span>
                         <span class="cmd-char-count" id="charCount">字符数：2230</span>
                     </div>
                 </div>
@@ -1191,7 +1361,7 @@
                     <span class="section-icon">🚀</span>
                     执行模式
                 </div>
-                <div class="exec-mode-value">CNBUA | 版本V2</div>
+                <div class="exec-mode-value">CNBUA</div>
 
                 <!-- 同/异步执行标题 -->
                 <div class="drawer-section-title" style="margin-top: 18px;"><span class="section-icon">⚡</span>同/异步执行</div>
@@ -1447,8 +1617,164 @@
         });
     }
 
+    // 版本数据
+    var versionData = [
+        { id: 4, version: 'v4', status: '草稿', editor: '余梦玲' },
+        { id: 3, version: 'v3', status: '线上', editor: '余梦玲' },
+        { id: 2, version: 'v2', status: '草稿', editor: '余梦玲' },
+        { id: 1, version: 'v1', status: '草稿', editor: '余梦玲' }
+    ];
+
+    var currentVersionId = 3; // 当前选中的版本ID
+
+    // 按版本号倒序排序（v4 > v3 > v2 > v1）
+    function sortVersionsByNumber(versions) {
+        return versions.slice().sort(function(a, b) {
+            var numA = parseInt(a.version.replace('v', ''), 10);
+            var numB = parseInt(b.version.replace('v', ''), 10);
+            return numB - numA; // 倒序
+        });
+    }
+
+    // 渲染版本下拉列表
+    function renderVersionDropdown() {
+        var listEl = document.getElementById('versionDropdownList');
+        if (!listEl) return;
+
+        var sortedVersions = sortVersionsByNumber(versionData);
+
+        var html = sortedVersions.map(function(version) {
+            var isSelected = version.id === currentVersionId;
+            var statusClass = version.status === '草稿' ? 'draft' : 'online';
+            var statusText = version.status === '草稿' ? '草稿' : '线上';
+            
+            return '<div class="version-item' + (isSelected ? ' selected' : '') + '" onclick="selectVersion(' + version.id + ')">'
+                + '<div class="version-item-left">'
+                + '<svg class="version-item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
+                + '<span class="version-item-name">' + version.version + '</span>'
+                + '</div>'
+                + '<div class="version-item-right">'
+                + '<span class="version-item-editor">' + version.editor + '</span>'
+                + '<span class="version-item-status ' + statusClass + '">' + statusText + '</span>'
+                + '</div>'
+                + '</div>';
+        }).join('');
+
+        listEl.innerHTML = html;
+    }
+
+    // 更新版本标签显示
+    function updateVersionTag() {
+        var tagEl = document.getElementById('versionTag');
+        var dotEl = document.getElementById('versionDot');
+        var currentVersion = versionData.find(function(v) { return v.id === currentVersionId; });
+        
+        if (currentVersion) {
+            // 找到最新版本
+            var sortedVersions = sortVersionsByNumber(versionData);
+            var latestVersion = sortedVersions[0];
+            
+            // 检查是否有更新的版本
+            var hasNewerVersion = currentVersion.id !== latestVersion.id;
+            
+            // 更新文本节点，保留红点元素
+            var textNode = tagEl.firstChild;
+            var newText = hasNewerVersion
+                ? 'Version: ' + currentVersion.version.replace('v', '') + '，升级最新'
+                : 'Version: ' + currentVersion.version.replace('v', '') + '，已是最新';
+            if (textNode && textNode.nodeType === 3) {
+                textNode.textContent = newText;
+            } else {
+                tagEl.insertBefore(document.createTextNode(newText), tagEl.firstChild);
+            }
+            
+            // 显示/隐藏红点
+            showVersionDot(hasNewerVersion);
+        }
+    }
+
+    // 切换版本下拉列表显示
+    function toggleVersionDropdown() {
+        var dropdown = document.getElementById('versionDropdown');
+        if (!dropdown) return;
+        
+        var isShowing = dropdown.classList.contains('show');
+        
+        if (isShowing) {
+            dropdown.classList.remove('show');
+        } else {
+            // 渲染并显示下拉列表
+            renderVersionDropdown();
+            dropdown.classList.add('show');
+        }
+    }
+
+    // 选择版本
+    function selectVersion(versionId) {
+        currentVersionId = versionId;
+        
+        // 关闭下拉列表
+        var dropdown = document.getElementById('versionDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+        
+        // 更新标签和UI
+        updateVersionTag();
+        
+        // 这里可以添加加载对应版本内容的逻辑
+        console.log('切换到版本:', versionId);
+    }
+
+    // 升级到最新版本
+    function upgradeToLatest() {
+        var sortedVersions = sortVersionsByNumber(versionData);
+        var latestVersion = sortedVersions[0];
+        
+        if (latestVersion && latestVersion.id !== currentVersionId) {
+            currentVersionId = latestVersion.id;
+            
+            // 关闭下拉列表
+            var dropdown = document.getElementById('versionDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('show');
+            }
+            
+            // 更新标签和UI
+            updateVersionTag();
+            
+            console.log('升级到最新版本:', latestVersion.version);
+        }
+    }
+
+    // 点击外部关闭下拉列表
+    document.addEventListener('click', function(e) {
+        var selector = document.getElementById('versionSelector');
+        var dropdown = document.getElementById('versionDropdown');
+        
+        if (selector && !selector.contains(e.target) && dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // 控制版本红点显示
+    function showVersionDot(visible) {
+        const dot = document.getElementById('versionDot');
+        if (dot) {
+            if (visible) {
+                dot.classList.add('visible');
+            } else {
+                dot.classList.remove('visible');
+            }
+        }
+    }
+
     // 页面加载时初始化
-    window.addEventListener('DOMContentLoaded', initTooltip);
+    window.addEventListener('DOMContentLoaded', function() {
+        initTooltip();
+        // 初始化版本标签
+        updateVersionTag();
+    });
 </script>
 </body>
 </html>
