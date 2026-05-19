@@ -573,6 +573,50 @@
             margin-left: 4px;
         }
 
+        .group-sort-arrows {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+            gap: 1px;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .group-sort-arrows:hover {
+            background-color: rgba(124, 58, 237, 0.08);
+        }
+
+        .group-sort-arrows:hover .group-sort-up,
+        .group-sort-arrows:hover .group-sort-down {
+            color: #7C3AED;
+        }
+
+        .group-sort-up,
+        .group-sort-down {
+            color: #999;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .group-sort-up svg,
+        .group-sort-down svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .group-sort-up.disabled,
+        .group-sort-down.disabled {
+            color: #ddd;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
         .group-cards-wrapper {
             overflow-x: auto;
             padding-bottom: 8px;
@@ -2436,6 +2480,68 @@
             white-space: nowrap;
         }
 
+        /* 超时输入框气泡提示 */
+        #timeoutBubble {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: normal;
+            line-height: 1.6;
+            max-width: 340px;
+            width: max-content;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            pointer-events: auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+        #timeoutBubble.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        #timeoutBubble::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 20px;
+            border: 6px solid transparent;
+            border-bottom-color: rgba(0, 0, 0, 0.85);
+        }
+        #timeoutBubble.bubble-above::after {
+            bottom: auto;
+            top: 100%;
+            border-bottom-color: transparent;
+            border-top-color: rgba(0, 0, 0, 0.85);
+        }
+        #timeoutBubble .bubble-close {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 2px;
+            transition: color 0.15s;
+        }
+        #timeoutBubble .bubble-close:hover {
+            color: #fff;
+        }
+        #timeoutBubble .bubble-link {
+            color: #B388FF;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        #timeoutBubble .bubble-link:hover {
+            color: #D1C4E9;
+        }
+
         /* 超时提示弹窗 */
         #timeoutWarningModal {
             z-index: 2000;
@@ -3084,12 +3190,17 @@
         .debug-combined-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .debug-combined-actions .btn {
-            padding: 6px 12px;
+            padding: 8px 16px;
             font-size: 13px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         .debug-settings-icon {
@@ -3434,6 +3545,405 @@
 
         .btn-modal-danger:hover {
             background-color: #FF7875;
+        }
+
+        /* ============================================
+           Skill 管理弹窗样式
+           ============================================ */
+        #skillModal {
+            z-index: 1500;
+        }
+
+        #skillModal .modal-container {
+            width: 700px;
+            max-width: 95vw;
+        }
+
+        #skillModal .modal-body {
+            padding: 0;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .skill-modal-top {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+
+        .skill-version-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .skill-version-row label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .skill-version-select {
+            width: 200px;
+            padding: 4px 10px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            outline: none;
+            color: var(--text-primary);
+            background-color: var(--card-bg);
+            font-family: var(--font-family);
+        }
+
+        .skill-version-select optgroup {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-style: normal;
+        }
+
+        .skill-confirm-btn {
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--gradient-primary);
+            color: var(--text-white);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            white-space: nowrap;
+            line-height: 1.4;
+        }
+
+        .skill-confirm-btn:hover {
+            background: var(--gradient-primary-hover);
+        }
+
+        .skill-tabs {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 24px;
+            flex-shrink: 0;
+        }
+
+        .skill-tab {
+            padding: 12px 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            transition: color var(--transition-fast);
+        }
+
+        .skill-tab:hover {
+            color: var(--text-primary);
+        }
+
+        .skill-tab.active {
+            color: var(--primary-color);
+        }
+
+        .skill-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .skill-tab-content {
+            display: none;
+            padding: 20px 24px;
+        }
+
+        .skill-tab-content.active {
+            display: block;
+        }
+
+        /* 创建方式 - 两卡片并排布局 */
+        .skill-create-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .skill-create-card {
+            flex: 1;
+            background-color: #F5F5F7;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            gap: 14px;
+            border: 1px solid transparent;
+            transition: box-shadow var(--transition-fast);
+        }
+
+        .skill-create-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.08);
+        }
+
+        .skill-create-card-left {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .skill-create-card-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .skill-preview-card {
+            cursor: pointer;
+            transition: opacity var(--transition-fast);
+        }
+
+        .skill-preview-card:hover {
+            opacity: 0.85;
+        }
+
+        .skill-preview-img {
+            width: 120px;
+            height: 80px;
+            background-color: #E8E8EC;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-size: 11px;
+            transition: box-shadow var(--transition-fast);
+        }
+
+        .skill-preview-card:hover .skill-preview-img {
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.15);
+        }
+
+        .skill-preview-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 8px;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .skill-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .skill-upload-area {
+            border: 1.5px dashed var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color var(--transition-fast), background-color var(--transition-fast);
+            margin-bottom: 10px;
+        }
+
+        .skill-upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+        }
+
+        .skill-upload-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .skill-upload-hint svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+
+        .skill-btn-sm {
+            align-self: flex-start;
+            font-size: 13px;
+            padding: 5px 16px;
+        }
+
+        /* Skill 卡片列表 */
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .skill-card {
+            background-color: #F8F8FA;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .skill-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .skill-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .skill-card-meta {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .skill-card-source {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .skill-card-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .skill-card-btn {
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .skill-card-btn-view {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+
+        .skill-card-btn-view:hover {
+            background-color: #EDE5FF;
+        }
+
+        .skill-card-btn-delete {
+            background-color: #FEF2F2;
+            color: #DC2626;
+        }
+
+        .skill-card-btn-delete:hover {
+            background-color: #FEE2E2;
+        }
+
+        .skill-feedback-row {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .skill-feedback-textarea {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            outline: none;
+            resize: vertical;
+            min-height: 36px;
+            font-family: var(--font-family);
+        }
+
+        .skill-feedback-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(101, 61, 214, 0.08);
+        }
+
+        .skill-feedback-btn {
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background-color: var(--primary-color);
+            color: var(--text-white);
+            transition: background-color var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .skill-feedback-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* 图片放大遮罩 */
+        .skill-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+            cursor: pointer;
+            padding: 40px;
+        }
+
+        .skill-image-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .skill-image-overlay img,
+        .skill-image-overlay .skill-image-placeholder {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: var(--radius-md);
+            background-color: var(--card-bg);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .skill-image-placeholder {
+            width: 600px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
         }
 
         /* 设置弹窗只读样式 */
@@ -3889,6 +4399,12 @@
             transform: translateX(-50%);
             border: 4px solid transparent;
             border-top-color: rgba(0, 0, 0, 0.8);
+        }
+        .floating-tooltip.tooltip-wide {
+            max-width: 380px;
+            padding: 10px 14px;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         /* 可复制单元格 */
@@ -4805,6 +5321,11 @@
             cursor: not-allowed !important;
             pointer-events: none !important;
         }
+        .debug-readonly-mode #debugGenerateSkillBtn {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            pointer-events: none !important;
+        }
         .debug-readonly-mode .version-delete-btn {
             display: none !important;
         }
@@ -5170,12 +5691,10 @@
                                     <div class="version-dropdown" id="versionDropdown"></div>
                                 </div>
                                 <button class="btn btn-primary" id="debugSaveBtn">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-                                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
-                                        <polyline points="7 3 7 8 15 8"></polyline>
-                                    </svg>
                                     保存
+                                </button>
+                                <button class="btn btn-primary tooltip-wrapper" id="debugGenerateSkillBtn" data-tooltip-html="调整完成的prompt可以生成一版Skill，大模型按照Skill执行会大幅提升prompt执行的准确率">
+                                    Skill
                                 </button>
                             </div>
                         </div>
@@ -5795,6 +6314,24 @@
                         <div class="form-error" id="settingsGroupError">请选择或输入所属分组</div>
                     </div>
 
+                    <!-- 分组展示形式 -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            分组展示形式
+                            <span class="tooltip-wrapper" data-tooltip-html="<div style='margin-bottom:6px;font-weight:600;'>全铺展示：</div><div style='margin-bottom:10px;padding-left:8px;opacity:0.9;'>所有卡片平铺在一个区域中展示，不按分组分行</div><div style='margin-bottom:6px;font-weight:600;'>单组单行：</div><div style='padding-left:8px;opacity:0.9;'>每个分组独占一行，组名在左侧，该组卡片在右侧一行排列</div>" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="settingsDisplayMode" value="full" checked id="settingsDisplayFull">
+                                <span>全铺展示</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="settingsDisplayMode" value="single" id="settingsDisplaySingle">
+                                <span>单组单行</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <!-- AI员工权限同步 -->
                     <div class="form-group">
                         <label class="form-label">AI员工权限同步 <span class="tooltip-wrapper" data-tooltip="有该AI员工权限的用户，可以编辑本指令。同时本指令可以调用AI员工的"菜鸟账权"和"公共账密"。" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></label>
@@ -5837,6 +6374,174 @@
                 <button class="btn-modal btn-modal-default" id="settingsCancelBtn">取消</button>
                 <button class="btn-modal btn-modal-primary" id="settingsSaveBtn">保存</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Skill 管理弹窗 -->
+    <div class="modal-overlay" id="skillModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Skill 管理</h3>
+                <button class="modal-close" id="skillModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="skill-modal-top">
+                <div class="skill-version-row">
+                    <label>当前执行版本：</label>
+                    <select class="skill-version-select" id="skillVersionSelect">
+                        <optgroup label="当前版本">
+                            <option value="v4-noskill" selected>V4（不使用Skill）</option>
+                            <option value="v4-skillv4">V4_SkillV4</option>
+                        </optgroup>
+                        <optgroup label="历史版本">
+                            <option value="v3-skillv3">V3_SkillV3</option>
+                            <option value="v1-skillv1">V1_SkillV1</option>
+                            <option value="trace-skillv1">Trace_SkillV1</option>
+                        </optgroup>
+                    </select>
+                    <button class="skill-confirm-btn" id="skillConfirmBtn">确认</button>
+                </div>
+            </div>
+            <div class="skill-tabs">
+                <div class="skill-tab active" data-tab="create">创建Skill</div>
+                <div class="skill-tab" data-tab="manage">管理Skill</div>
+            </div>
+            <div class="modal-body">
+                <!-- 创建Skill Tab -->
+                <div class="skill-tab-content active" id="skillCreateTab">
+                    <div class="skill-create-cards">
+                        <!-- 卡片一：轨迹+通用Skill -->
+                        <div class="skill-create-card">
+                            <div class="skill-create-card-left">
+                                <div class="skill-preview-card" id="skillPreview1">
+                                    <div class="skill-preview-img">
+                                        <span>示意图占位</span>
+                                    </div>
+                                </div>
+                                <div class="skill-preview-title">方式一：轨迹+通用Skill</div>
+                            </div>
+                            <div class="skill-create-card-right">
+                                <div class="skill-card-desc">上传执行轨迹，与通用Skill结合生成新版本</div>
+                                <div class="skill-upload-area" id="skillUploadArea">
+                                    <div class="skill-upload-hint">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        <div>点击上传轨迹文件</div>
+                                    </div>
+                                </div>
+                                <input type="file" id="skillFileInput" class="file-input" accept=".json,.txt">
+                                <button class="btn btn-primary skill-btn-sm" id="skillGenerateFromTraceBtn">开始生成</button>
+                            </div>
+                        </div>
+
+                        <!-- 卡片二：Prompt生成 -->
+                        <div class="skill-create-card">
+                            <div class="skill-create-card-left">
+                                <div class="skill-preview-card" id="skillPreview2">
+                                    <div class="skill-preview-img">
+                                        <span>示意图占位</span>
+                                    </div>
+                                </div>
+                                <div class="skill-preview-title">方式二：Prompt生成</div>
+                            </div>
+                            <div class="skill-create-card-right">
+                                <div class="skill-card-desc">基于当前Prompt版本直接生成Skill版本</div>
+                                <button class="btn btn-primary skill-btn-sm" id="skillGenerateFromPromptBtn">生成Skill</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 管理Skill Tab -->
+                <div class="skill-tab-content" id="skillManageTab">
+                    <div class="skill-list" id="skillList">
+                        <!-- Mock 数据卡片 1 -->
+                        <div class="skill-card" data-skill-id="1">
+                            <div class="skill-card-header">
+                                <div>
+                                    <div class="skill-card-title">Skill V1</div>
+                                    <div class="skill-card-meta">
+                                        <span>2024-12-20 09:00</span>
+                                        <span>创建人：余梦玲</span>
+                                    </div>
+                                    <div class="skill-card-source">基于 草稿V4 生成</div>
+                                </div>
+                                <div class="skill-card-actions">
+                                    <button class="skill-card-btn skill-card-btn-view" onclick="viewSkill(1)">查看</button>
+                                    <button class="skill-card-btn skill-card-btn-delete" onclick="deleteSkill(1)">删除</button>
+                                </div>
+                            </div>
+                            <div class="skill-feedback-row">
+                                <textarea class="skill-feedback-textarea" placeholder="输入执行反馈..."></textarea>
+                                <button class="skill-feedback-btn" onclick="submitSkillFeedback(this)">提交</button>
+                            </div>
+                        </div>
+
+                        <!-- Mock 数据卡片 2 -->
+                        <div class="skill-card" data-skill-id="2">
+                            <div class="skill-card-header">
+                                <div>
+                                    <div class="skill-card-title">Skill V2</div>
+                                    <div class="skill-card-meta">
+                                        <span>2024-12-21 14:30</span>
+                                        <span>创建人：余梦玲</span>
+                                    </div>
+                                    <div class="skill-card-source">基于 轨迹: order_trace_001.json 生成</div>
+                                </div>
+                                <div class="skill-card-actions">
+                                    <button class="skill-card-btn skill-card-btn-view" onclick="viewSkill(2)">查看</button>
+                                    <button class="skill-card-btn skill-card-btn-delete" onclick="deleteSkill(2)">删除</button>
+                                </div>
+                            </div>
+                            <div class="skill-feedback-row">
+                                <textarea class="skill-feedback-textarea" placeholder="输入执行反馈..."></textarea>
+                                <button class="skill-feedback-btn" onclick="submitSkillFeedback(this)">提交</button>
+                            </div>
+                        </div>
+
+                        <!-- Mock 数据卡片 3 -->
+                        <div class="skill-card" data-skill-id="3">
+                            <div class="skill-card-header">
+                                <div>
+                                    <div class="skill-card-title">Skill V3</div>
+                                    <div class="skill-card-meta">
+                                        <span>2024-12-22 11:15</span>
+                                        <span>创建人：余梦玲</span>
+                                    </div>
+                                    <div class="skill-card-source">基于 生效中V3 生成</div>
+                                </div>
+                                <div class="skill-card-actions">
+                                    <button class="skill-card-btn skill-card-btn-view" onclick="viewSkill(3)">查看</button>
+                                    <button class="skill-card-btn skill-card-btn-delete" onclick="deleteSkill(3)">删除</button>
+                                </div>
+                            </div>
+                            <div class="skill-feedback-row">
+                                <textarea class="skill-feedback-textarea" placeholder="输入执行反馈..."></textarea>
+                                <button class="skill-feedback-btn" onclick="submitSkillFeedback(this)">提交</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片放大遮罩 -->
+    <div class="skill-image-overlay" id="skillImageOverlay">
+        <div class="skill-image-placeholder" id="skillImageOverlayContent">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <span>示意图占位（点击关闭）</span>
         </div>
     </div>
 
@@ -5919,6 +6624,24 @@
                             <input type="text" class="new-group-input" id="newGroupInput" placeholder="请输入新分组名称">
                         </div>
                         <div class="form-error" id="groupError">请选择或输入所属分组</div>
+                    </div>
+
+                    <!-- 分组展示形式 -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            分组展示形式
+                            <span class="tooltip-wrapper" data-tooltip-html="<div style='margin-bottom:6px;font-weight:600;'>全铺展示：</div><div style='margin-bottom:10px;padding-left:8px;opacity:0.9;'>所有卡片平铺在一个区域中展示，不按分组分行</div><div style='margin-bottom:6px;font-weight:600;'>单组单行：</div><div style='padding-left:8px;opacity:0.9;'>每个分组独占一行，组名在左侧，该组卡片在右侧一行排列</div>" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="displayMode" value="full" checked id="displayFull">
+                                <span>全铺展示</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="displayMode" value="single" id="displaySingle">
+                                <span>单组单行</span>
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Prompt 内容 -->
@@ -6127,16 +6850,83 @@
         // 全局自定义分组集合（用于存储通过设置弹窗新增的分组）
         let customGroups = new Set();
 
+        // 分组排序顺序数组（持久化分组顺序）
+        let groupOrder = [];
+
+        // 当前渲染的数据（用于排序后保持筛选状态）
+        let currentRenderData = commandData;
+
+        // 初始化分组顺序（从 commandData 提取）
+        function initGroupOrder() {
+            const groups = [...new Set(commandData.map(item => item.group || '默认分组'))];
+            // 默认分组始终在第一位
+            groupOrder = groups.sort((a, b) => {
+                if (a === '默认分组') return -1;
+                if (b === '默认分组') return 1;
+                return a.localeCompare(b);
+            });
+        }
+
         // 获取所有分组（commandData 中的分组 + 自定义分组）
         function getAllGroups() {
             const groups = new Set([
                 ...commandData.map(item => item.group || '默认分组'),
                 ...customGroups
             ]);
+            // 如果 groupOrder 已初始化，按 groupOrder 排序；否则按默认规则
+            if (groupOrder.length > 0) {
+                return [...groups].sort((a, b) => {
+                    const idxA = groupOrder.indexOf(a);
+                    const idxB = groupOrder.indexOf(b);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.localeCompare(b);
+                });
+            }
             return [...groups].sort((a, b) => {
                 if (a === '默认分组') return -1;
                 if (b === '默认分组') return 1;
                 return a.localeCompare(b);
+            });
+        }
+
+        // 上移分组
+        function moveGroupUp(groupName) {
+            const idx = groupOrder.indexOf(groupName);
+            if (idx <= 1) return; // 默认分组不能移动，且已经是第一位
+            // 交换位置
+            [groupOrder[idx], groupOrder[idx - 1]] = [groupOrder[idx - 1], groupOrder[idx]];
+            // 重新渲染保持当前筛选状态
+            renderCards(currentRenderData);
+            showToast('分组已上移');
+        }
+
+        // 下移分组
+        function moveGroupDown(groupName) {
+            const idx = groupOrder.indexOf(groupName);
+            if (idx === -1 || idx >= groupOrder.length - 1) return;
+            // 交换位置
+            [groupOrder[idx], groupOrder[idx + 1]] = [groupOrder[idx + 1], groupOrder[idx]];
+            renderCards(currentRenderData);
+            showToast('分组已下移');
+        }
+
+        // 绑定分组排序事件
+        function bindGroupSortEvents() {
+            document.querySelectorAll('.group-sort-up').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const group = btn.dataset.group;
+                    if (group) moveGroupUp(group);
+                });
+            });
+            document.querySelectorAll('.group-sort-down').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const group = btn.dataset.group;
+                    if (group) moveGroupDown(group);
+                });
             });
         }
 
@@ -6166,6 +6956,7 @@
         // 渲染卡片函数（按分组渲染）
         // ============================================
         function renderCards(data) {
+            currentRenderData = data;
             const cardContainer = document.getElementById('cardContainer');
 
             if (data.length === 0) {
@@ -6188,21 +6979,56 @@
                 groupedData[group].push(item);
             });
 
-            // 按分组顺序渲染（保持默认分组在前）
+            // 如果 groupOrder 未初始化，先初始化
+            if (groupOrder.length === 0) {
+                initGroupOrder();
+            }
+
+            // 确保所有分组都在 groupOrder 中
+            Object.keys(groupedData).forEach(group => {
+                if (!groupOrder.includes(group)) {
+                    groupOrder.push(group);
+                }
+            });
+
+            // 按 groupOrder 排序分组
             const sortedGroups = Object.keys(groupedData).sort((a, b) => {
-                if (a === '默认分组') return -1;
-                if (b === '默认分组') return 1;
+                const idxA = groupOrder.indexOf(a);
+                const idxB = groupOrder.indexOf(b);
+                if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                if (idxA !== -1) return -1;
+                if (idxB !== -1) return 1;
                 return a.localeCompare(b);
             });
 
-            cardContainer.innerHTML = sortedGroups.map(group => {
+            // 判断当前是否是"我的GUI" tab
+            const isCommandTab = document.querySelector('.tab-item[data-tab="command"]')?.classList.contains('active');
+            const isMyCommandsSidebar = document.querySelector('.sidebar-nav-item[data-sidebar-tab="myCommands"]')?.classList.contains('active');
+            const showSortArrows = isCommandTab !== false && isMyCommandsSidebar !== false;
+
+            cardContainer.innerHTML = sortedGroups.map((group, index) => {
                 const items = groupedData[group];
+                const isFirst = index === 0;
+                const isLast = index === sortedGroups.length - 1;
+                const upClass = isFirst ? 'group-sort-up disabled' : 'group-sort-up';
+                const downClass = isLast ? 'group-sort-down disabled' : 'group-sort-down';
+                const sortArrowsHtml = showSortArrows ? `
+                            <div class="group-sort-arrows">
+                                <div class="${upClass}" data-group="${escapeHtml(group)}" title="上移分组">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                </div>
+                                <div class="${downClass}" data-group="${escapeHtml(group)}" title="下移分组">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                        ` : '';
                 return `
                     <div class="group-section" data-group="${escapeHtml(group)}">
                         <div class="group-header">
                             <div class="group-indicator"></div>
                             <span class="group-title">${escapeHtml(group)}</span>
                             <span class="group-count">(${items.length})</span>
+                            ${sortArrowsHtml}
                         </div>
                         <div class="group-cards-wrapper">
                             <div class="group-cards">
@@ -6215,6 +7041,11 @@
 
             // 绑定卡片操作事件
             bindCardEvents();
+
+            // 绑定分组排序事件
+            if (showSortArrows) {
+                bindGroupSortEvents();
+            }
         }
 
         // 渲染单个卡片
@@ -6920,6 +7751,11 @@
             item.viewPermission = viewPermission;
             item.department = department;
 
+            // 如果分组变为新分组，添加到 groupOrder
+            if (!groupOrder.includes(group)) {
+                groupOrder.push(group);
+            }
+
             // 重新渲染列表（如果名称或分组变了）
             renderCards(commandData);
 
@@ -7520,13 +8356,6 @@
                     return;
                 }
 
-                // 超时>10时弹窗提示
-                const timeoutInput = document.getElementById('timeoutInput');
-                const val = parseInt(timeoutInput ? timeoutInput.value : '0', 10);
-                if (!isNaN(val) && val > 10) {
-                    openTimeoutWarningModal();
-                    return;
-                }
                 var currentVersion = versionData.find(function(v){ return v.selected; });
                 if (!currentVersion) return;
 
@@ -7579,6 +8408,15 @@
                         item.desc = getPromptText(textarea) || '';
                     }
                 }
+            });
+
+            // 生成Skill按钮
+            document.getElementById('debugGenerateSkillBtn').addEventListener('click', () => {
+                if (currentDebugReadOnly) {
+                    showToast('当前为只读模式，无法生成Skill');
+                    return;
+                }
+                openSkillModal();
             });
 
             // 设置图标点击事件
@@ -8919,6 +9757,11 @@
                 commandData.splice(firstGroupIndex, 0, newCommand);
             } else {
                 commandData.unshift(newCommand);
+            }
+
+            // 如果新增了新分组，添加到 groupOrder
+            if (!groupOrder.includes(groupValue)) {
+                groupOrder.push(groupValue);
             }
 
             // 更新分组下拉框（如果新增了新分组）
@@ -10321,6 +11164,7 @@
             var current = versionData.find(function(v){ return v.id === activeVersionId; });
             if(!target) return;
 
+
             var confirmDiv = document.createElement('div');
             confirmDiv.className = 'version-activate-confirm';
             confirmDiv.style.cssText = 'position:fixed;background:#fff;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:16px;z-index:1300;min-width:240px;';
@@ -10488,6 +11332,12 @@
         }
 
     </script>
+<!-- 超时输入框气泡提示 -->
+<div id="timeoutBubble">
+    <button class="bubble-close" id="timeoutBubbleClose">&times;</button>
+    <div>执行时间超过10分钟的指令，请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="bubble-link" href="#" target="_blank">使用说明</a>。</div>
+</div>
+
 <!-- 浮动 tooltip 容器（用于弹窗内，避免被 overflow 裁切） -->
 <div class="floating-tooltip" id="floatingTooltip"></div>
 
@@ -10504,7 +11354,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <p class="timeout-warning-text">本模板执行时间配置超过10分钟。<br>请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="timeout-warning-link" href="#" target="_blank">使用说明</a>。<br>请确认是否保存？</p>
+            <p class="timeout-warning-text">本模板执行时间配置超过10分钟。<br>请在画布配置流程时将浏览器节点的执行类型选择【异步执行】，并结合循环Agent一起使用。使用教程请查看<a class="timeout-warning-link" href="#" target="_blank">使用说明</a>。<br>请确认是否生效？</p>
         </div>
         <div class="modal-footer" style="justify-content: flex-end; gap: 12px;">
             <button class="btn-modal btn-modal-default" id="timeoutWarningCancel">取消</button>
@@ -10531,9 +11381,16 @@
 
             currentWrapper = wrapper;
             const text = wrapper.getAttribute('data-tooltip');
-            if (!text) return;
+            const html = wrapper.getAttribute('data-tooltip-html');
+            if (!text && !html) return;
 
-            floatingTooltip.textContent = text;
+            if (html) {
+                floatingTooltip.innerHTML = html;
+                floatingTooltip.classList.add('tooltip-wide');
+            } else {
+                floatingTooltip.textContent = text;
+                floatingTooltip.classList.remove('tooltip-wide');
+            }
             floatingTooltip.classList.add('visible');
 
             // 先显示以获取尺寸，再定位
@@ -10576,11 +11433,98 @@
 
             if (wrapper === currentWrapper) {
                 floatingTooltip.classList.remove('visible');
+                floatingTooltip.classList.remove('tooltip-wide');
+                floatingTooltip.innerHTML = '';
                 floatingTooltip.style.left = '';
                 floatingTooltip.style.top = '';
                 currentWrapper = null;
             }
         }, true);
+    })();
+
+    // 超时输入框气泡提示逻辑
+    var timeoutBubbleShown = false;
+
+    (function() {
+        var bubble = document.getElementById('timeoutBubble');
+        var bubbleClose = document.getElementById('timeoutBubbleClose');
+        var timeoutInput = document.getElementById('timeoutInput');
+        if (!bubble || !timeoutInput) return;
+
+        function positionBubble() {
+            var inputWrap = timeoutInput.closest('.timeout-input-wrap');
+            if (!inputWrap) inputWrap = timeoutInput;
+            var rect = inputWrap.getBoundingClientRect();
+            var bubbleRect = bubble.getBoundingClientRect();
+
+            // 默认显示在输入框上方
+            var top = rect.top - bubbleRect.height - 10;
+            var left = rect.left;
+            bubble.classList.add('bubble-above');
+
+            // 如果上方空间不足，显示在下方
+            if (top < 10) {
+                top = rect.bottom + 10;
+                bubble.classList.remove('bubble-above');
+            }
+            // 防止超出视口左侧
+            if (left < 8) left = 8;
+            // 防止超出视口右侧
+            if (left + bubbleRect.width > window.innerWidth - 8) {
+                left = window.innerWidth - 8 - bubbleRect.width;
+            }
+
+            bubble.style.top = top + 'px';
+            bubble.style.left = left + 'px';
+        }
+
+        function showBubble() {
+            bubble.classList.add('visible');
+            positionBubble();
+            // 重新定位（获取实际尺寸后再算一次）
+            requestAnimationFrame(function() {
+                positionBubble();
+            });
+        }
+
+        function hideBubble() {
+            bubble.classList.remove('visible');
+            bubble.style.top = '';
+            bubble.style.left = '';
+        }
+
+        // 监听超时输入框的 input 事件
+        timeoutInput.addEventListener('input', function() {
+            var val = parseInt(timeoutInput.value, 10);
+            if (!isNaN(val) && val > 10 && !timeoutBubbleShown) {
+                timeoutBubbleShown = true;
+                showBubble();
+            }
+        });
+
+        // 关闭按钮
+        if (bubbleClose) {
+            bubbleClose.addEventListener('click', function(e) {
+                e.stopPropagation();
+                hideBubble();
+            });
+        }
+
+        // 点击页面空白处关闭气泡
+        document.addEventListener('click', function(e) {
+            if (!bubble.classList.contains('visible')) return;
+            if (bubble.contains(e.target)) return;
+            if (e.target === timeoutInput || timeoutInput.closest('.timeout-input-wrap') && timeoutInput.closest('.timeout-input-wrap').contains(e.target)) return;
+            hideBubble();
+        });
+
+        // 窗口滚动/resize 时重新定位
+        window.addEventListener('scroll', function() {
+            if (bubble.classList.contains('visible')) positionBubble();
+        }, true);
+        window.addEventListener('resize', function() {
+            if (bubble.classList.contains('visible')) positionBubble();
+        });
     })();
 
     // 超时提示弹窗逻辑
@@ -10596,58 +11540,7 @@
         modal.classList.remove('active');
     }
     
-    // 超时弹窗确认后执行保存
-    function executeSaveAfterTimeoutWarning() {
-        closeTimeoutWarningModal();
-        // 执行保存按钮的后续逻辑（跳过超时检查）
-        var currentVersion = versionData.find(function(v){ return v.selected; });
-        if (!currentVersion) return;
-    
-        var textarea = document.getElementById('debugPromptTextarea');
-        var currentPrompt = textarea ? getPromptText(textarea) : '';
-    
-        if (currentVersion.id === activeVersionId) {
-            if(confirm('当前编辑的是生效版本，是否基于 ' + currentVersion.version + ' 创建新草稿？')) {
-                var maxNum = versionData.reduce(function(max, v){
-                    var num = parseInt(v.version.replace(/^V/i, ''), 10);
-                    return isNaN(num) ? max : Math.max(max, num);
-                }, 0);
-                var newVersionStr = 'V' + (maxNum + 1);
-                var now = new Date();
-                var timeStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-    
-                var newVersion = {
-                    id: Date.now(),
-                    version: newVersionStr,
-                    status: '草稿',
-                    updateTime: timeStr,
-                    editor: '小王',
-                    selected: false,
-                    sandbox: currentVersion.sandbox,
-                    prompt: currentPrompt,
-                    variables: currentVersion.variables ? currentVersion.variables.map(function(v){return{name:v.name,value:v.value};}) : []
-                };
-                versionData.unshift(newVersion);
-                selectVersion(newVersion.id);
-                showToast('已保存为草稿: ' + newVersionStr);
-            }
-        } else {
-            currentVersion.prompt = currentPrompt;
-            currentVersion.updateTime = (function(){
-                var now = new Date();
-                return now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
-            })();
-            renderVersionDropdown();
-            showToast('草稿已保存: ' + currentVersion.version);
-        }
-    
-        if (currentDebugId) {
-            const item = commandData.find(cmd => cmd.id === currentDebugId);
-            if (item && textarea) {
-                item.desc = getPromptText(textarea) || '';
-            }
-        }
-    }
+
     
     (function() {
         const modal = document.getElementById('timeoutWarningModal');
@@ -10667,9 +11560,9 @@
             cancelBtn.addEventListener('click', closeTimeoutWarningModal);
         }
     
-        // 确认按钮 - 执行保存
+        // 确认按钮 - 执行设为生效
         if (confirmBtn) {
-            confirmBtn.addEventListener('click', executeSaveAfterTimeoutWarning);
+            confirmBtn.addEventListener('click', closeTimeoutWarningModal);
         }
     
         // 点击遮罩关闭
@@ -10678,6 +11571,171 @@
                 closeTimeoutWarningModal();
             }
         });
+    })();
+
+    // ============================================
+    // Skill 管理弹窗功能
+    // ============================================
+    function openSkillModal() {
+        const modal = document.getElementById('skillModal');
+        if (modal) {
+            modal.classList.add('active');
+        }
+    }
+
+    function closeSkillModal() {
+        const modal = document.getElementById('skillModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+
+    function switchSkillTab(tabName) {
+        // 更新Tab样式
+        document.querySelectorAll('.skill-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.tab === tabName) {
+                tab.classList.add('active');
+            }
+        });
+
+        // 更新内容显示
+        document.querySelectorAll('.skill-tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        if (tabName === 'create') {
+            document.getElementById('skillCreateTab').classList.add('active');
+        } else if (tabName === 'manage') {
+            document.getElementById('skillManageTab').classList.add('active');
+        }
+    }
+
+    function openSkillImageOverlay(previewId) {
+        const overlay = document.getElementById('skillImageOverlay');
+        if (overlay) {
+            overlay.classList.add('active');
+        }
+    }
+
+    function closeSkillImageOverlay() {
+        const overlay = document.getElementById('skillImageOverlay');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+    }
+
+    function viewSkill(skillId) {
+        showToast('查看 Skill ' + skillId);
+    }
+
+    function deleteSkill(skillId) {
+        if (confirm('确定要删除该 Skill 吗？')) {
+            const card = document.querySelector('.skill-card[data-skill-id="' + skillId + '"]');
+            if (card) {
+                card.remove();
+                showToast('删除成功');
+            }
+        }
+    }
+
+    function submitSkillFeedback(btn) {
+        const card = btn.closest('.skill-card');
+        const textarea = card ? card.querySelector('.skill-feedback-textarea') : null;
+        const value = textarea ? textarea.value.trim() : '';
+        if (value) {
+            showToast('反馈已提交');
+            if (textarea) textarea.value = '';
+        } else {
+            showToast('请输入反馈内容');
+        }
+    }
+
+    (function() {
+        const modal = document.getElementById('skillModal');
+        const closeBtn = document.getElementById('skillModalClose');
+        const tabs = document.querySelectorAll('.skill-tab');
+        const uploadArea = document.getElementById('skillUploadArea');
+        const fileInput = document.getElementById('skillFileInput');
+        const generateTraceBtn = document.getElementById('skillGenerateFromTraceBtn');
+        const generatePromptBtn = document.getElementById('skillGenerateFromPromptBtn');
+        const previewCards = document.querySelectorAll('.skill-preview-card');
+        const imageOverlay = document.getElementById('skillImageOverlay');
+
+        if (!modal) return;
+
+        // 关闭按钮(×)
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeSkillModal);
+        }
+
+        // 点击遮罩关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeSkillModal();
+            }
+        });
+
+        // Tab 切换
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                switchSkillTab(this.dataset.tab);
+            });
+        });
+
+        // 文件上传区域点击
+        if (uploadArea && fileInput) {
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+        }
+
+        // 文件选择变化
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    showToast('已选择文件: ' + this.files[0].name);
+                }
+            });
+        }
+
+        // 开始生成按钮
+        if (generateTraceBtn) {
+            generateTraceBtn.addEventListener('click', function() {
+                showToast('Skill生成中...');
+            });
+        }
+
+        // 生成Skill按钮
+        if (generatePromptBtn) {
+            generatePromptBtn.addEventListener('click', function() {
+                showToast('Skill生成中...');
+            });
+        }
+
+        // 图片点击放大
+        previewCards.forEach(card => {
+            card.addEventListener('click', function() {
+                openSkillImageOverlay(this.id);
+            });
+        });
+
+        // 图片遮罩点击关闭
+        if (imageOverlay) {
+            imageOverlay.addEventListener('click', closeSkillImageOverlay);
+        }
+
+        // Skill版本关联下拉 & 确认按钮
+        const skillVersionSelect = document.getElementById('skillVersionSelect');
+        const skillConfirmBtn = document.getElementById('skillConfirmBtn');
+
+        if (skillConfirmBtn && skillVersionSelect) {
+            skillConfirmBtn.addEventListener('click', function() {
+                var selectedOption = skillVersionSelect.options[skillVersionSelect.selectedIndex];
+                var selectedText = selectedOption ? selectedOption.text : '';
+                closeSkillModal();
+                showToast('执行版本已切换为: ' + selectedText);
+            });
+        }
     })();
     </script>
 </body>
