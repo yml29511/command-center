@@ -2255,14 +2255,14 @@
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-left: 12px;
-            padding: 2px 8px;
-            background-color: #EEF2FF;
-            color: var(--primary-color);
+            margin-left: 12px
+            padding: 2px 10px;
+            background-color: #F3EEFF;
+            color: #7C3AED;
             border-radius: 10px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
-            border: 1px solid #C7D2FE;
+            border: 1px solid #DDD6FE;
             line-height: 1.5;
         }
 
@@ -3312,12 +3312,13 @@
 
         .skill-inline-header {
             display: flex;
+            flex-direction: row;
             align-items: center;
             padding: 10px 18px;
             cursor: pointer;
-            gap: 12px;
+            gap: 8px;
             transition: filter 0.2s;
-            background: linear-gradient(135deg, #0A73FD, #72BCFF, #B2C7FE, #FFDDB7);
+            background: linear-gradient(135deg, #0A73FD 0%, #0A73FD 40%, #72BCFF 65%, #B2C7FE 80%, #FFDDB7 100%);
             color: white;
             border-radius: 12px;
             border: none;
@@ -3406,11 +3407,23 @@
             stroke: #fff;
         }
 
-        .skill-inline-arrow {
+        .skill-inline-hint-arrow {
+            color: white;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            opacity: 0.85;
+        }
+
+        .skill-inline-hint-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+.skill-inline-arrow {
             color: white;
             transition: transform 0.2s;
             flex-shrink: 0;
             margin-left: auto;
+            display: none;
         }
 
         .skill-inline-arrow.expanded {
@@ -3711,15 +3724,14 @@
         .skill-intro-card-img .skill-hover-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            border-radius: 8px;
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 2;
         }
 
         .skill-intro-card-img:hover .skill-hover-overlay {
@@ -3727,10 +3739,28 @@
             pointer-events: auto;
         }
 
-        /* 上传成功后蒙版常驻显示 */
+        /* 上传成功后常驻显示 */
         .skill-intro-card-img.uploaded .skill-hover-overlay {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        .skill-intro-card-img .skill-method-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* 进度条/创建中覆盖层需要绝对定位覆盖图片区 */
+        #uploadProgressOverlay,
+        #uploadGenerateProgressOverlay,
+        #traceGenerateProgressState {
+            position: absolute !important;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6) !important;
+            border-radius: 8px;
+            z-index: 5;
         }
 
         /* 上传进度条区域 */
@@ -3783,23 +3813,51 @@
             background: rgba(255,255,255,0.1);
         }
 
+        .skill-creating-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: default;
+        }
+        .skill-creating-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: skill-spin 0.8s linear infinite;
+        }
+        @keyframes skill-spin {
+            to { transform: rotate(360deg); }
+        }
+
         .skill-hover-upload-btn {
-            padding: 8px 18px;
+            padding: 10px 20px;
             background: #fff;
             color: #7c3aed;
-            border: none;
+            border: 1px solid #7c3aed;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(124,58,237,0.1);
             transition: transform 0.15s, box-shadow 0.15s;
             white-space: nowrap;
         }
 
         .skill-hover-upload-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.2);
+            background: #7c3aed;
+            color: #fff;
         }
 
         /* 上传成功状态内容 */
@@ -3811,11 +3869,10 @@
         }
 
         .skill-upload-filename {
-            color: #fff;
+            color: #333;
             font-size: 13px;
             font-weight: 600;
             margin-bottom: 12px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
         }
 
         .skill-upload-filename .check-icon {
@@ -3831,8 +3888,8 @@
 
         .skill-reupload-btn {
             background: transparent;
-            border: 1px solid #fff;
-            color: #fff;
+            border: 1px solid #7c3aed;
+            color: #7c3aed;
             border-radius: 6px;
             padding: 8px 16px;
             font-size: 12px;
@@ -3843,7 +3900,7 @@
         }
 
         .skill-reupload-btn:hover {
-            background: rgba(255,255,255,0.15);
+            background: rgba(124,58,237,0.08);
         }
 
         .skill-confirm-generate-btn {
@@ -3938,6 +3995,69 @@
             padding: 0 12px 12px;
         }
 
+        /* 创建Skill失败态 */
+        .skill-generate-fail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            min-height: 180px;
+        }
+        #uploadGenerateFailState,
+        #traceGenerateFailState {
+            position: absolute;
+            inset: 0;
+            background: #fafafa;
+            z-index: 10;
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+        .skill-generate-fail-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #DC2626;
+            margin-bottom: 12px;
+        }
+        .skill-generate-fail-info {
+            font-size: 13px;
+            color: #666;
+            line-height: 2;
+            max-width: 320px;
+        }
+        .skill-generate-fail-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .skill-generate-fail-btn-primary {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #7F46FF, #C251FD);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .skill-generate-fail-btn-primary:hover {
+            opacity: 0.9;
+        }
+        .skill-generate-fail-btn-secondary {
+            padding: 8px 20px;
+            background: white;
+            color: #7F46FF;
+            border: 1px solid #7F46FF;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .skill-generate-fail-btn-secondary:hover {
+            background: #f5f0ff;
+        }
+
         /* 方式二：创建Skill成功态 */
         .skill-generate-success {
             display: flex;
@@ -4004,20 +4124,16 @@
             opacity: 0.9;
         }
 
-        .skill-cancel-enable-btn {
-            padding: 4px 12px;
-            background: white;
-            color: #666;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-        }
 
-        .skill-cancel-enable-btn:hover {
-            background: #fff;
-            color: #DC2626;
-            border-color: #DC2626;
+        .skill-status-tag-inactive {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-right: 8px;
         }
 
         /* 启用Skill二次确认弹窗 */
@@ -4103,7 +4219,9 @@
             gap: 6px;
         }
         .skill-status-tag-active {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
             background: #DEF7EC;
             color: #059669;
             font-size: 12px;
@@ -4112,9 +4230,91 @@
             border-radius: 4px;
             margin-right: 8px;
         }
+        .skill-status-tag-active::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #059669;
+        }
         .skill-enabled-card-info {
             padding: 16px 20px;
             background: white;
+        }
+        #enabledLeftActive .skill-enabled-card-info,
+        #enabledRightActive .skill-enabled-card-info {
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        .skill-enabled-card-actions {
+            padding: 0;
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .skill-action-btn-primary {
+            padding: 10px 20px;
+            background: #7F46FF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            font-weight: 500;
+            width: 100%;
+        }
+        .skill-action-btn-primary:hover {
+            background: #6B35E8;
+        }
+        .skill-action-btn-secondary {
+            padding: 10px 20px;
+            background: white;
+            color: #666;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            width: 100%;
+            position: relative;
+        }
+        .skill-action-btn-secondary:not(.disabled):hover {
+            color: #7F46FF;
+            border-color: #7F46FF;
+        }
+        .skill-action-btn-secondary.disabled {
+            color: #bbb;
+            border-color: #e5e7eb;
+            cursor: not-allowed;
+            background: #f9f9f9;
+        }
+        .skill-action-btn-secondary.disabled:hover .skill-btn-tooltip {
+            display: block;
+        }
+        .skill-btn-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            font-size: 12px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            white-space: nowrap;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .skill-btn-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #333;
         }
         .skill-enabled-card-name {
             font-size: 14px;
@@ -4149,6 +4349,21 @@
         .skill-enabled-card-trace .skill-trace-id-clickable:hover {
             text-decoration: underline;
         }
+        .skill-enabled-card-links {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        .skill-enabled-card-links a {
+            color: #7F46FF;
+            text-decoration: none;
+        }
+        .skill-enabled-card-links a:hover {
+            text-decoration: underline;
+        }
+        .skill-enabled-card-links-sep {
+            color: #ddd;
+            margin: 0 8px;
+        }
         .skill-enabled-card-link {
             display: block;
             color: #7F46FF;
@@ -4168,6 +4383,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: auto;
         }
         .skill-enabled-card-img img {
             max-height: 180px;
@@ -4209,19 +4425,19 @@
         }
         .skill-overlay-btn-secondary {
             padding: 8px 20px;
-            background: rgba(255,255,255,0.9);
-            color: #333;
-            border: 1px solid rgba(255,255,255,0.8);
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
             border-radius: 6px;
             font-size: 13px;
             cursor: pointer;
-            margin-top: 8px;
+            margin-top: 0;
             min-width: 140px;
             text-align: center;
         }
         .skill-overlay-btn-secondary:hover {
-            background: #fff;
-            color: #7F46FF;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
         }
         .skill-reupload-select-area {
             display: flex;
@@ -5124,6 +5340,99 @@
             background: var(--gradient-primary-hover);
         }
 
+        /* 沙箱类型提示弹窗 */
+        #sandboxTypeModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2100;
+        }
+        #sandboxTypeModal.active {
+            display: flex;
+        }
+        .sandbox-type-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px 32px 24px;
+            min-width: 400px;
+            max-width: 480px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+        }
+        .sandbox-type-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 14px;
+        }
+        .sandbox-type-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+        .sandbox-type-text .highlight-cngui {
+            color: #7C3AED;
+            font-weight: 600;
+        }
+        .sandbox-type-text .highlight-warning {
+            color: #E53E3E;
+            font-weight: 600;
+        }
+        .sandbox-type-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .sandbox-type-btns .btn-cancel {
+            padding: 8px 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .sandbox-type-btns .btn-cancel:hover {
+            border-color: #bbb;
+            color: #333;
+        }
+        .sandbox-type-btns .btn-switch {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            background: var(--gradient-primary);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .sandbox-type-btns .btn-switch:hover {
+            background: var(--gradient-primary-hover);
+        }
+        #versionSwitchConflictModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2100;
+        }
+        #versionSwitchConflictModal.active {
+            display: flex;
+        }
+
         .skill-tabs {
             display: flex;
             gap: 24px;
@@ -5271,6 +5580,8 @@
         .version-tag--online { background-color: #F3EEFF; color: #7C3AED; }
         .version-tag--active { background-color: #F3EEFF; color: #7C3AED; }
         .version-tag--version { background-color: #F0F0F0; color: #666666; }
+        .version-tag--history { background-color: #F5F5F5; color: #999999; }
+        .version-tag--历史版本 { background-color: #F5F5F5; color: #999999; }
         .version-trigger .version-arrow { display: none; }
         .version-arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
         .version-trigger.active .version-arrow { transform: rotate(180deg); }
@@ -5289,15 +5600,14 @@
         .version-delete-confirm span { font-size: 12px; color: #333; }
         .version-delete-confirm-yes { font-size: 12px; color: #fff; background: #7C3AED; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
         .version-delete-confirm-no { font-size: 12px; color: #666; background: #f0f0f0; border: none; border-radius: 4px; padding: 2px 10px; cursor: pointer; }
-        .version-item-info { flex: 1; display: flex; align-items: center; gap: 10px; }
-        .version-item-info .version-tag { flex-shrink: 0; }
+        .version-item-info { flex: 1; display: flex; align-items: flex-start; gap: 10px; }
+        .version-item-info .version-tag { flex-shrink: 0; margin-top: 2px; }
         .version-tag-col { width: 100px; text-align: right; flex-shrink: 0; }
-        .version-item-meta { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-        .version-item-meta-row { display: flex; align-items: center; justify-content: space-between; }
-                .version-item-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .version-item-meta { flex: 1; display: flex; flex-direction: column; gap: 4px; }
         .version-item-id { font-size: 13px; color: #999; }
         .version-item-editor { font-size: 12px; color: #999; }
-        .version-item-time { font-size: 12px; color: #999; }
+        .version-item-time { font-size: 12px; color: #999; white-space: nowrap; }
+        .version-item-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
         .version-active-badge {
             display: inline-flex;
             align-items: center;
@@ -6724,6 +7034,27 @@
             font-size: 12px;
             text-align: center;
             white-space: nowrap;
+        }
+
+        /* 版本状态标签样式 */
+        .version-status-tag {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+        .version-status-online {
+            background-color: #F3EEFF;
+            color: #7C3AED;
+            border: 1px solid #DDD6FE;
+        }
+        .version-status-draft {
+            background-color: #FFF7E6;
+            color: #D48806;
+            border: 1px solid #FFE7BA;
         }
 
         /* prompt列已在上方统一定义 */
@@ -8179,8 +8510,9 @@
                         <!-- Skill 入口条 -->
                         <div class="skill-inline-entry" id="skillInlineEntry">
                             <div class="skill-inline-header" onclick="toggleSkillInlinePanel()">
+                                <svg class="skill-inline-hint-arrow" id="skillInlineHintArrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                                 <div class="skill-inline-title">
-                                    <span class="skill-new-feature-tag">新功能</span><span>GUI Skill</span>
+                                    <span class="skill-new-feature-tag">⭐ 点击查看新功能</span><span>GUI Skill</span>
                                 </div>
                                 <span class="skill-inline-current-info">—— 帮助你快速完成Prompt编写，保障执行稳定性的好助手~</span>
                                 <svg class="skill-inline-arrow" id="skillInlineArrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -8192,19 +8524,20 @@
                                     <input type="file" id="emptyStateFileInput" accept=".json" style="display:none" onchange="onEmptyStateFileSelected(this)" />
                                     <div class="skill-method-intro">
                                         <div class="skill-method-card">
-                                            <div class="skill-enabled-card-info" style="text-align:left;">
+                                            <div class="skill-enabled-card-info" id="uploadCardInfo" style="text-align:left;">
                                                 <div class="skill-enabled-card-section-title">
                                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                                                         <rect x="1" y="2" width="16" height="11" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
+                                                        <polygon points="7,5 7,10 12,7.5" fill="#666"/>
                                                         <line x1="9" y1="13" x2="9" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
                                                         <line x1="5.5" y1="15.5" x2="12.5" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
-                                                        <circle cx="9" cy="7.5" r="3" fill="#DC2626"/>
                                                     </svg>
-                                                    录制轨迹生成
+                                                    录制轨迹生成Skill
                                                 </div>
-                                                <div class="skill-enabled-card-desc-text">利用工具录制屏幕操作，提升编写点击+键盘操作Prompt的效率。</div>
-                                                <a href="#" class="skill-enabled-card-link" target="_blank">轨迹录屏工具</a>
-                                                <a href="#" class="skill-enabled-card-link" target="_blank">使用教程</a>
+                                                <div class="skill-enabled-card-desc-text">利用工具录制屏幕操作，提升"点击+键盘操作"相关Prompt的编写效率。帮助你快速完成一个可以跑通的Prompt。（仅支持"CNGUI沙箱"）</div>
+                                                <div class="skill-enabled-card-links">
+                                                    <a href="#" target="_blank">使用教程及工具下载</a>
+                                                </div>
                                             </div>
                                             <div class="skill-intro-card-img" id="uploadCardImg">
                                                 <img src="screenshots/record-tool-demo.png" alt="上传录制轨迹" class="skill-method-img" onerror="this.style.display='none'" />
@@ -8220,7 +8553,7 @@
                                                         </div>
                                                         <div class="skill-upload-action-btns">
                                                             <button class="skill-reupload-btn" onclick="resetUploadState()">重新上传</button>
-                                                            <button class="skill-confirm-generate-btn" onclick="confirmAndGenerateSkill()">确认并生成Skill</button>
+                                                            <button class="skill-confirm-generate-btn" onclick="confirmAndGenerateSkill()">确认并创建Skill</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -8234,14 +8567,11 @@
                                                         <button class="skill-upload-cancel-btn" onclick="cancelUpload()">取消上传</button>
                                                     </div>
                                                 </div>
-                                                <!-- 生成Skill进度条态（独立overlay，与右侧对齐） -->
+                                                <!-- 生成Skill创建中状态（独立overlay） -->
                                                 <div class="skill-hover-overlay" id="uploadGenerateProgressOverlay" style="display:none;opacity:1;">
-                                                    <div class="skill-upload-progress-area">
-                                                        <div class="skill-upload-progress-bar">
-                                                            <div class="skill-upload-progress-fill" id="uploadGenerateProgressFill"></div>
-                                                        </div>
-                                                        <span class="skill-upload-progress-text" id="uploadGenerateProgressText">0%</span>
-                                                        <button class="skill-upload-cancel-btn" onclick="cancelUploadGenerate()">取消创建</button>
+                                                    <div style="display:flex; flex-direction:row; align-items:center; gap:12px;">
+                                                        <button class="skill-creating-btn"><span class="skill-creating-spinner"></span>创建中...</button>
+                                                        <button class="skill-overlay-btn-secondary" onclick="cancelUploadGenerate()">取消创建</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -8254,14 +8584,26 @@
                                                     <div>关联轨迹文件：<span id="uploadGenerateFileName" style="color:#7F46FF; font-weight:600;"></span></div>
                                                 </div>
                                                 <div class="skill-generate-success-actions">
-                                                    <button class="skill-generate-success-btn-secondary" onclick="recreateSkillFromUpload()">重新创建Skill</button>
+                                                    <button class="skill-generate-success-btn-secondary" onclick="recreateSkillFromUpload()">暂不启用Skill</button>
                                                     <button class="skill-generate-success-btn-primary" onclick="enableCreatedSkill()">启用Skill</button>
+                                                </div>
+                                            </div>
+                                            <!-- 方式一创建失败态 -->
+                                            <div id="uploadGenerateFailState" style="display:none;" class="skill-generate-fail">
+                                                <div class="skill-generate-fail-title">✖ 创建Skill失败</div>
+                                                <div class="skill-generate-fail-info">
+                                                    <div>失败原因：<span id="uploadGenerateFailReason">轨迹文件解析异常，请检查文件格式是否正确</span></div>
+                                                    <div>关联轨迹文件：<span id="uploadGenerateFailFileName" style="color:#7F46FF; font-weight:600;">recording_trace_001.json</span></div>
+                                                </div>
+                                                <div class="skill-generate-fail-actions">
+                                                    <button class="skill-generate-fail-btn-secondary" onclick="retryUploadFromFail()">重新上传文件</button>
+                                                    <button class="skill-generate-fail-btn-primary" onclick="retryCreateSkillFromFail()">重新创建Skill</button>
                                                 </div>
                                             </div>
 
                                         </div>
                                         <div class="skill-method-card">
-                                            <div class="skill-enabled-card-info" style="text-align:left;">
+                                            <div class="skill-enabled-card-info" id="traceCardInfo" style="text-align:left;">
                                                 <div class="skill-enabled-card-section-title">
                                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                                                         <rect x="3" y="2" width="12" height="14" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
@@ -8269,9 +8611,9 @@
                                                         <line x1="6" y1="9" x2="12" y2="9" stroke="#666" stroke-width="1.2" stroke-linecap="round"/>
                                                         <line x1="6" y1="12" x2="9" y2="12" stroke="#666" stroke-width="1.2" stroke-linecap="round"/>
                                                     </svg>
-                                                    Prompt轨迹生成
+                                                    Prompt轨迹生成Skill
                                                 </div>
-                                                <div class="skill-enabled-card-desc-text">将已成功的调试的轨迹作为参考，不再让大模型自由发挥影响执行结果</div>
+                                                <div class="skill-enabled-card-desc-text">利用您已成功调试的轨迹生成Skill将大大提高执行准确率，不再受大模型自由发挥的困扰。（仅支持“CNGUI沙箱”）</div>
                                                 <a href="#" class="skill-enabled-card-link" target="_blank">使用教程</a>
                                             </div>
                                             <div class="skill-intro-card-img" id="traceCardImg">
@@ -8296,17 +8638,14 @@
                                                                 <div class="skill-trace-dropdown-item" onclick="selectTraceId('trace_20241220_001')">trace_20241220_001</div>
                                                             </div>
                                                         </div>
-                                                        <button class="skill-confirm-generate-btn" onclick="generateSkillFromTrace()">生成Skill</button>
+                                                        <button class="skill-confirm-generate-btn" onclick="generateSkillFromTrace()">创建Skill</button>
                                                     </div>
                                                 </div>
-                                                <!-- 进度条态 -->
+                                                <!-- 创建中状态 -->
                                                 <div class="skill-hover-overlay" id="traceGenerateProgressState" style="display:none;opacity:1">
-                                                    <div class="skill-upload-progress-area">
-                                                        <div class="skill-upload-progress-bar">
-                                                            <div class="skill-upload-progress-fill" id="traceGenerateProgressFill"></div>
-                                                        </div>
-                                                        <span class="skill-upload-progress-text" id="traceGenerateProgressText">0%</span>
-                                                        <button class="skill-upload-cancel-btn" onclick="cancelTraceGenerate()">取消创建</button>
+                                                    <div style="display:flex; flex-direction:row; align-items:center; gap:12px;">
+                                                        <button class="skill-creating-btn"><span class="skill-creating-spinner"></span>创建中...</button>
+                                                        <button class="skill-overlay-btn-secondary" onclick="cancelTraceGenerate()">取消创建</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -8319,8 +8658,20 @@
                                                     <div>关联轨迹ID：<span class="skill-trace-id-clickable" id="traceGenerateTraceId" onclick="showTraceResultBySkill(this.textContent)">trace_20241222_002</span></div>
                                                 </div>
                                                 <div class="skill-generate-success-actions">
-                                                    <button class="skill-generate-success-btn-secondary" onclick="recreateSkill()">重新创建Skill</button>
+                                                    <button class="skill-generate-success-btn-secondary" onclick="recreateSkill()">暂不启用Skill</button>
                                                     <button class="skill-generate-success-btn-primary" onclick="enableCreatedSkill()">启用Skill</button>
+                                                </div>
+                                            </div>
+                                            <!-- 方式二创建失败态 -->
+                                            <div id="traceGenerateFailState" style="display:none" class="skill-generate-fail">
+                                                <div class="skill-generate-fail-title">✖ 创建Skill失败</div>
+                                                <div class="skill-generate-fail-info">
+                                                    <div>失败原因：<span id="traceGenerateFailReason">轨迹数据解析超时，请检查轨迹ID是否有效</span></div>
+                                                    <div>关联轨迹ID：<span id="traceGenerateFailTraceId" style="color:#7F46FF; font-weight:600;">trace_20241222_002</span></div>
+                                                </div>
+                                                <div class="skill-generate-fail-actions">
+                                                    <button class="skill-generate-fail-btn-secondary" onclick="retryTraceFromFail()">重新选择轨迹</button>
+                                                    <button class="skill-generate-fail-btn-primary" onclick="retryCreateSkillFromTraceFail()">重新创建Skill</button>
                                                 </div>
                                             </div>
 
@@ -8331,60 +8682,126 @@
                                 <!-- 已启用管理态 -->
                                 <div id="skillEnabledState" style="display:none; padding: 16px;">
                                     <div style="display: flex; gap: 20px;">
-                                        <!-- 左侧：录制轨迹介绍卡片（与右侧管理卡片结构一致） -->
+                                        <!-- 左侧：录制轨迹卡片 -->
                                         <div class="skill-enabled-card" style="flex:1;">
-                                            <div class="skill-enabled-card-info" style="text-align:left;">
-                                                <div class="skill-enabled-card-section-title" style="margin-bottom:10px;">
-                                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                                                        <rect x="1" y="2" width="16" height="11" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
-                                                        <line x1="9" y1="13" x2="9" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
-                                                        <line x1="5.5" y1="15.5" x2="12.5" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
-                                                        <circle cx="9" cy="7.5" r="3" fill="#DC2626"/>
-                                                    </svg>
-                                                    录制轨迹生成
+                                            <!-- 左侧-介绍态 -->
+                                            <div id="enabledLeftIntro">
+                                                <div class="skill-enabled-card-info" style="text-align:left;">
+                                                    <div class="skill-enabled-card-section-title" style="margin-bottom:10px;">
+                                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                            <rect x="1" y="2" width="16" height="11" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
+                                                            <line x1="9" y1="13" x2="9" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                                                            <line x1="5.5" y1="15.5" x2="12.5" y2="15.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/>
+                                                            <circle cx="9" cy="7.5" r="3" fill="#DC2626"/>
+                                                        </svg>
+                                                        录制轨迹生成Skill
+                                                    </div>
+                                                    <div class="skill-enabled-card-desc-text">录制浏览器屏幕操作，自动生成GUI Skill</div>
+                                                    <div class="skill-enabled-card-links">
+                                                        <a href="#" onclick="return false;">使用教程及工具下载</a>
+                                                    </div>
                                                 </div>
-                                                <div class="skill-enabled-card-desc-text">录制浏览器屏幕操作，自动生成GUI Skill</div>
-                                                <div>
-                                                    <a href="#" class="skill-enabled-card-link" onclick="return false;">轨迹录屏工具</a>
-                                                    <a href="#" class="skill-enabled-card-link" onclick="return false;">使用教程</a>
+                                                <div class="skill-enabled-card-img" id="enabledUploadCardImg">
+                                                    <img src="screenshots/record-tool-demo.png" alt="录制轨迹" style="display:block; border-radius:8px;" onerror="this.style.display='none'" />
+                                                    <div class="skill-hover-overlay">
+                                                        <div style="display:flex; align-items:center; gap:10px;">
+                                                            <button class="skill-overlay-upload-btn" onclick="openReuploadFromEnabled()">上传已录制的操作轨迹</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="skill-enabled-card-img" id="enabledUploadCardImg">
-                                                <img src="screenshots/record-tool-demo.png" alt="录制轨迹" style="display:block; border-radius:8px;" onerror="this.style.display='none'" />
-                                                <div class="skill-hover-overlay">
-                                                    <div style="display:flex; align-items:center; gap:10px;">
-                                                        <button class="skill-overlay-upload-btn" onclick="openReuploadFromEnabled()">上传已录制的操作轨迹</button>
+                                            <!-- 左侧-启用态 -->
+                                            <div id="enabledLeftActive" style="display:none; padding:16px 20px;">
+                                                <div style="display:flex; align-items:center; margin-bottom:12px;">
+                                                    <div class="skill-enabled-card-section-title" style="margin-bottom:0;">
+                                                        <span class="skill-status-tag-active">启用中</span>
+                                                        录制轨迹生成Skill
+                                                    </div>
+                                                </div>
+                                                <div class="skill-enabled-card-info" id="enabledLeftCardInfo">
+                                                    <a class="skill-enabled-card-name" href="#" target="_blank" onclick="event.preventDefault();" id="enabledLeftSkillName">跨境物流抓取_录制轨迹_GUISkill</a>
+                                                    <div class="skill-enabled-card-meta">
+                                                        <span id="enabledLeftTime"></span>
+                                                        <span style="margin-left: 12px;">创建人：余梦玲</span>
+                                                    </div>
+                                                    <div class="skill-enabled-card-trace">基于录制轨迹文件: <span class="skill-trace-id-clickable" id="enabledLeftTraceFile">recording_trace_001.json</span> 生成</div>
+                                                </div>
+                                                <div class="skill-enabled-card-links">
+                                                    <a href="#" onclick="event.preventDefault();">使用教程及工具下载</a>
+                                                </div>
+                                                <div class="skill-enabled-card-actions">
+                                                    <button class="skill-action-btn-primary" id="enabledLeftPrimaryBtn" onclick="showCancelEnableConfirm()">取消启用</button>
+                                                    <button class="skill-action-btn-secondary disabled" id="enabledLeftReuploadBtn"><span class="skill-btn-tooltip">需先取消启用原Skill后才可以上传新的轨迹文件</span>重新上传轨迹</button>
+                                                </div>
+                                                <div class="skill-enabled-card-img" style="display:none;">
+                                                    <img src="screenshots/record-tool-demo.png" alt="录制轨迹" style="display:block; border-radius:8px;" onerror="this.style.display='none'" />
+                                                    <div class="skill-hover-overlay">
+                                                        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+                                                            <button class="skill-overlay-upload-btn" id="reuploadRecordBtn" onclick="openReuploadFromEnabled()">重新上传轨迹</button>
+                                                            <button class="skill-overlay-btn-secondary" onclick="window.open('#','_blank')">轨迹录屏工具</button>
+                                                            <button class="skill-overlay-btn-secondary" onclick="window.open('#','_blank')">使用教程</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- 右侧：Skill管理卡片 -->
+                                        <!-- 右侧：Prompt轨迹卡片 -->
                                         <div class="skill-enabled-card" style="flex:1;">
-                                            <div class="skill-enabled-card-info">
-                                                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                                            <!-- 右侧-介绍态 -->
+                                            <div id="enabledRightIntro" style="display:none;">
+                                                <div class="skill-enabled-card-info" style="text-align:left;">
+                                                    <div class="skill-enabled-card-section-title" style="margin-bottom:10px;">
+                                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                            <rect x="3" y="2" width="12" height="14" rx="2" stroke="#666" stroke-width="1.5" fill="none"/>
+                                                            <line x1="6" y1="6" x2="12" y2="6" stroke="#666" stroke-width="1.2" stroke-linecap="round"/>
+                                                            <line x1="6" y1="9" x2="12" y2="9" stroke="#666" stroke-width="1.2" stroke-linecap="round"/>
+                                                            <line x1="6" y1="12" x2="9" y2="12" stroke="#666" stroke-width="1.2" stroke-linecap="round"/>
+                                                        </svg>
+                                                        Prompt轨迹生成Skill
+                                                    </div>
+                                                    <div class="skill-enabled-card-desc-text">利用您已成功调试的轨迹生成Skill将大大提高执行准确率，不再受大模型自由发挥的困扰。（仅支持“CNGUI沙箱”）</div>
+                                                    <a href="#" class="skill-enabled-card-link" target="_blank">使用教程</a>
+                                                </div>
+                                                <div class="skill-enabled-card-img">
+                                                    <img src="screenshots/prompt-trace-demo.png" alt="GUI Skill" style="display:block; border-radius:8px;" onerror="this.src='screenshots/sample_room_full_v2.png'; this.onerror=null;" />
+                                                    <div class="skill-hover-overlay">
+                                                        <div style="display:flex; align-items:center; gap:10px;">
+                                                            <button class="skill-overlay-upload-btn" onclick="openReuploadFromEnabled()">选择调试轨迹</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 右侧-启用态 -->
+                                            <div id="enabledRightActive" style="padding:16px 20px;">
+                                                <div style="display:flex; align-items:center; margin-bottom:12px;">
                                                     <div class="skill-enabled-card-section-title" style="margin-bottom:0;">
                                                         <span class="skill-status-tag-active">启用中</span>
-                                                        Prompt轨迹生成
+                                                        Prompt轨迹生成Skill
                                                     </div>
-                                                    <button class="skill-cancel-enable-btn" onclick="showCancelEnableConfirm()">取消启用</button>
                                                 </div>
-                                                <a class="skill-enabled-card-name" href="#" target="_blank" onclick="event.preventDefault(); window.open('#', '_blank')">跨境物流抓取_调试轨迹_GUISkill</a>
-                                                <div class="skill-enabled-card-meta">
-                                                    <span>2026-05-21 10:52</span>
-                                                    <span style="margin-left: 12px;">创建人：余梦玲</span>
+                                                <div class="skill-enabled-card-info" id="enabledRightCardInfo">
+                                                    <a class="skill-enabled-card-name" href="#" target="_blank" onclick="event.preventDefault(); window.open('#', '_blank')" id="enabledRightSkillName">跨境物流抓取_调试轨迹_GUISkill</a>
+                                                    <div class="skill-enabled-card-meta">
+                                                        <span id="enabledRightTime">2026-05-21 10:52</span>
+                                                        <span style="margin-left: 12px;">创建人：余梦玲</span>
+                                                    </div>
+                                                    <div class="skill-enabled-card-trace">基于调试轨迹id: <span class="skill-trace-id-clickable" onclick="showTraceResultBySkill('trace_20241222_002')" id="enabledRightTraceId">trace_20241222_002</span> 生成</div>
                                                 </div>
-                                                <div class="skill-enabled-card-trace">基于调试轨迹id: <span class="skill-trace-id-clickable" onclick="showTraceResultBySkill('trace_20241222_002')">trace_20241222_002</span> 生成</div>
-                                            </div>
-                                            <div class="skill-enabled-card-img">
-                                                <img src="screenshots/prompt-trace-demo.png" alt="GUI Skill" style="display:block; border-radius:8px;" onerror="this.src='screenshots/sample_room_full_v2.png'; this.onerror=null;" />
-                                                <div class="skill-hover-overlay">
-                                                    <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
-                                                        <button class="skill-overlay-upload-btn" id="reuploadTraceBtn" onclick="showTraceReuploadSelect()">重新上传轨迹</button>
-                                                        <button class="skill-overlay-btn-secondary" onclick="viewOldVersions()">查看旧版本</button>
-                                                        <div id="traceReuploadSelect" style="display:none;" class="skill-reupload-select-area">
-                                                            <input type="text" class="skill-reupload-input" placeholder="选择 trace id" />
-                                                            <button class="skill-reupload-confirm-btn" onclick="confirmReuploadTrace()">生成Skill</button>
-                                                            <button class="skill-reupload-cancel-btn" onclick="cancelReuploadTrace()">取消</button>
+                                                <div class="skill-enabled-card-actions">
+                                                    <button class="skill-action-btn-primary" id="enabledRightPrimaryBtn" onclick="showCancelEnableConfirm()">取消启用</button>
+                                                    <button class="skill-action-btn-secondary disabled" id="enabledRightReuploadBtn"><span class="skill-btn-tooltip">需先取消启用原Skill后才可以上传新的轨迹文件</span>重新上传轨迹</button>
+                                                </div>
+                                                <div class="skill-enabled-card-img" style="display:none;">
+                                                    <img src="screenshots/prompt-trace-demo.png" alt="GUI Skill" style="display:block; border-radius:8px;" onerror="this.src='screenshots/sample_room_full_v2.png'; this.onerror=null;" />
+                                                    <div class="skill-hover-overlay">
+                                                        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+                                                            <button class="skill-overlay-upload-btn" id="reuploadTraceBtn" onclick="showTraceReuploadSelect()">重新上传轨迹</button>
+                                                            <button class="skill-overlay-upload-btn" onclick="window.open('#','_blank')">使用教程</button>
+                                                            <div id="traceReuploadSelect" style="display:none;" class="skill-reupload-select-area">
+                                                                <input type="text" class="skill-reupload-input" placeholder="选择 trace id" />
+                                                                <button class="skill-reupload-confirm-btn" onclick="confirmReuploadTrace()">创建Skill</button>
+                                                                <button class="skill-reupload-cancel-btn" onclick="cancelReuploadTrace()">取消</button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -9096,32 +9513,39 @@
                         </div>
                     </div>
 
-                    <!-- 指令使用权限 -->
+                    <!-- 使用权限 -->
                     <div class="form-group">
-                        <label class="form-label">指令使用权限 <span class="tooltip-wrapper" data-tooltip="该AI员工对应的权限人员有权在Workunit中调用该GUI指令" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></label>
-                        <div class="multi-select-container" id="settingsPermissionGroupMulti">
-                            <div class="multi-select-tags" id="settingsPermissionGroupTags"></div>
-                            <div class="multi-select-dropdown" id="settingsPermissionGroupDropdown"></div>
+                        <label class="form-label" style="font-weight:600; font-size:15px; margin-bottom:12px;"><span style="display:inline-block; width:4px; height:16px; background:#7C3AED; border-radius:2px; vertical-align:-2px; margin-right:8px;"></span>使用权限</label>
+                        <!-- Ai员工权限绑定 -->
+                        <div>
+                            <label class="form-label" style="font-size:13px;">Ai员工权限绑定 <span class="tooltip-wrapper" data-tooltip="该AI员工对应的权限人员有权在Workunit中调用该GUI指令" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></label>
+                            <div class="multi-select-container" id="settingsPermissionGroupMulti">
+                                <div class="multi-select-tags" id="settingsPermissionGroupTags"></div>
+                                <div class="multi-select-dropdown" id="settingsPermissionGroupDropdown"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 管理员 -->
+                    <!-- 管理权限 -->
                     <div class="form-group">
-                        <label class="form-label">
-                            管理员<span class="required">*</span>
-                        </label>
-                        <div class="tag-input-container" id="settingsAdminContainer">
-                            <!-- 管理员标签将通过JS动态填充 -->
-                            <input type="text" class="tag-input" id="settingsAdminInput" placeholder="输入管理员名称，按回车添加">
+                        <label class="form-label" style="font-weight:600; font-size:15px; margin-bottom:12px;"><span style="display:inline-block; width:4px; height:16px; background:#7C3AED; border-radius:2px; vertical-align:-2px; margin-right:8px;"></span>管理权限</label>
+                        <!-- 管理员 -->
+                        <div style="margin-bottom:16px;">
+                            <label class="form-label" style="font-size:13px;">
+                                管理员<span class="required">*</span>
+                            </label>
+                            <div class="tag-input-container" id="settingsAdminContainer">
+                                <!-- 管理员标签将通过JS动态填充 -->
+                                <input type="text" class="tag-input" id="settingsAdminInput" placeholder="输入管理员名称，按回车添加">
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- 权限部门 -->
-                    <div class="form-group">
-                        <label class="form-label">权限部门</label>
-                        <select class="form-select" id="settingsDepartment">
-                            <option value="">请选择部门</option>
-                        </select>
+                        <!-- 部门范围配置 -->
+                        <div>
+                            <label class="form-label" style="font-size:13px;">部门范围配置</label>
+                            <select class="form-select" id="settingsDepartment">
+                                <option value="">请选择部门</option>
+                            </select>
+                        </div>
                     </div>
 
                 </form>
@@ -9179,7 +9603,7 @@
                                 <div class="skill-preview-title">方式一：录制轨迹生成 <span class="skill-title-info-icon" data-tip="通过屏幕录制工具，记录用户在浏览器的点击+键盘操作轨迹，通过该轨迹生成Skill。">ⓘ</span></div>
                             </div>
                             <div class="skill-create-card-right">
-                                <div class="skill-card-desc"><svg class="skill-download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg><a class="skill-client-link" href="#" target="_blank">轨迹录屏工具</a><span class="skill-desc-divider">|</span><svg class="skill-tutorial-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg><a class="skill-client-link" href="#" target="_blank">使用教程</a></div>
+                                <div class="skill-card-desc"><a class="skill-client-link" href="#" target="_blank">使用教程及工具下载</a></div>
                                 <div class="skill-row-layout">
                                     <div class="skill-upload-area" id="skillUploadArea">
                                         <div class="skill-upload-hint">
@@ -9391,6 +9815,32 @@
         </div>
     </div>
 
+    <!-- 沙箱类型提示弹窗 -->
+    <div id="sandboxTypeModal">
+        <div class="sandbox-type-card">
+            <div class="sandbox-type-title">沙箱类型提示</div>
+            <div class="sandbox-type-text">
+                当前BUA Skill仅支持结合<span class="highlight-cngui">"CNGUI沙箱"</span>使用，您当前的沙箱类型为<span class="highlight-warning">"无影GUI"</span>（Skill在使用无影GUI沙箱时无法生效）。点击"切换并继续生成Skill"按钮将切换沙箱为<span class="highlight-cngui">"CNGUI"</span>并继续生成Skill。
+            </div>
+            <div class="sandbox-type-btns">
+                <button class="btn-cancel" id="sandboxTypeCancelBtn">取消</button>
+                <button class="btn-switch" id="sandboxTypeSwitchBtn">切换沙箱并继续生成Skill</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 版本切换冲突提示弹窗 -->
+    <div id="versionSwitchConflictModal">
+        <div class="sandbox-type-card">
+            <div class="sandbox-type-title">沙箱类型冲突提示</div>
+            <div class="sandbox-type-text" id="versionSwitchConflictText"></div>
+            <div class="sandbox-type-btns">
+                <button class="btn-cancel" id="versionSwitchConflictCancelBtn">取消切换</button>
+                <button class="btn-switch" id="versionSwitchConflictSwitchBtn">切换版本并暂停启用Skill</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 图片放大遮罩 -->
     <div class="skill-image-overlay" id="skillImageOverlay">
         <div class="skill-image-placeholder" id="skillImageOverlayContent">
@@ -9508,41 +9958,48 @@
                         <textarea class="form-input" id="commandDesc" rows="4" placeholder="请输入Prompt内容"></textarea>
                     </div>
 
-                    <!-- 指令使用权限 -->
+                    <!-- 使用权限 -->
                     <div class="form-group">
-                        <label class="form-label">指令使用权限 <span class="tooltip-wrapper" data-tooltip="该AI员工对应的权限人员有权在Workunit中调用该GUI指令" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></label>
-                        <div class="multi-select-container" id="permissionGroupMulti">
-                            <div class="multi-select-tags" id="permissionGroupTags"></div>
-                            <div class="multi-select-dropdown" id="permissionGroupDropdown"></div>
-                        </div>
-                    </div>
-
-                    <!-- 管理员 -->
-                    <div class="form-group">
-                        <label class="form-label">
-                            管理员<span class="required">*</span>
-                        </label>
-                        <div class="tag-input-container" id="adminContainer">
-                            <div class="tag-item">
-                                <span>余梦玲</span>
-                                <span class="tag-remove" data-name="余梦玲">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                                    </svg>
-                                </span>
+                        <label class="form-label" style="font-weight:600; font-size:15px; margin-bottom:12px;"><span style="display:inline-block; width:4px; height:16px; background:#7C3AED; border-radius:2px; vertical-align:-2px; margin-right:8px;"></span>使用权限</label>
+                        <!-- Ai员工权限绑定 -->
+                        <div>
+                            <label class="form-label" style="font-size:13px;">Ai员工权限绑定 <span class="tooltip-wrapper" data-tooltip="该AI员工对应的权限人员有权在Workunit中调用该GUI指令" style="display:inline-flex;align-items:center;cursor:help;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span></label>
+                            <div class="multi-select-container" id="permissionGroupMulti">
+                                <div class="multi-select-tags" id="permissionGroupTags"></div>
+                                <div class="multi-select-dropdown" id="permissionGroupDropdown"></div>
                             </div>
-                            <input type="text" class="tag-input" id="adminInput" placeholder="输入管理员名称，按回车添加">
                         </div>
-                        <div class="form-error" id="adminError">请至少添加一名管理员</div>
                     </div>
 
-                    <!-- 权限部门 -->
+                    <!-- 管理权限 -->
                     <div class="form-group">
-                        <label class="form-label">权限部门</label>
-                        <select class="form-select" id="department">
-                            <option value="">请选择部门</option>
-                        </select>
+                        <label class="form-label" style="font-weight:600; font-size:15px; margin-bottom:12px;"><span style="display:inline-block; width:4px; height:16px; background:#7C3AED; border-radius:2px; vertical-align:-2px; margin-right:8px;"></span>管理权限</label>
+                        <!-- 管理员 -->
+                        <div style="margin-bottom:16px;">
+                            <label class="form-label" style="font-size:13px;">
+                                管理员<span class="required">*</span>
+                            </label>
+                            <div class="tag-input-container" id="adminContainer">
+                                <div class="tag-item">
+                                    <span>余梦玲</span>
+                                    <span class="tag-remove" data-name="余梦玲">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </span>
+                                </div>
+                                <input type="text" class="tag-input" id="adminInput" placeholder="输入管理员名称，按回车添加">
+                            </div>
+                            <div class="form-error" id="adminError">请至少添加一名管理员</div>
+                        </div>
+                        <!-- 部门范围配置 -->
+                        <div>
+                            <label class="form-label" style="font-size:13px;">部门范围配置</label>
+                            <select class="form-select" id="department">
+                                <option value="">请选择部门</option>
+                            </select>
+                        </div>
                     </div>
 
                 </form>
@@ -10272,7 +10729,27 @@
         // Prompt版本管理功能
         // ============================================
         var versionData = [
-            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', editor: '小王', selected: false,
+            { id: 10886, version: 'V6', status: '草稿', updateTime: '2026-04-28 10:15:30', editor: '小李', selected: false,
+              sandbox: 'browser',
+              prompt: '智能物流数据抓取 Agent V6，支持AI自动识别页面结构并提取数据。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v6/smart' },
+                { name: 'ai_model', value: 'auto-detect' },
+                { name: 'confidence_threshold', value: '0.85' },
+                { name: 'max_retry', value: '5' }
+              ]
+            },
+            { id: 10885, version: 'V5', status: '草稿', updateTime: '2026-04-28 09:20:15', editor: '小张', selected: false,
+              sandbox: 'code',
+              prompt: '增强版物流数据抓取 Agent V5，支持异步并发采集与增量更新。',
+              variables: [
+                { name: 'target_url', value: 'https://logistics.example.com/v5/async' },
+                { name: 'concurrency', value: '10' },
+                { name: 'incremental_mode', value: 'true' },
+                { name: 'cache_ttl', value: '3600' }
+              ]
+            },
+            { id: 10884, version: 'V4', status: '草稿', updateTime: '2026-04-27 13:39:28', editor: '小王', selected: true,
               sandbox: 'browser',
               prompt: '专业的跨境物流数据抓取 Agent，访问看板提取数据。',
               variables: [
@@ -10290,7 +10767,7 @@
                 { name: 'timeout', value: '30000' }
               ]
             },
-            { id: 10881, version: 'V2', status: '草稿', updateTime: '2026-04-27 12:10:12', editor: '小张',
+            { id: 10881, version: 'V2', status: '历史版本', updateTime: '2026-04-27 12:10:12', editor: '小张',
               sandbox: 'browser',
               prompt: '物流数据采集 Agent V2，从指定页面抓取物流信息并生成报告。',
               variables: [
@@ -10298,7 +10775,7 @@
                 { name: 'report_type', value: 'summary' }
               ]
             },
-            { id: 10878, version: 'V1', status: '草稿', updateTime: '2026-04-27 11:45:58', editor: '小王',
+            { id: 10878, version: 'V1', status: '历史版本', updateTime: '2026-04-27 11:45:58', editor: '小王',
               sandbox: 'code',
               prompt: '基础物流数据抓取脚本，从单一数据源获取物流跟踪信息。',
               variables: [
@@ -10322,7 +10799,12 @@
                 activeVersionId = onlineVersion.id;
             }
         })();
-        function getVersionTagClass(s){return s==='草稿'?'version-tag--draft':'version-tag--online';}
+        function getVersionTagClass(s){
+            if(s==='草稿') return 'version-tag--draft';
+            if(s==='线上') return 'version-tag--online';
+            if(s==='历史版本') return 'version-tag--历史版本';
+            return 'version-tag--online';
+        }
         function updateActiveBadge() {
             var badge = document.getElementById('versionActiveBadge');
             if (!badge) return;
@@ -10338,18 +10820,25 @@
             var d=document.getElementById('versionDropdown');
             if(!d)return;
             var displayStatus=function(s){return s==='线上'?'使用中':s;};
+            // 找到当前选中的版本号，用于判断历史版本
+            var selectedVersion = versionData.find(function(v){return v.selected;});
+            var selectedVersionNum = selectedVersion ? parseInt(selectedVersion.version.replace(/^V/i, ''), 10) : 0;
+            
             var itemsHtml=versionData.map(function(item){
                 var isActive = item.id === activeVersionId;
+                var isHistoryStatus = item.status === '历史版本';
                 var cls = 'version-item';
                 if(item.selected) cls += ' version-item--selected';
                 if(isActive) cls += ' version-item--active';
                 var tagLabel = isActive ? '生效中: '+item.version : (item.status==='线上'?'使用中':item.status)+': '+item.version;
                 var tagCls = isActive ? 'version-tag version-tag--active' : 'version-tag '+getVersionTagClass(item.status);
-                var deleteBtnHtml = (!isActive && !currentDebugReadOnly) ? '<span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span>' : '';
-                var activateBtnHtml = (!isActive && !currentDebugReadOnly) ? '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>' : '';
-                return '<div class="'+cls+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="'+tagCls+'">'+tagLabel+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-editor">编辑人：'+(item.editor||'小王')+'</span><span class="version-item-actions">'+deleteBtnHtml+activateBtnHtml+'</span></div><div class="version-item-meta-row"><span class="version-item-time">更新时间：'+item.updateTime+'</span><span class="version-item-id">版本Id: '+item.id+'</span></div></div></div></div>';
+                // 历史版本不支持删除和设为生效操作
+                var deleteBtnHtml = (!isActive && !currentDebugReadOnly && !isHistoryStatus) ? '<span class="version-delete-btn" onclick="event.stopPropagation();showVersionDeleteConfirm('+item.id+',this)">删除</span>' : '';
+                var activateBtnHtml = (!isActive && !currentDebugReadOnly && !isHistoryStatus) ? '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>' : '';
+                var actionBtnsHtml = (deleteBtnHtml || activateBtnHtml) ? '<div class="version-item-actions">' + deleteBtnHtml + activateBtnHtml + '</div>' : '';
+                return '<div class="'+cls+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="'+tagCls+'">'+tagLabel+'</span><div class="version-item-meta"><div class="version-item-id">版本Id: '+item.id+'</div><div class="version-item-editor">编辑人：'+(item.editor||'小王')+'</div><div class="version-item-time">更新时间：'+item.updateTime+'</div></div>'+actionBtnsHtml+'</div></div>';
             }).join('');
-            var addBtnHtml = currentDebugReadOnly ? '' : '<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';
+            var addBtnHtml = currentDebugReadOnly ? '' : '<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>版本克隆</span></div>';
             d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;
         }
         function updateVersionTrigger(){
@@ -10379,8 +10868,40 @@
                 t.classList.remove('active');
             }
         }
+        var pendingSwitchVersionId = null;
+
         function selectVersion(id){
             var c=versionData.find(function(v){return v.id===id;});
+
+            // 检测冲突：Skill已启用且目标版本是"无影GUI"沙箱
+            var skillEnabledState = document.getElementById('skillEnabledState');
+            var skillEnabled = skillEnabledState && skillEnabledState.style.display !== 'none';
+            if (skillEnabled && c && c.sandbox === 'browser') {
+                // 获取Skill名称
+                var leftActive = document.getElementById('enabledLeftActive');
+                var rightActive = document.getElementById('enabledRightActive');
+                var skillNameEl = null;
+                if (leftActive && leftActive.style.display !== 'none') {
+                    skillNameEl = document.getElementById('enabledLeftSkillName');
+                } else if (rightActive && rightActive.style.display !== 'none') {
+                    skillNameEl = document.getElementById('enabledRightSkillName');
+                }
+                var skillName = skillNameEl ? skillNameEl.textContent : 'GUI Skill';
+
+                // 设置弹窗文案
+                var textEl = document.getElementById('versionSwitchConflictText');
+                if (textEl) {
+                    textEl.innerHTML = '当前已启用 GUI Skill「' + skillName + '」，仅支持结合<span class="highlight-cngui">"CNGUI沙箱"</span>使用。您切换的版本 ' + c.version + ' 使用的是<span class="highlight-warning">"无影GUI"</span>沙箱，Skill 将无法生效。';
+                }
+
+                // 暂存目标版本id并显示弹窗
+                pendingSwitchVersionId = id;
+                var modal = document.getElementById('versionSwitchConflictModal');
+                if (modal) modal.classList.add('active');
+                toggleVersionDropdown(false);
+                return;
+            }
+
             versionData.forEach(function(v){v.selected=(v.id===id);});
             renderVersionDropdown();
             updateVersionTrigger();
@@ -10397,7 +10918,7 @@
         }
         function addNewVersion(){
             if (currentDebugReadOnly) {
-                showToast('当前为只读模式，无法新增版本');
+                showToast('当前为只读模式，无法克隆版本');
                 return;
             }
             var current = versionData.find(function(v){return v.selected;});
@@ -11443,7 +11964,9 @@
             var skillPanel = document.getElementById('skillInlinePanel');
             if (skillPanel) skillPanel.style.display = 'none';
             var skillArrow = document.getElementById('skillInlineArrow');
+            var skillHintArrow = document.getElementById('skillInlineHintArrow');
             if (skillArrow) skillArrow.classList.remove('expanded');
+            if (skillHintArrow) skillHintArrow.classList.remove('expanded');
         }
 
         function closeDebugPage() {
@@ -11476,7 +11999,9 @@
             var skillPanel = document.getElementById('skillInlinePanel');
             if (skillPanel) skillPanel.style.display = 'none';
             var skillArrow = document.getElementById('skillInlineArrow');
+            var skillHintArrow2 = document.getElementById('skillInlineHintArrow');
             if (skillArrow) skillArrow.classList.remove('expanded');
+            if (skillHintArrow2) skillHintArrow2.classList.remove('expanded');
             var skillInfo = document.querySelector('.skill-inline-current-info');
             if (skillInfo) skillInfo.style.display = '';
 
@@ -12311,7 +12836,9 @@
             var skillPanelRun = document.getElementById('skillInlinePanel');
             if (skillPanelRun) skillPanelRun.style.display = 'none';
             var skillArrowRun = document.getElementById('skillInlineArrow');
+            var skillHintArrowRun = document.getElementById('skillInlineHintArrow');
             if (skillArrowRun) skillArrowRun.classList.remove('expanded');
+            if (skillHintArrowRun) skillHintArrowRun.classList.remove('expanded');
 
             // 隐藏调试完成提示条
             const tipBanner = document.getElementById('debugTipBanner');
@@ -13055,6 +13582,8 @@
                 const recordTime = new Date(baseTime.getTime() - timeOffset * 60000);
                 const status = statuses[Math.floor(Math.random() * statuses.length)];
                 const sandboxType = Math.random() > 0.5 ? '无影GUI' : 'CNGUI';
+                const versionNum = Math.floor(Math.random() * 4) + 1;
+                const versionStatus = versionNum === 3 ? 'online' : 'draft'; // V3为线上版本，其他为草稿
 
                 records.push({
                     initiator: 'WB02044705',
@@ -13066,7 +13595,8 @@
                         minute: '2-digit',
                         second: '2-digit'
                     }).replace(/\//g, '-'),
-                    version: 'V' + (Math.floor(Math.random() * 4) + 1),
+                    version: 'V' + versionNum,
+                    versionStatus: versionStatus, // 版本状态：online(线上)/draft(草稿)
                     resultId: generateRandomId(),
                     prompt: prompts[i],
                     sandboxType: sandboxType,
@@ -13149,7 +13679,7 @@
                     </td>
                     <td>${record.initiator}</td>
                     <td>${record.createTime}</td>
-                    <td>${record.version}</td>
+                    <td>${record.version} <span class="version-status-tag version-status-${record.versionStatus}">${record.versionStatus === 'online' ? '生效中' : '草稿'}</span></td>
                     <td>
                         <span class="copy-cell" onclick="copyToClipboard('${record.resultId}')">
                             ${record.resultId}
@@ -14516,21 +15046,26 @@
         if (isRunning) return;
         var panel = document.getElementById('skillInlinePanel');
         var arrow = document.getElementById('skillInlineArrow');
+        var hintArrow = document.getElementById('skillInlineHintArrow');
         if (panel.style.display === 'none') {
             panel.style.display = '';
             arrow.classList.add('expanded');
+            if (hintArrow) hintArrow.classList.add('expanded');
         } else {
             panel.style.display = 'none';
             arrow.classList.remove('expanded');
+            if (hintArrow) hintArrow.classList.remove('expanded');
         }
     }
 
     function expandSkillMode(mode) {
         var panel = document.getElementById('skillInlinePanel');
         var arrow = document.getElementById('skillInlineArrow');
+        var hintArrow = document.getElementById('skillInlineHintArrow');
         var infoText = document.querySelector('.skill-inline-current-info');
         panel.style.display = '';
         arrow.classList.add('expanded');
+        if (hintArrow) hintArrow.classList.add('expanded');
         if (infoText) infoText.style.display = '';
         switchSkillInlineMode(mode);
         document.querySelectorAll('.skill-inline-tag').forEach(function(tag) {
@@ -15011,20 +15546,115 @@
         var skillGenerationIntervals = {};
 
         // Skill生成二次确认相关变量
-        var skipSkillConfirm = false;
+        window.skipSkillConfirm = false;  // 挂到 window 供外部作用域访问
         var pendingSkillCardIndex = null;
+        var pendingSkillCallback = null; // 用于 confirmAndGenerateSkill / confirmReuploadTrace 的回调
 
-        // 暴露到全局供 onclick 调用 - 生成按钮点击入口
-        window.handleSkillGenerate = function(cardIndex) {
-            if (skipSkillConfirm) {
-                startSkillGeneration(cardIndex);
-                return;
+        // 沙箱类型检查相关变量
+        var pendingSandboxSource = null;  // 记录沙箱检查入口来源：'upload' 或 'trace'
+        var pendingSandboxTraceId = null; // trace入口时保存traceId
+
+        // 获取当前沙箱类型是否为"无影GUI"（即 sandboxSelect 值为 browser）
+        window._isWuyingSandbox = function() {
+            var select = document.getElementById('sandboxSelect');
+            if (select) {
+                return select.value === 'browser';
             }
-            pendingSkillCardIndex = cardIndex;
+            return false; // 默认不是无影GUI，不拦截
+        };
+
+        // 打开沙箱类型提示弹窗
+        window._openSandboxTypeModal = function(source, traceId) {
+            pendingSandboxSource = source || null;
+            pendingSandboxTraceId = traceId || null;
+            var modal = document.getElementById('sandboxTypeModal');
+            if (modal) modal.classList.add('active');
+        };
+
+        // 沙箱提示弹窗 - 取消按钮
+        document.getElementById('sandboxTypeCancelBtn').addEventListener('click', function() {
+            var modal = document.getElementById('sandboxTypeModal');
+            if (modal) modal.classList.remove('active');
+            pendingSandboxSource = null;
+            pendingSandboxTraceId = null;
+        });
+
+        // 沙箱提示弹窗 - 切换沙箱并继续生成Skill
+        document.getElementById('sandboxTypeSwitchBtn').addEventListener('click', function() {
+            // 切换沙箱类型为CNGUI
+            var select = document.getElementById('sandboxSelect');
+            if (select) {
+                select.value = 'code';
+                // 触发change事件以同步已有逻辑
+                select.dispatchEvent(new Event('change'));
+            }
+            // 关闭弹窗
+            var modal = document.getElementById('sandboxTypeModal');
+            if (modal) modal.classList.remove('active');
+            // 根据入口来源继续执行原始生成逻辑
+            var source = pendingSandboxSource;
+            var traceId = pendingSandboxTraceId;
+            pendingSandboxSource = null;
+            pendingSandboxTraceId = null;
+            if (source === 'upload') {
+                // 继续走覆盖确认+生成流程
+                if (window.skipSkillConfirm || typeof window._openSkillConfirmModal !== 'function') {
+                    _doConfirmAndGenerateSkill();
+                } else {
+                    window._openSkillConfirmModal(null, function() {
+                        _doConfirmAndGenerateSkill();
+                    });
+                }
+            } else if (source === 'trace') {
+                if (window.skipSkillConfirm || typeof window._openSkillConfirmModal !== 'function') {
+                    _doGenerateSkillFromTrace(traceId);
+                } else {
+                    window._openSkillConfirmModal(null, function() {
+                        _doGenerateSkillFromTrace(traceId);
+                    });
+                }
+            }
+        });
+
+        // 版本切换冲突弹窗 - 取消按钮
+        document.getElementById('versionSwitchConflictCancelBtn').addEventListener('click', function() {
+            var modal = document.getElementById('versionSwitchConflictModal');
+            if (modal) modal.classList.remove('active');
+            pendingSwitchVersionId = null;
+        });
+
+        // 版本切换冲突弹窗 - 切换版本并暂停启用Skill
+        document.getElementById('versionSwitchConflictSwitchBtn').addEventListener('click', function() {
+            var modal = document.getElementById('versionSwitchConflictModal');
+            if (modal) modal.classList.remove('active');
+            var targetId = pendingSwitchVersionId;
+            pendingSwitchVersionId = null;
+            // 暂停启用Skill
+            confirmCancelEnable();
+            // 执行原有的版本切换逻辑
+            if (targetId !== null) {
+                selectVersion(targetId);
+                showToast('沙箱切换成功');
+            }
+        });
+
+        // 统一打开确认弹窗（支持 cardIndex 模式和 callback 模式）
+        window._openSkillConfirmModal = function(cardIndex, callback) {
             var modal = document.getElementById('skillConfirmModal');
             var checkbox = document.getElementById('skillConfirmSkipCheckbox');
             if (checkbox) checkbox.checked = false;
+            pendingSkillCardIndex = (cardIndex !== undefined && cardIndex !== null) ? cardIndex : null;
+            pendingSkillCallback = callback || null;
             if (modal) modal.classList.add('active');
+        };
+
+        // 暴露到全局供 onclick 调用 - 生成按钮点击入口
+        window.handleSkillGenerate = function(cardIndex) {
+            if (window.skipSkillConfirm) {
+                startSkillGeneration(cardIndex);
+                return;
+            }
+            window._openSkillConfirmModal(cardIndex, null);
         };
 
         // 确认弹窗 - 取消按钮
@@ -15032,19 +15662,24 @@
             var modal = document.getElementById('skillConfirmModal');
             if (modal) modal.classList.remove('active');
             pendingSkillCardIndex = null;
+            pendingSkillCallback = null;
         });
 
         // 确认弹窗 - 确认按钮
         document.getElementById('skillConfirmOkBtn').addEventListener('click', function() {
             var checkbox = document.getElementById('skillConfirmSkipCheckbox');
             if (checkbox && checkbox.checked) {
-                skipSkillConfirm = true;
+                window.skipSkillConfirm = true;
             }
             var modal = document.getElementById('skillConfirmModal');
             if (modal) modal.classList.remove('active');
             var idx = pendingSkillCardIndex;
+            var cb = pendingSkillCallback;
             pendingSkillCardIndex = null;
-            if (idx !== null) {
+            pendingSkillCallback = null;
+            if (cb) {
+                cb();
+            } else if (idx !== null) {
                 startSkillGeneration(idx);
             }
         });
@@ -15360,59 +15995,63 @@
     var _uploadGenerateTimer = null;
 
     function confirmAndGenerateSkill() {
+        // 沙箱类型检查：如果是"无影GUI"，先弹出提示
+        if (window._isWuyingSandbox && window._isWuyingSandbox()) {
+            window._openSandboxTypeModal('upload');
+            return;
+        }
+        if (window.skipSkillConfirm || typeof window._openSkillConfirmModal !== 'function') {
+            _doConfirmAndGenerateSkill();
+            return;
+        }
+        window._openSkillConfirmModal(null, function() {
+            _doConfirmAndGenerateSkill();
+        });
+    }
+
+    function _doConfirmAndGenerateSkill() {
         // 隐藏已上传状态（文件名+按钮区域）和初始蒙版
         document.getElementById('uploadHoverOverlay').style.display = 'none';
         // 显示生成进度条overlay
         var progressOverlay = document.getElementById('uploadGenerateProgressOverlay');
         progressOverlay.style.display = 'flex';
 
-        var progress = 0;
-        var progressFill = document.getElementById('uploadGenerateProgressFill');
-        var progressText = document.getElementById('uploadGenerateProgressText');
-        progressFill.style.width = '0%';
-        progressText.textContent = '0%';
+        // 根据当前指令判断模拟结果：执行失败测试(id=11)显示失败，其他显示成功
+        var isFailDemo = (typeof currentDebugId !== 'undefined' && currentDebugId === 11);
 
-        _uploadGenerateTimer = setInterval(function() {
-            var increment = Math.floor(Math.random() * 3) + 3; // 3-5%
-            progress = Math.min(100, progress + increment);
-            progressFill.style.width = progress + '%';
-            progressText.textContent = progress + '%';
-            if (progress >= 100) {
-                clearInterval(_uploadGenerateTimer);
-                _uploadGenerateTimer = null;
-                // 完成：显示成功态
-                setTimeout(function() {
-                    // 隐藏进度条overlay
-                    progressOverlay.style.display = 'none';
-                    // 隐藏方式一图片区域
-                    document.getElementById('uploadCardImg').style.display = 'none';
-                    // 显示成功态
-                    document.getElementById('uploadGenerateSuccessState').style.display = 'flex';
-                    // 成功态需要足够高度展示内容，动态给父卡片设置min-height
-                    document.getElementById('uploadGenerateSuccessState').closest('.skill-method-card').style.minHeight = '380px';
-                    // 填入时间
-                    var now = new Date();
-                    var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
-                    document.getElementById('uploadGenerateTime').textContent = timeStr;
-                    // 填入文件名
-                    var fileNameEl = document.querySelector('#uploadSuccessState .skill-upload-filename');
-                    var fileName = fileNameEl ? fileNameEl.textContent.replace('✓','').trim() : 'recording_trace_001.json';
-                    document.getElementById('uploadGenerateFileName').textContent = fileName;
-                }, 300);
+        _uploadGenerateTimer = setTimeout(function() {
+            _uploadGenerateTimer = null;
+            if (isFailDemo) {
+                showUploadGenerateFail('轨迹文件解析异常，请检查文件格式是否正确');
+            } else {
+                // 隐藏进度条overlay
+                progressOverlay.style.display = 'none';
+                // 隐藏方式一标题/描述/链接区域
+                document.getElementById('uploadCardInfo').style.display = 'none';
+                // 隐藏方式一图片区域
+                document.getElementById('uploadCardImg').style.display = 'none';
+                // 显示成功态
+                document.getElementById('uploadGenerateSuccessState').style.display = 'flex';
+                document.getElementById('uploadGenerateSuccessState').closest('.skill-method-card').style.minHeight = '380px';
+                // 填入时间
+                var now = new Date();
+                var timeStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0') + ' ' + String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+                document.getElementById('uploadGenerateTime').textContent = timeStr;
+                // 填入文件名
+                var fileNameEl = document.querySelector('#uploadSuccessState .skill-upload-filename');
+                var fileName = fileNameEl ? fileNameEl.textContent.replace('✓','').trim() : 'recording_trace_001.json';
+                document.getElementById('uploadGenerateFileName').textContent = fileName;
             }
-        }, 100);
+        }, 3000);
     }
 
     function cancelUploadGenerate() {
         if (_uploadGenerateTimer) {
-            clearInterval(_uploadGenerateTimer);
+            clearTimeout(_uploadGenerateTimer);
             _uploadGenerateTimer = null;
         }
-        // 隐藏进度条overlay
+        // 隐藏创建中overlay
         document.getElementById('uploadGenerateProgressOverlay').style.display = 'none';
-        // 重置进度
-        document.getElementById('uploadGenerateProgressFill').style.width = '0%';
-        document.getElementById('uploadGenerateProgressText').textContent = '0%';
         // 恢复初始蒙版，显示文件名+按钮状态
         document.getElementById('uploadHoverOverlay').style.display = '';
         document.getElementById('uploadInitState').style.display = 'none';
@@ -15420,16 +16059,110 @@
     }
 
     function recreateSkillFromUpload() {
+        // “暂不启用Skill”：转入“生成但未启用”状态
         // 隐藏成功态
         document.getElementById('uploadGenerateSuccessState').style.display = 'none';
-        // 移除父卡片动态min-height
         document.getElementById('uploadGenerateSuccessState').closest('.skill-method-card').style.minHeight = '';
+        // 隐藏空态
+        document.getElementById('skillEmptyState').style.display = 'none';
+        // 显示已启用管理态
+        document.getElementById('skillEnabledState').style.display = '';
+        // 左侧卡片显示激活态，右侧显示介绍态
+        document.getElementById('enabledLeftIntro').style.display = 'none';
+        document.getElementById('enabledLeftActive').style.display = '';
+        document.getElementById('enabledRightIntro').style.display = '';
+        document.getElementById('enabledRightActive').style.display = 'none';
+        // 填入动态数据
+        var uploadTime = document.getElementById('uploadGenerateTime') ? document.getElementById('uploadGenerateTime').textContent : '';
+        document.getElementById('enabledLeftTime').textContent = uploadTime;
+        var uploadFileName = document.getElementById('uploadGenerateFileName') ? document.getElementById('uploadGenerateFileName').textContent : 'recording_trace_001.json';
+        document.getElementById('enabledLeftTraceFile').textContent = uploadFileName;
+        // 设置为“未启用”状态
+        _setNotEnabledState();
+    }
+
+    // === 创建失败态相关函数 ===
+    function showUploadGenerateFail(reason) {
+        // 隐藏创建中overlay
+        document.getElementById('uploadGenerateProgressOverlay').style.display = 'none';
+        // 隐藏标题/描述/链接区域
+        document.getElementById('uploadCardInfo').style.display = 'none';
+        // 隐藏图片区域
+        document.getElementById('uploadCardImg').style.display = 'none';
+        // 填入失败原因
+        if (reason) document.getElementById('uploadGenerateFailReason').textContent = reason;
+        // 填入文件名
+        var fileNameEl = document.querySelector('#uploadSuccessState .skill-upload-filename');
+        var fileName = fileNameEl ? fileNameEl.textContent.replace('✓','').trim() : 'recording_trace_001.json';
+        document.getElementById('uploadGenerateFailFileName').textContent = fileName;
+        // 显示失败态
+        document.getElementById('uploadGenerateFailState').style.display = 'flex';
+        document.getElementById('uploadGenerateFailState').closest('.skill-method-card').style.minHeight = '380px';
+    }
+
+    function retryUploadFromFail() {
+        // 隐藏失败态
+        document.getElementById('uploadGenerateFailState').style.display = 'none';
+        document.getElementById('uploadGenerateFailState').closest('.skill-method-card').style.minHeight = '';
+        // 恢复标题/描述/链接区域
+        document.getElementById('uploadCardInfo').style.display = '';
         // 显示图片区域
         document.getElementById('uploadCardImg').style.display = '';
-        // 恢复初始hover态（移除uploaded class，恢复初始蒙版按钮）
+        // 恢复初始hover态
         document.getElementById('uploadCardImg').classList.remove('uploaded');
-        // 重置上传相关状态
+        // 重置上传状态
         resetUploadState();
+    }
+
+    function retryCreateSkillFromFail() {
+        // 隐藏失败态
+        document.getElementById('uploadGenerateFailState').style.display = 'none';
+        document.getElementById('uploadGenerateFailState').closest('.skill-method-card').style.minHeight = '';
+        // 直接重新开始创建流程
+        _doConfirmAndGenerateSkill();
+    }
+
+    function showTraceGenerateFail(reason, traceId) {
+        // 隐藏创建中状态
+        document.getElementById('traceGenerateProgressState').style.display = 'none';
+        // 隐藏标题/描述区域
+        document.getElementById('traceCardInfo').style.display = 'none';
+        // 隐藏图片区域
+        document.getElementById('traceCardImg').style.display = 'none';
+        // 填入失败信息
+        if (reason) document.getElementById('traceGenerateFailReason').textContent = reason;
+        if (traceId) document.getElementById('traceGenerateFailTraceId').textContent = traceId;
+        // 显示失败态
+        document.getElementById('traceGenerateFailState').style.display = 'flex';
+        document.getElementById('traceGenerateFailState').closest('.skill-method-card').style.minHeight = '380px';
+    }
+
+    function retryTraceFromFail() {
+        // 隐藏失败态
+        document.getElementById('traceGenerateFailState').style.display = 'none';
+        document.getElementById('traceGenerateFailState').closest('.skill-method-card').style.minHeight = '';
+        // 恢复标题/描述区域
+        document.getElementById('traceCardInfo').style.display = '';
+        // 显示图片区域
+        document.getElementById('traceCardImg').style.display = '';
+        // 恢复初始态遮罩
+        document.getElementById('traceCardImg').classList.remove('uploaded');
+        document.getElementById('traceInitOverlay').style.display = '';
+        document.getElementById('traceInitState').style.display = '';
+        // 清空输入框
+        var input = document.getElementById('traceIdSelectInput');
+        if (input) input.value = '';
+    }
+
+    function retryCreateSkillFromTraceFail() {
+        // 隐藏失败态，重新开始创建
+        document.getElementById('traceGenerateFailState').style.display = 'none';
+        document.getElementById('traceGenerateFailState').closest('.skill-method-card').style.minHeight = '';
+        // 重新开始生成流程（复用上次的轨迹ID）
+        var traceId = document.getElementById('traceGenerateFailTraceId').textContent;
+        if (traceId) {
+            _doReuploadTrace(traceId);
+        }
     }
 
     function toggleTraceDropdown() {
@@ -15484,59 +16217,64 @@
             alert('请先选择或输入轨迹ID');
             return;
         }
+        // 沙箱类型检查：如果是“无影GUI”，先弹出提示
+        if (window._isWuyingSandbox && window._isWuyingSandbox()) {
+            window._openSandboxTypeModal('trace', value);
+            return;
+        }
+        // 覆盖确认弹窗
+        if (window.skipSkillConfirm || typeof window._openSkillConfirmModal !== 'function') {
+            _doGenerateSkillFromTrace(value);
+            return;
+        }
+        window._openSkillConfirmModal(null, function() {
+            _doGenerateSkillFromTrace(value);
+        });
+    }
+
+    function _doGenerateSkillFromTrace(value) {
         // 隐藏初始态
         document.getElementById('traceInitOverlay').style.display = 'none';
-        // 显示进度条态
+        // 显示创建中状态
         var progressState = document.getElementById('traceGenerateProgressState');
         progressState.style.display = 'flex';
         // 给图片容器加 uploaded class使蒙版常驻
         document.getElementById('traceCardImg').classList.add('uploaded');
-        // 开始模拟进度
-        traceGenerateProgress = 0;
-        var fill = document.getElementById('traceGenerateProgressFill');
-        var text = document.getElementById('traceGenerateProgressText');
-        fill.style.width = '0%';
-        text.textContent = '0%';
-        traceGenerateTimer = setInterval(function() {
-            var increment = Math.floor(Math.random() * 3) + 3; // 3-5%
-            traceGenerateProgress = Math.min(100, traceGenerateProgress + increment);
-            fill.style.width = traceGenerateProgress + '%';
-            text.textContent = traceGenerateProgress + '%';
-            if (traceGenerateProgress >= 100) {
-                clearInterval(traceGenerateTimer);
-                traceGenerateTimer = null;
-                // 隐藏进度条态
-                progressState.style.display = 'none';
-                // 隐藏整个图片区域
-                document.getElementById('traceCardImg').style.display = 'none';
-                // 显示创建成功态
-                var successState = document.getElementById('traceGenerateSuccessState');
-                successState.style.display = 'flex';
-                // 成功态需要足够高度展示内容，动态给父卡片设置min-height
-                successState.closest('.skill-method-card').style.minHeight = '380px';
-                // 动态填入轨迹ID
-                var traceIdEl = document.getElementById('traceGenerateTraceId');
-                traceIdEl.textContent = value;
-                traceIdEl.setAttribute('onclick', "showTraceResultBySkill('" + value + "')");
-                // 动态填入创建时间
-                var now = new Date();
-                var year = now.getFullYear();
-                var month = String(now.getMonth() + 1).padStart(2, '0');
-                var day = String(now.getDate()).padStart(2, '0');
-                var hour = String(now.getHours()).padStart(2, '0');
-                var minute = String(now.getMinutes()).padStart(2, '0');
-                document.getElementById('traceGenerateTime').textContent = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
-            }
-        }, 100);
+        // 3秒后自动切换到成功态
+        traceGenerateTimer = setTimeout(function() {
+            traceGenerateTimer = null;
+            // 隐藏创建中状态
+            progressState.style.display = 'none';
+            // 隐藏标题/描述/链接区域
+            document.getElementById('traceCardInfo').style.display = 'none';
+            // 隐藏整个图片区域
+            document.getElementById('traceCardImg').style.display = 'none';
+            // 显示创建成功态
+            var successState = document.getElementById('traceGenerateSuccessState');
+            successState.style.display = 'flex';
+            successState.closest('.skill-method-card').style.minHeight = '380px';
+            // 动态填入轨迹ID
+            var traceIdEl = document.getElementById('traceGenerateTraceId');
+            traceIdEl.textContent = value;
+            traceIdEl.setAttribute('onclick', "showTraceResultBySkill('" + value + "')");
+            // 动态填入创建时间
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = String(now.getMonth() + 1).padStart(2, '0');
+            var day = String(now.getDate()).padStart(2, '0');
+            var hour = String(now.getHours()).padStart(2, '0');
+            var minute = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('traceGenerateTime').textContent = year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
+        }, 3000);
     }
 
     function cancelTraceGenerate() {
-        // 停止进度
+        // 停止定时器
         if (traceGenerateTimer) {
-            clearInterval(traceGenerateTimer);
+            clearTimeout(traceGenerateTimer);
             traceGenerateTimer = null;
         }
-        // 隐藏进度条态
+        // 隐藏创建中状态
         document.getElementById('traceGenerateProgressState').style.display = 'none';
         // 恢复初始态
         document.getElementById('traceInitOverlay').style.display = 'flex';
@@ -15551,12 +16289,7 @@
     }
 
     function enableCreatedSkill() {
-        if (window.enableSkillNoMoreTipFlag) {
-            doEnableSkill();
-            return;
-        }
-        var overlay = document.getElementById('enableSkillConfirmOverlay');
-        overlay.style.display = 'flex';
+        doEnableSkill();
     }
 
     function closeEnableSkillConfirm() {
@@ -15572,6 +16305,60 @@
     }
 
     function doEnableSkill() {
+        // 检查是否需要显示启用提示弹窗
+        if (!localStorage.getItem('enableSkillTipDismissed')) {
+            window._pendingEnableSkill = true;
+            document.getElementById('enableSkillTipOverlay').style.display = 'flex';
+            return;
+        }
+        _doEnableSkillCore();
+    }
+
+    function confirmEnableSkillTip() {
+        var checkbox = document.getElementById('enableSkillTipNoMore');
+        if (checkbox && checkbox.checked) {
+            localStorage.setItem('enableSkillTipDismissed', '1');
+        }
+        document.getElementById('enableSkillTipOverlay').style.display = 'none';
+        if (window._pendingEnableSkill) {
+            window._pendingEnableSkill = false;
+            _doEnableSkillCore();
+        }
+    }
+
+    function _setNotEnabledState() {
+        // 设置标签为“未启用”
+        var leftActive = document.getElementById('enabledLeftActive');
+        if (leftActive) {
+            var tag = leftActive.querySelector('.skill-status-tag-active');
+            if (tag) { tag.className = 'skill-status-tag-inactive'; tag.textContent = '未启用'; }
+            var btn = leftActive.querySelector('.skill-cancel-enable-btn');
+            if (btn) { btn.textContent = '启用Skill'; btn.setAttribute('onclick', 'reEnableSkill()'); }
+            var primaryBtn = document.getElementById('enabledLeftPrimaryBtn');
+            if (primaryBtn) { primaryBtn.textContent = '启用Skill'; primaryBtn.setAttribute('onclick', 'reEnableSkill()'); }
+        }
+        var rightActive = document.getElementById('enabledRightActive');
+        if (rightActive) {
+            var tag = rightActive.querySelector('.skill-status-tag-active');
+            if (tag) { tag.className = 'skill-status-tag-inactive'; tag.textContent = '未启用'; }
+            var btn = rightActive.querySelector('.skill-cancel-enable-btn');
+            if (btn) { btn.textContent = '启用Skill'; btn.setAttribute('onclick', 'reEnableSkill()'); }
+            var primaryBtn = document.getElementById('enabledRightPrimaryBtn');
+            if (primaryBtn) { primaryBtn.textContent = '启用Skill'; primaryBtn.setAttribute('onclick', 'reEnableSkill()'); }
+        }
+        // 内卡片灰色边框
+        var leftInfo = document.querySelector('#enabledLeftActive .skill-enabled-card-info');
+        if (leftInfo) { leftInfo.style.background = 'white'; leftInfo.style.borderColor = '#e5e7eb'; }
+        var rightInfo = document.querySelector('#enabledRightActive .skill-enabled-card-info');
+        if (rightInfo) { rightInfo.style.background = 'white'; rightInfo.style.borderColor = '#e5e7eb'; }
+        // 解锁重新上传按钮
+        var leftReupload = document.getElementById('enabledLeftReuploadBtn');
+        if (leftReupload) { leftReupload.classList.remove('disabled'); leftReupload.setAttribute('onclick', 'openReuploadFromEnabled()'); }
+        var rightReupload = document.getElementById('enabledRightReuploadBtn');
+        if (rightReupload) { rightReupload.classList.remove('disabled'); rightReupload.setAttribute('onclick', 'openReuploadFromEnabled()'); }
+    }
+
+    function _doEnableSkillCore() {
         // 隐藏空态（两个介绍卡片区域）
         document.getElementById('skillEmptyState').style.display = 'none';
         // 隐藏方式二成功态（如果可见）
@@ -15584,6 +16371,35 @@
         if (uploadSuccessState) { uploadSuccessState.style.display = 'none'; uploadSuccessState.closest('.skill-method-card').style.minHeight = ''; }
         // 显示已启用管理态
         document.getElementById('skillEnabledState').style.display = '';
+
+        // 根据启用方式切换卡片状态
+        var leftIntro = document.getElementById('enabledLeftIntro');
+        var leftActive = document.getElementById('enabledLeftActive');
+        var rightIntro = document.getElementById('enabledRightIntro');
+        var rightActive = document.getElementById('enabledRightActive');
+
+        if (isUploadSuccess) {
+            // 左侧(录制轨迹)启用
+            leftIntro.style.display = 'none';
+            leftActive.style.display = '';
+            rightIntro.style.display = '';
+            rightActive.style.display = 'none';
+            // 填入左侧启用态的动态数据
+            var uploadTime = document.getElementById('uploadGenerateTime') ? document.getElementById('uploadGenerateTime').textContent : '';
+            document.getElementById('enabledLeftTime').textContent = uploadTime;
+            var uploadFileName = document.getElementById('uploadGenerateFileName') ? document.getElementById('uploadGenerateFileName').textContent : 'recording_trace_001.json';
+            document.getElementById('enabledLeftTraceFile').textContent = uploadFileName;
+        } else {
+            // 右侧(Prompt轨迹)启用
+            leftIntro.style.display = '';
+            leftActive.style.display = 'none';
+            rightIntro.style.display = 'none';
+            rightActive.style.display = '';
+            // 填入右侧启用态的动态数据
+            var traceTime = document.getElementById('traceGenerateTime') ? document.getElementById('traceGenerateTime').textContent : '';
+            document.getElementById('enabledRightTime').textContent = traceTime;
+        }
+
         // 判断是方式一还是方式二，更新header文案
         var noneEl = document.querySelector('.skill-inline-current-none');
         if (noneEl) {
@@ -15597,11 +16413,29 @@
         // 显示toast提示
         var skillName = isUploadSuccess ? '跨境物流抓取_录制轨迹_GUISkill' : '跨境物流抓取_调试轨迹_GUISkill';
         showSkillToast('已成功启用' + skillName);
+        // 更新面包屑中的Skill标签
+        var skillTag = document.getElementById('breadcrumbSkillTag');
+        var skillNameEl = document.getElementById('breadcrumbSkillName');
+        if (skillTag && skillNameEl) {
+            skillNameEl.textContent = skillName;
+            skillTag.style.display = 'inline-flex';
+        }
         // 更新横幅描述文案
         var infoEl = document.querySelector('.skill-inline-current-info');
         if (infoEl) {
             infoEl.textContent = '当前启用的Skill：' + skillName;
         }
+        // 禁用沙箱选择框并添加提示
+        var sandboxSelect = document.getElementById('sandboxSelect');
+        if (sandboxSelect) {
+            sandboxSelect.disabled = true;
+            sandboxSelect.title = '切换沙箱需先取消启用GUI Skill';
+        }
+        // 启用态：内卡片绿色描边
+        var leftInfo = document.querySelector('#enabledLeftActive .skill-enabled-card-info');
+        if (leftInfo) { leftInfo.style.borderColor = '#22C55E'; }
+        var rightInfo = document.querySelector('#enabledRightActive .skill-enabled-card-info');
+        if (rightInfo) { rightInfo.style.borderColor = '#22C55E'; }
     }
 
     function showCancelEnableConfirm() {
@@ -15614,57 +16448,172 @@
 
     function confirmCancelEnable() {
         closeCancelEnableConfirm();
-        // 隐藏管理态
-        document.getElementById('skillEnabledState').style.display = 'none';
-        // 显示空态
-        document.getElementById('skillEmptyState').style.display = '';
+        
+        // 切换到"未启用"状态（保留卡片信息，不回到空态）
+        // 左侧卡片
+        var leftActive = document.getElementById('enabledLeftActive');
+        if (leftActive) {
+            var leftTag = leftActive.querySelector('.skill-status-tag-active');
+            if (leftTag) {
+                leftTag.className = 'skill-status-tag-inactive';
+                leftTag.textContent = '未启用';
+            }
+            var leftBtn = leftActive.querySelector('.skill-cancel-enable-btn');
+            if (leftBtn) {
+                leftBtn.textContent = '启用Skill';
+                leftBtn.setAttribute('onclick', 'reEnableSkill()');
+            }
+            // 更新底部主按钮
+            var leftPrimaryBtn = document.getElementById('enabledLeftPrimaryBtn');
+            if (leftPrimaryBtn) {
+                leftPrimaryBtn.textContent = '启用Skill';
+                leftPrimaryBtn.setAttribute('onclick', 'reEnableSkill()');
+            }
+        }
+        // 右侧卡片
+        var rightActive = document.getElementById('enabledRightActive');
+        if (rightActive) {
+            var rightTag = rightActive.querySelector('.skill-status-tag-active');
+            if (rightTag) {
+                rightTag.className = 'skill-status-tag-inactive';
+                rightTag.textContent = '未启用';
+            }
+            var rightBtn = rightActive.querySelector('.skill-cancel-enable-btn');
+            if (rightBtn) {
+                rightBtn.textContent = '启用Skill';
+                rightBtn.setAttribute('onclick', 'reEnableSkill()');
+            }
+            // 更新底部主按钮
+            var rightPrimaryBtn = document.getElementById('enabledRightPrimaryBtn');
+            if (rightPrimaryBtn) {
+                rightPrimaryBtn.textContent = '启用Skill';
+                rightPrimaryBtn.setAttribute('onclick', 'reEnableSkill()');
+            }
+        }
+        
+        // 恢复横幅描述文案
+        var infoEl = document.querySelector('.skill-inline-current-info');
+        if (infoEl) {
+            infoEl.textContent = '—— 帮助你快速完成Prompt编写，保障执行稳定性的好助手~';
+        }
         // 恢复header文案为"暂无"
         var noneEl = document.querySelector('.skill-inline-current-none');
         if (noneEl) {
             noneEl.textContent = '暂无';
             noneEl.style.color = '';
         }
-        // 恢复横幅描述文案
-        var infoEl = document.querySelector('.skill-inline-current-info');
-        if (infoEl) {
-            infoEl.textContent = '—— 帮助你快速完成Prompt编写，保障执行稳定性的好助手~';
+        // 隐藏面包屑中的Skill标签
+        var skillTag = document.getElementById('breadcrumbSkillTag');
+        if (skillTag) {
+            skillTag.style.display = 'none';
         }
-        // 恢复 traceCardImg 图片区域（可能在生成Skill流程中被隐藏）
-        var traceCardImg = document.getElementById('traceCardImg');
-        if (traceCardImg) {
-            traceCardImg.style.display = '';
-            traceCardImg.classList.remove('uploaded');
-        }
-        // 隐藏创建成功态
-        var traceSuccessState = document.getElementById('traceGenerateSuccessState');
-        if (traceSuccessState) {
-            traceSuccessState.style.display = 'none';
-            var traceMethodCard = traceSuccessState.closest('.skill-method-card');
-            if (traceMethodCard) traceMethodCard.style.minHeight = '';
-        }
-        // 恢复初始态遮罩（输入框+生成按钮）
-        var traceInitOverlay = document.getElementById('traceInitOverlay');
-        if (traceInitOverlay) traceInitOverlay.style.display = 'flex';
-        // 隐藏进度条态
-        var traceProgressState = document.getElementById('traceGenerateProgressState');
-        if (traceProgressState) traceProgressState.style.display = 'none';
-        // 停止并重置进度条
-        if (window.traceGenerateTimer) {
-            clearInterval(window.traceGenerateTimer);
-            window.traceGenerateTimer = null;
-        }
-        var fill = document.getElementById('traceGenerateProgressFill');
-        var text = document.getElementById('traceGenerateProgressText');
-        if (fill) fill.style.width = '0%';
-        if (text) text.textContent = '0%';
-        // 恢复 uploadCardImg 图片区域（如有被隐藏）
-        var uploadCardImg = document.getElementById('uploadCardImg');
-        if (uploadCardImg) {
-            uploadCardImg.style.display = '';
-            uploadCardImg.classList.remove('uploaded');
+        // 恢复沙箱选择框
+        var sandboxSelect = document.getElementById('sandboxSelect');
+        if (sandboxSelect) {
+            sandboxSelect.disabled = false;
+            sandboxSelect.title = '';
         }
         // 显示toast
-        showSkillToast('已取消启用Skill');
+        showSkillToast('取消启用成功');
+        // 内卡片恢复为灰色边框
+        var leftInfo = document.querySelector('#enabledLeftActive .skill-enabled-card-info');
+        if (leftInfo) { leftInfo.style.background = 'white'; leftInfo.style.borderColor = '#e5e7eb'; }
+        var rightInfo = document.querySelector('#enabledRightActive .skill-enabled-card-info');
+        if (rightInfo) { rightInfo.style.background = 'white'; rightInfo.style.borderColor = '#e5e7eb'; }
+        // 解锁重新上传按钮
+        var leftReupload = document.getElementById('enabledLeftReuploadBtn');
+        if (leftReupload) { leftReupload.classList.remove('disabled'); leftReupload.setAttribute('onclick', 'openReuploadFromEnabled()'); }
+        var rightReupload = document.getElementById('enabledRightReuploadBtn');
+        if (rightReupload) { rightReupload.classList.remove('disabled'); rightReupload.setAttribute('onclick', 'openReuploadFromEnabled()'); }
+    }
+
+    function reEnableSkill() {
+        var leftActive = document.getElementById('enabledLeftActive');
+        var rightActive = document.getElementById('enabledRightActive');
+        var skillName = '';
+
+        // 重新启用：将"未启用"改回"启用中"
+        if (leftActive) {
+            var leftTag = leftActive.querySelector('.skill-status-tag-inactive');
+            if (leftTag) {
+                leftTag.className = 'skill-status-tag-active';
+                leftTag.textContent = '启用中';
+            }
+            var leftBtn = leftActive.querySelector('.skill-cancel-enable-btn');
+            if (leftBtn) {
+                leftBtn.textContent = '取消启用';
+                leftBtn.setAttribute('onclick', 'showCancelEnableConfirm()');
+            }
+            // 更新底部主按钮
+            var leftPrimaryBtn = document.getElementById('enabledLeftPrimaryBtn');
+            if (leftPrimaryBtn) {
+                leftPrimaryBtn.textContent = '取消启用';
+                leftPrimaryBtn.setAttribute('onclick', 'showCancelEnableConfirm()');
+            }
+            if (leftActive.style.display !== 'none') {
+                var leftNameEl = document.getElementById('enabledLeftSkillName');
+                if (leftNameEl) skillName = leftNameEl.textContent;
+            }
+        }
+        if (rightActive) {
+            var rightTag = rightActive.querySelector('.skill-status-tag-inactive');
+            if (rightTag) {
+                rightTag.className = 'skill-status-tag-active';
+                rightTag.textContent = '启用中';
+            }
+            var rightBtn = rightActive.querySelector('.skill-cancel-enable-btn');
+            if (rightBtn) {
+                rightBtn.textContent = '取消启用';
+                rightBtn.setAttribute('onclick', 'showCancelEnableConfirm()');
+            }
+            // 更新底部主按钮
+            var rightPrimaryBtn = document.getElementById('enabledRightPrimaryBtn');
+            if (rightPrimaryBtn) {
+                rightPrimaryBtn.textContent = '取消启用';
+                rightPrimaryBtn.setAttribute('onclick', 'showCancelEnableConfirm()');
+            }
+            if (rightActive.style.display !== 'none') {
+                var rightNameEl = document.getElementById('enabledRightSkillName');
+                if (rightNameEl) skillName = rightNameEl.textContent;
+            }
+        }
+
+        // 更新横幅
+        var infoEl = document.querySelector('.skill-inline-current-info');
+        if (infoEl) {
+            infoEl.textContent = skillName ? '当前启用的Skill：' + skillName : '已启用GUI Skill，将以GUI Skill的方式执行指令';
+        }
+        // 更新header
+        var noneEl = document.querySelector('.skill-inline-current-none');
+        if (noneEl) {
+            noneEl.textContent = skillName || 'GUI Skill';
+            noneEl.style.color = 'white';
+        }
+        // 更新面包屑Skill标签
+        var skillTag = document.getElementById('breadcrumbSkillTag');
+        var skillNameEl = document.getElementById('breadcrumbSkillName');
+        if (skillTag && skillNameEl) {
+            skillNameEl.textContent = skillName || 'GUI Skill';
+            skillTag.style.display = 'inline-flex';
+        }
+        // 锁定沙箱
+        var sandboxSelect = document.getElementById('sandboxSelect');
+        if (sandboxSelect) {
+            sandboxSelect.disabled = true;
+            sandboxSelect.title = '切换沙箱需先取消启用GUI Skill';
+        }
+        // 显示toast
+        showSkillToast('已成功启用' + (skillName || 'GUI Skill'));
+        // 启用态：绿色描边白底内卡片
+        var leftInfo = document.querySelector('#enabledLeftActive .skill-enabled-card-info');
+        if (leftInfo) { leftInfo.style.background = 'white'; leftInfo.style.borderColor = '#22C55E'; }
+        var rightInfo = document.querySelector('#enabledRightActive .skill-enabled-card-info');
+        if (rightInfo) { rightInfo.style.background = 'white'; rightInfo.style.borderColor = '#22C55E'; }
+        // 禁用重新上传按钮
+        var leftReupload = document.getElementById('enabledLeftReuploadBtn');
+        if (leftReupload) { leftReupload.classList.add('disabled'); leftReupload.removeAttribute('onclick'); }
+        var rightReupload = document.getElementById('enabledRightReuploadBtn');
+        if (rightReupload) { rightReupload.classList.add('disabled'); rightReupload.removeAttribute('onclick'); }
     }
 
     function showSkillToast(message) {
@@ -15728,6 +16677,21 @@
             showSkillToast('请先输入 trace id');
             return;
         }
+        // 沙箱类型检查：如果是"无影GUI"，先弹出提示
+        if (window._isWuyingSandbox && window._isWuyingSandbox()) {
+            window._openSandboxTypeModal('trace', traceId);
+            return;
+        }
+        if (window.skipSkillConfirm || typeof window._openSkillConfirmModal !== 'function') {
+            _doReuploadTrace(traceId);
+            return;
+        }
+        window._openSkillConfirmModal(null, function() {
+            _doReuploadTrace(traceId);
+        });
+    }
+
+    function _doReuploadTrace(traceId) {
         cancelReuploadTrace(); // 先恢复
         showSkillToast('已选择轨迹：' + traceId);
         // 开始生成流程...
@@ -15759,23 +16723,36 @@
         }
         var uploadSuccessState = document.getElementById('uploadGenerateSuccessState');
         if (uploadSuccessState) { uploadSuccessState.style.display = 'none'; uploadSuccessState.closest('.skill-method-card').style.minHeight = ''; }
+        // 重置启用态卡片状态（恢复默认：左侧intro可见，右侧active可见）
+        var leftIntro = document.getElementById('enabledLeftIntro');
+        var leftActive = document.getElementById('enabledLeftActive');
+        var rightIntro = document.getElementById('enabledRightIntro');
+        var rightActive = document.getElementById('enabledRightActive');
+        if (leftIntro) leftIntro.style.display = '';
+        if (leftActive) leftActive.style.display = 'none';
+        if (rightIntro) rightIntro.style.display = 'none';
+        if (rightActive) rightActive.style.display = '';
     }
 
     function recreateSkill() {
+        // “暂不启用Skill”：转入“生成但未启用”状态
         // 隐藏成功态
         document.getElementById('traceGenerateSuccessState').style.display = 'none';
-        // 移除父卡片动态min-height
         document.getElementById('traceGenerateSuccessState').closest('.skill-method-card').style.minHeight = '';
-        // 显示图片区域
-        document.getElementById('traceCardImg').style.display = '';
-        // 恢复初始蒙版态
-        document.getElementById('traceInitOverlay').style.display = '';
-        document.getElementById('traceInitState').style.display = '';
-        // 移除uploaded class
-        document.getElementById('traceCardImg').classList.remove('uploaded');
-        // 清空输入框
-        var input = document.getElementById('traceCardImg').querySelector('input');
-        if (input) input.value = '';
+        // 隐藏空态
+        document.getElementById('skillEmptyState').style.display = 'none';
+        // 显示已启用管理态
+        document.getElementById('skillEnabledState').style.display = '';
+        // 右侧卡片显示激活态，左侧显示介绍态
+        document.getElementById('enabledLeftIntro').style.display = '';
+        document.getElementById('enabledLeftActive').style.display = 'none';
+        document.getElementById('enabledRightIntro').style.display = 'none';
+        document.getElementById('enabledRightActive').style.display = '';
+        // 填入动态数据
+        var traceTime = document.getElementById('traceGenerateTime') ? document.getElementById('traceGenerateTime').textContent : '';
+        document.getElementById('enabledRightTime').textContent = traceTime;
+        // 设置为“未启用”状态
+        _setNotEnabledState();
     }
 
     // 空态视图 - 方式一：上传录制轨迹
@@ -15843,6 +16820,19 @@
             </div>
         </div>
     </div>
+    <!-- 启用Skill信息提示弹窗（仅首次） -->
+    <div id="enableSkillTipOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+        <div class="enable-skill-confirm-dialog" style="max-width:420px;">
+            <div class="enable-skill-confirm-text" style="line-height:1.7;">启用Skill后可通过“调试”功能查看执行效果，在AI员工的Workunit的该指令运行中，也将结合Skill进行执行。</div>
+            <div class="enable-skill-confirm-checkbox">
+                <label><input type="checkbox" id="enableSkillTipNoMore" /> 不再提示</label>
+            </div>
+            <div class="enable-skill-confirm-actions">
+                <button class="enable-skill-confirm-ok" onclick="confirmEnableSkillTip()" style="width:100%;">我知道了</button>
+            </div>
+        </div>
+    </div>
+
 <div id="skillToast" class="skill-toast" style="display:none;"></div>
 
 <!-- Skill版本历史弹窗 -->
