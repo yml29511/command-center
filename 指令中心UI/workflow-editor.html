@@ -636,34 +636,149 @@
             display: block;
         }
 
-        /* Version dropdown */
+        /* Version dropdown - 弹窗样式 */
         .version-dropdown {
             position: absolute;
             top: calc(100% + 8px);
             right: 0;
-            width: 320px;
+            width: 280px;
             background: var(--card-bg);
             border-radius: var(--radius-md);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             z-index: 1000;
             display: none;
-            padding: 6px 0;
+            padding: 0;
             overflow: hidden;
         }
         .version-dropdown.show {
             display: block;
         }
 
-        .version-dropdown-upgrade {
-            padding: 10px 16px;
-            font-size: 13px;
-            color: #4F46E5;
-            cursor: pointer;
+        /* 版本模式选择区域 */
+        .version-mode-section {
+            padding: 10px 12px;
             border-bottom: 1px solid var(--border-light);
+        }
+        .version-mode-options {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .version-mode-option-new {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 3px;
             transition: background 0.15s;
         }
-        .version-dropdown-upgrade:hover {
-            background: #F5F3FF;
+        .version-mode-option-new:hover {
+            background: #F5F7FA;
+        }
+        .version-mode-option-new input[type="radio"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin: 0;
+        }
+        .version-mode-option-label {
+            font-size: 12px;
+            color: var(--text-2);
+            line-height: 1.4;
+        }
+
+        /* 版本列表区域 */
+        .version-list-section {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 6px 0;
+            display: none;
+        }
+        .version-list-section.active {
+            display: block;
+        }
+
+        .version-item-new {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            gap: 8px;
+        }
+        .version-item-new:hover:not(.disabled) {
+            background: #F9FAFB;
+        }
+        .version-item-new.selected {
+            background: #EBF5FF;
+        }
+        .version-item-new.disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
+        .version-item-left-new {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .version-item-check-new {
+            width: 14px;
+            height: 14px;
+            color: #1890FF;
+            flex-shrink: 0;
+            opacity: 0;
+        }
+        .version-item-new.selected .version-item-check-new {
+            opacity: 1;
+        }
+
+        .version-item-name-new {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-1);
+        }
+
+        .version-item-right-new {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .version-item-editor-new {
+            font-size: 11px;
+            color: var(--text-3);
+        }
+
+        .version-item-status-new {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+            border: 1px solid;
+        }
+        .version-item-status-new.draft {
+            background: #FFF7E6;
+            color: #D48806;
+            border-color: #FFE7BA;
+        }
+        .version-item-status-new.online {
+            background: #F6FFED;
+            color: #52C41A;
+            border-color: #B7EB8F;
+        }
+        .version-item-status-new.history {
+            background: #F5F5F5;
+            color: #8C8C8C;
+            border-color: #D9D9D9;
         }
 
         .version-dropdown-list {
@@ -741,6 +856,11 @@
             background: #F0F5FF;
             color: #1890FF;
             border-color: #ADC6FF;
+        }
+        .version-item-status.history {
+            background: #F5F5F5;
+            color: #8C8C8C;
+            border-color: #D9D9D9;
         }
 
         .cmd-actions {
@@ -1331,11 +1451,24 @@
                             <span class="version-dot visible" id="versionDot"></span>
                         </span>
                         <div class="version-dropdown" id="versionDropdown">
-                            <div class="version-dropdown-upgrade" onclick="upgradeToLatest()">
-                                升级到最新版本 v3
+                            <!-- 版本模式选择 -->
+                            <div class="version-mode-section">
+                                <div class="version-mode-options">
+                                    <label class="version-mode-option-new" id="modeAutoOption">
+                                        <input type="radio" name="versionMode" value="auto" checked onchange="onVersionModeChange('auto')">
+                                        <span class="version-mode-option-label">始终使用最新</span>
+                                    </label>
+                                    <label class="version-mode-option-new" id="modeManualOption">
+                                        <input type="radio" name="versionMode" value="manual" onchange="onVersionModeChange('manual')">
+                                        <span class="version-mode-option-label">手动选择版本</span>
+                                    </label>
+                                </div>
                             </div>
-                            <div class="version-dropdown-list" id="versionDropdownList">
-                                <!-- 版本列表动态生成 -->
+                            <!-- 版本列表 -->
+                            <div class="version-list-section" id="versionListSection">
+                                <div id="versionListContainer">
+                                    <!-- 版本列表动态生成 -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1385,33 +1518,16 @@
 
 
                 <!-- 同/异步执行标题 -->
-                <div class="drawer-section-title" style="margin-top: 18px;"><span class="section-icon">⚡</span>同/异步执行</div>
-
-                <!-- 同步/异步选择 -->
-                <div class="exec-mode-radio-group" id="execModeRadioGroup">
-                    <label class="exec-mode-radio">
-                        <input type="radio" name="execMode" value="sync" checked onchange="onExecModeChange(this.value)">
-                        同步执行
-                    </label>
-                    <label class="exec-mode-radio">
-                        <input type="radio" name="execMode" value="async" onchange="onExecModeChange(this.value)">
-                        异步执行
-                    </label>
+                <div class="drawer-section-title" style="margin-top: 18px;"><span class="section-icon"></span>同/异步执行</div>
+                
+                <!-- 执行时间输入 -->
+                <div class="exec-mode-input-row" style="margin-top: 12px;">
+                    <input class="duration-input" type="number" id="execDuration" min="1" max="60" value="60" placeholder="请输入">
+                    <span class="input-unit">分钟</span>
                 </div>
-
-                <!-- 同步执行提示 -->
-                <div class="exec-mode-detail active" id="syncHint">
-                    <div class="exec-mode-hint">同步执行时间最长10分钟，超过时间限制将中断。</div>
-                </div>
-
-                <!-- 异步执行选项 -->
-                <div class="exec-mode-detail" id="asyncDetail">
-                    <div class="exec-mode-input-row">
-                        <input class="duration-input" type="number" id="asyncDuration" min="1" max="60" value="10" placeholder="请输入">
-                        <span class="input-unit">分钟</span>
-                    </div>
-                    <div class="exec-mode-hint">异步执行最大值为60分钟，需配合循环Agent使用。循环Agent轮询异步执行完成后，继续到下一个节点。<a class="hint-link" href="javascript:void(0)" onclick="window.open('', '_blank'); return false;">使用说明</a></div>
-                </div>
+                
+                <!-- 执行时间提示 -->
+                <div class="exec-mode-hint" style="margin-top: 10px;">最长执行时间不超过60分钟，请选择合理时间以免影响总体执行效率</div>
             </div>
 
             <!-- 执行衔接 -->
@@ -1605,22 +1721,8 @@
         });
     }
     
-    // 执行模式切换
-    function onExecModeChange(value) {
-        const syncHint = document.getElementById('syncHint');
-        const asyncDetail = document.getElementById('asyncDetail');
-
-        if (value === 'sync') {
-            syncHint.classList.add('active');
-            asyncDetail.classList.remove('active');
-        } else {
-            syncHint.classList.remove('active');
-            asyncDetail.classList.add('active');
-        }
-    }
-
-    // 限制异步执行时长输入范围
-    const durationInput = document.getElementById('asyncDuration');
+    // 限制执行时间输入范围
+    const durationInput = document.getElementById('execDuration');
     if (durationInput) {
         durationInput.addEventListener('input', function() {
             let val = parseInt(this.value, 10);
@@ -1642,11 +1744,14 @@
     var versionData = [
         { id: 4, version: 'v4', status: '草稿', editor: '余梦玲' },
         { id: 3, version: 'v3', status: '线上', editor: '余梦玲' },
-        { id: 2, version: 'v2', status: '草稿', editor: '余梦玲' },
-        { id: 1, version: 'v1', status: '草稿', editor: '余梦玲' }
+        { id: 2, version: 'v2', status: '线上', editor: '余梦玲' },
+        { id: 1, version: 'v1', status: '线上', editor: '余梦玲' }
     ];
 
-    var currentVersionId = 3; // 当前选中的版本ID
+    var currentVersionId = 2; // 当前选中的版本ID
+    var versionMode = 'auto'; // 'auto' = 自动模式，'manual' = 手动模式
+    var tempVersionId = currentVersionId; // 临时选中的版本ID（用于弹窗内操作）
+    var tempVersionMode = versionMode; // 临时选中的模式（用于弹窗内操作）
 
     // 按版本号倒序排序（v4 > v3 > v2 > v1）
     function sortVersionsByNumber(versions) {
@@ -1657,26 +1762,49 @@
         });
     }
 
-    // 渲染版本下拉列表
+    // 渲染版本弹窗列表
     function renderVersionDropdown() {
-        var listEl = document.getElementById('versionDropdownList');
+        var listEl = document.getElementById('versionListContainer');
         if (!listEl) return;
 
         var sortedVersions = sortVersionsByNumber(versionData);
+        
+        // 找到最新线上版本
+        var onlineVersions = versionData.filter(function(v) {
+            return v.status === '线上';
+        });
+        var sortedOnlineVersions = sortVersionsByNumber(onlineVersions);
+        var latestOnlineVersion = sortedOnlineVersions.length > 0 ? sortedOnlineVersions[0] : null;
 
+        // 渲染版本列表
         var html = sortedVersions.map(function(version) {
-            var isSelected = version.id === currentVersionId;
-            var statusClass = version.status === '草稿' ? 'draft' : 'online';
-            var statusText = version.status === '草稿' ? '草稿' : '线上';
+            var isSelected = version.id === tempVersionId;
+            var isDraft = version.status === '草稿';
             
-            return '<div class="version-item' + (isSelected ? ' selected' : '') + '" onclick="selectVersion(' + version.id + ')">'
-                + '<div class="version-item-left">'
-                + '<svg class="version-item-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>'
-                + '<span class="version-item-name">' + version.version + '</span>'
+            // 判断显示标签
+            var displayLabel, statusClass;
+            if (isDraft) {
+                displayLabel = '草稿';
+                statusClass = 'draft';
+            } else if (version.id === (latestOnlineVersion ? latestOnlineVersion.id : -1)) {
+                // 最新线上版本显示为"线上"
+                displayLabel = '线上';
+                statusClass = 'online';
+            } else {
+                // 旧线上版本显示为"历史版本"
+                displayLabel = '历史版本';
+                statusClass = 'history';
+            }
+            
+            return '<div class="version-item-new' + (isSelected ? ' selected' : '') + (isDraft ? ' disabled' : '') + '" ' +
+                (isDraft ? '' : 'onclick="selectTempVersion(' + version.id + ')"') + '>'
+                + '<div class="version-item-left-new">'
+                + (isSelected ? '<svg class="version-item-check-new" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
+                + '<span class="version-item-name-new">' + version.version + '</span>'
                 + '</div>'
-                + '<div class="version-item-right">'
-                + '<span class="version-item-editor">' + version.editor + '</span>'
-                + '<span class="version-item-status ' + statusClass + '">' + statusText + '</span>'
+                + '<div class="version-item-right-new">'
+                + '<span class="version-item-editor-new">' + version.editor + '</span>'
+                + '<span class="version-item-status-new ' + statusClass + '">' + displayLabel + '</span>'
                 + '</div>'
                 + '</div>';
         }).join('');
@@ -1691,18 +1819,18 @@
         var currentVersion = versionData.find(function(v) { return v.id === currentVersionId; });
         
         if (currentVersion) {
-            // 找到最新版本
-            var sortedVersions = sortVersionsByNumber(versionData);
-            var latestVersion = sortedVersions[0];
-            
-            // 检查是否有更新的版本
-            var hasNewerVersion = currentVersion.id !== latestVersion.id;
+            // 找到最新线上版本
+            var onlineVersions = versionData.filter(function(v) {
+                return v.status === '线上';
+            });
+            var sortedOnlineVersions = sortVersionsByNumber(onlineVersions);
+            var latestOnlineVersion = sortedOnlineVersions.length > 0 ? sortedOnlineVersions[0] : null;
             
             // 更新文本节点，保留红点元素
             var textNode = tagEl.firstChild;
-            var newText = hasNewerVersion
-                ? 'Version: ' + currentVersion.version.replace('v', '') + '，升级最新'
-                : 'Version: ' + currentVersion.version.replace('v', '') + '，已是最新';
+            var isLatest = currentVersion.id === (latestOnlineVersion ? latestOnlineVersion.id : -1);
+            var newText = 'Version: ' + currentVersion.version.replace('v', '') + (isLatest ? '，已是最新' : '，升级最新');
+            
             if (textNode && textNode.nodeType === 3) {
                 textNode.textContent = newText;
             } else {
@@ -1710,11 +1838,11 @@
             }
             
             // 显示/隐藏红点
-            showVersionDot(hasNewerVersion);
+            showVersionDot(!isLatest);
         }
     }
 
-    // 切换版本下拉列表显示
+    // 切换版本弹窗显示
     function toggleVersionDropdown() {
         var dropdown = document.getElementById('versionDropdown');
         if (!dropdown) return;
@@ -1724,10 +1852,83 @@
         if (isShowing) {
             dropdown.classList.remove('show');
         } else {
-            // 渲染并显示下拉列表
+            // 初始化临时变量
+            tempVersionId = currentVersionId;
+            tempVersionMode = versionMode;
+            
+            // 渲染并显示版本弹窗
             renderVersionDropdown();
+            
+            // 根据模式显示/隐藏版本列表
+            var listSection = document.getElementById('versionListSection');
+            if (versionMode === 'manual') {
+                listSection.classList.add('active');
+            } else {
+                listSection.classList.remove('active');
+            }
+            
             dropdown.classList.add('show');
         }
+    }
+
+    // 版本模式切换
+    function onVersionModeChange(mode) {
+        tempVersionMode = mode;
+        var listSection = document.getElementById('versionListSection');
+        
+        if (mode === 'manual') {
+            listSection.classList.add('active');
+        } else {
+            listSection.classList.remove('active');
+        }
+    }
+
+    // 临时选择版本（弹窗内操作）
+    function selectTempVersion(versionId) {
+        tempVersionId = versionId;
+        renderVersionDropdown();
+    }
+
+    // 取消版本选择
+    function cancelVersionSelect() {
+        var dropdown = document.getElementById('versionDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+    }
+
+    // 确认版本选择
+    function confirmVersionSelect() {
+        // 应用临时选择
+        versionMode = tempVersionMode;
+        currentVersionId = tempVersionId;
+        
+        // 关闭弹窗
+        var dropdown = document.getElementById('versionDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+        
+        // 更新UI
+        updateVersionTag();
+        
+        console.log('确认版本选择 - 模式:', versionMode, '版本ID:', currentVersionId);
+    }
+
+    // 选择版本（直接生效，无需确认按钮）
+    function selectVersion(versionId) {
+        currentVersionId = versionId;
+        
+        // 关闭弹窗
+        var dropdown = document.getElementById('versionDropdown');
+        if (dropdown) {
+            dropdown.classList.remove('show');
+        }
+        
+        // 更新UI
+        updateVersionTag();
+        
+        console.log('切换到版本:', versionId);
     }
 
     // 选择版本
@@ -1742,30 +1943,10 @@
         
         // 更新标签和UI
         updateVersionTag();
+        renderVersionDropdown();
         
         // 这里可以添加加载对应版本内容的逻辑
         console.log('切换到版本:', versionId);
-    }
-
-    // 升级到最新版本
-    function upgradeToLatest() {
-        var sortedVersions = sortVersionsByNumber(versionData);
-        var latestVersion = sortedVersions[0];
-        
-        if (latestVersion && latestVersion.id !== currentVersionId) {
-            currentVersionId = latestVersion.id;
-            
-            // 关闭下拉列表
-            var dropdown = document.getElementById('versionDropdown');
-            if (dropdown) {
-                dropdown.classList.remove('show');
-            }
-            
-            // 更新标签和UI
-            updateVersionTag();
-            
-            console.log('升级到最新版本:', latestVersion.version);
-        }
     }
 
     // 点击外部关闭下拉列表

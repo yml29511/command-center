@@ -4118,11 +4118,12 @@
         }
         .skill-step3-creating {
             display: none;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
+            padding-top: 20px;
             flex: 1;
-            gap: 12px;
+            gap: 24px;
         }
         .skill-step3-creating .creating-spinner {
             width: 20px;
@@ -4832,7 +4833,7 @@
         #enabledLeftActive .skill-enabled-card-info,
         #enabledRightActive .skill-enabled-card-info {
             border-radius: 10px;
-            border: 1.5px solid #059669;
+            border: 1.5px solid #DDF6EB;
         }
         #enabledLeftActive .skill-enabled-card-info.info-border-inactive,
         #enabledRightActive .skill-enabled-card-info.info-border-inactive {
@@ -7355,6 +7356,17 @@
         .status-text.success {
             color: #52C41A;
         }
+        .skill-name-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            background: #F3EEFF;
+            color: #7F46FF;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 4px;
+            white-space: nowrap;
+        }
 
         .status-text.stopped {
             color: #999999;
@@ -9587,6 +9599,7 @@
                     <div class="execution-result-status" id="modalResultStatus">
                         <span class="status-icon" id="modalResultStatusIcon">✅</span>
                         <span class="status-text success" id="modalResultStatusText">执行完成</span>
+                                                <span class="skill-name-tag" id="modalSkillNameTag"></span>
                     </div>
                     <div class="execution-result-output">
                         <div class="execution-result-text-content" id="modalResultText"></div>
@@ -9661,6 +9674,7 @@
                         <th>运行结果id</th>
                         <th>prompt</th>
                         <th>沙箱类型</th>
+                        <th>GUI Skill</th>
                         <th>状态</th>
                         <th>id</th>
                         <th>操作</th>
@@ -12752,6 +12766,23 @@
             `;
         }
 
+        // 获取当前启用的Skill名称
+        function getActiveSkillName() {
+            // 检查左侧卡片是否启用
+            var leftActive = document.getElementById('enabledLeftActive');
+            if (leftActive && leftActive.style.display !== 'none') {
+                var leftTag = leftActive.querySelector('.skill-status-tag-active');
+                if (leftTag) return '录制轨迹生成Skill';
+            }
+            // 检查右侧卡片是否启用
+            var rightActive = document.getElementById('enabledRightActive');
+            if (rightActive && rightActive.style.display !== 'none') {
+                var rightTag = rightActive.querySelector('.skill-status-tag-active');
+                if (rightTag) return 'Prompt轨迹生成Skill';
+            }
+            return '';
+        }
+
         // 显示执行完成状态
         function showCompletedStatus(finalTime) {
             const statusContent = document.getElementById('taskStatusContent');
@@ -12766,10 +12797,22 @@
                             </svg>
                         </div>
                         <span class="status-text success">执行完成</span>
+                        <span class="skill-name-tag" id="debugSkillNameTag"></span>
                     </div>
                     <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
+            // 填充当前启用的Skill名称
+            var skillTag = document.getElementById('debugSkillNameTag');
+            if (skillTag) {
+                var activeSkillName = getActiveSkillName();
+                if (activeSkillName) {
+                    skillTag.textContent = activeSkillName;
+                    skillTag.style.display = '';
+                } else {
+                    skillTag.style.display = 'none';
+                }
+            }
             
             // 隐藏占位区域
             document.getElementById('debugPlaceholder').style.display = 'none';
@@ -12857,10 +12900,22 @@
                             </svg>
                         </div>
                         <span class="status-text failed">指令执行失败</span>
+                        <span class="skill-name-tag" id="debugSkillNameTagFailed"></span>
                     </div>
                     <span class="timer-text">${formatTime(finalTime)}</span>
                 </div>
             `;
+            // 填充当前启用的Skill名称
+            var skillTagF = document.getElementById('debugSkillNameTagFailed');
+            if (skillTagF) {
+                var activeSkillNameF = getActiveSkillName();
+                if (activeSkillNameF) {
+                    skillTagF.textContent = activeSkillNameF;
+                    skillTagF.style.display = '';
+                } else {
+                    skillTagF.style.display = 'none';
+                }
+            }
             
             // 隐藏占位区域
             document.getElementById('debugPlaceholder').style.display = 'none';
@@ -13817,6 +13872,24 @@
                 const sandboxType = Math.random() > 0.5 ? '无影GUI' : 'CNGUI';
                 const versionNum = Math.floor(Math.random() * 4) + 1;
                 const versionStatus = versionNum === 3 ? 'online' : 'draft'; // V3为线上版本，其他为草稿
+                // Skill信息（无影GUI沙箱不支持Skill，显示"-"）
+                let skillName = '';
+                let traceId = '';
+                let skillCreator = '';
+                let skillCreateTime = '';
+                if (sandboxType === 'CNGUI') {
+                    const skillOptions = [
+                        { name: '跨境物流抓取_录制轨迹_GUISkill', trace: 'trace_record.json', creator: '余梦玲', time: '2026-05-20 10:30' },
+                        { name: '跨境物流抓取_调试轨迹_GUISkill', trace: 'trace_20241222_002', creator: '张三', time: '2026-05-18 14:22' },
+                        { name: '订舶申请_录制轨迹_GUISkill', trace: '', creator: '余梦玲', time: '2026-05-15 09:10' },
+                        { name: '', trace: '', creator: '', time: '' }
+                    ];
+                    const opt = skillOptions[i % skillOptions.length];
+                    skillName = opt.name;
+                    traceId = opt.trace;
+                    skillCreator = opt.creator;
+                    skillCreateTime = opt.time;
+                }
 
                 records.push({
                     initiator: 'WB02044705',
@@ -13833,6 +13906,10 @@
                     resultId: generateRandomId(),
                     prompt: prompts[i],
                     sandboxType: sandboxType,
+                    skillName: skillName,
+                    traceId: traceId,
+                    skillCreator: skillCreator,
+                    skillCreateTime: skillCreateTime,
                     status: status,
                     id: 955 - i
                 });
@@ -13923,6 +14000,7 @@
                         ${promptPreview}
                     </td>
                     <td>${record.sandboxType}</td>
+                    <td>${record.skillName ? '<a href="javascript:void(0)" style="color:#333;text-decoration:none;cursor:pointer;" onmouseover="this.style.color=\'#1890FF\'" onmouseout="this.style.color=\'#333\'">' + record.skillName + '</a>' + (record.traceId ? '<br><span style="color:#999;font-size:11px;">' + record.traceId + '</span>' : '') : '-'}</td>
                     <td><span class="${record.status.class}">${record.status.text}</span></td>
                     <td>
                         <span class="copy-cell" onclick="copyToClipboard('${record.id}')">
@@ -14677,6 +14755,18 @@
             const filesEl = document.getElementById('modalResultFiles');
 
             if (!statusIcon || !statusText || !textEl || !toggleEl || !filesEl) return;
+
+            // 填充Skill名称标签
+            var modalSkillTag = document.getElementById('modalSkillNameTag');
+            if (modalSkillTag) {
+                var activeSkillName = getActiveSkillName();
+                if (activeSkillName) {
+                    modalSkillTag.textContent = activeSkillName;
+                    modalSkillTag.style.display = '';
+                } else {
+                    modalSkillTag.style.display = 'none';
+                }
+            }
 
             // 重置展开状态
             textEl.classList.remove('expanded');
@@ -16251,12 +16341,20 @@
         document.getElementById('step3ConfirmState').style.display = 'none';
         var creatingEl = document.getElementById('step3CreatingState');
         creatingEl.style.display = 'flex';
-        // 模拟5秒后完成创建
+        // 根据当前指令判断模拟结果：执行失败测试(id=11)显示失败，其他显示成功
+        var isFailDemo = (typeof currentDebugId !== 'undefined' && currentDebugId === 11);
+        var simulateDelay = isFailDemo ? 2000 : 3000;
         step3GenerateTimer = setTimeout(function() {
             step3GenerateTimer = null;
-            // 创建完成，跳转步骤4
-            stepperGoToStep(4);
-        }, 5000);
+            creatingEl.style.display = 'none';
+            if (isFailDemo) {
+                // 显示失败状态
+                document.getElementById('step3FailState').style.display = 'flex';
+            } else {
+                // 创建完成，跳转步骤4
+                stepperGoToStep(4);
+            }
+        }, simulateDelay);
     }
 
     // 步骤3 - 取消创建
@@ -16268,6 +16366,19 @@
         // 恢复确认状态
         document.getElementById('step3CreatingState').style.display = 'none';
         document.getElementById('step3ConfirmState').style.display = 'flex';
+    }
+
+    // 步骤3 - 创建失败后重新上传文件
+    function step3RetryUpload() {
+        document.getElementById('step3FailState').style.display = 'none';
+        // 跳回步骤2
+        stepperGoToStep(2);
+    }
+
+    // 步骤3 - 创建失败后重新创建
+    function step3RetryCreate() {
+        document.getElementById('step3FailState').style.display = 'none';
+        confirmAndGenerateSkill();
     }
 
     // 重置步骤条状态
@@ -16338,7 +16449,7 @@
     function closeCreateSkillFlowByX() {
         showSkillConfirmDialog({
             title: '是否保留创建进程？',
-            desc: '保留后可随时继续创建',
+            desc: '保留后可通过原按钮入口重新打开弹窗继续任务',
             confirmText: '保留',
             cancelText: '不保留',
             onConfirm: function() {
@@ -16359,7 +16470,7 @@
     function closeRightCreateSkillFlowByX() {
         showSkillConfirmDialog({
             title: '是否保留创建进程？',
-            desc: '保留后可随时继续创建',
+            desc: '保留后可通过原按钮入口重新打开弹窗继续任务',
             confirmText: '保留',
             cancelText: '不保留',
             onConfirm: function() {
@@ -16390,6 +16501,20 @@
         resetRightStepperState();
         rightSkillPreserved = false;
         resetRightCreateSkillBtn();
+    }
+
+    // 左侧弹窗 - 收起弹窗保留任务（不二次确认，直接收起）
+    function minimizeLeftCreateSkillFlow() {
+        document.getElementById('skillStepperModalMask').classList.remove('show');
+        leftSkillPreserved = true;
+        setLeftCreateSkillBtnPreserved();
+    }
+
+    // 右侧弹窗 - 收起弹窗保留任务（不二次确认，直接收起）
+    function minimizeRightCreateSkillFlow() {
+        document.getElementById('rightSkillStepperModalMask').classList.remove('show');
+        rightSkillPreserved = true;
+        setRightCreateSkillBtnPreserved();
     }
 
     // 设置左侧按钮为“Skill创建中”状态
@@ -17579,7 +17704,7 @@
                 <div style="margin-bottom: 16px;">
                     <select class="skill-stepper-select" id="rightStepperTraceSelect" onchange="validateRightStep1()" style="width: 100%; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 13px; color: #333; font-family: inherit; outline: none; background: #fff; cursor: pointer;">
                         <option value="" disabled selected>选择轨迹</option>
-                        <option value="trace_20241222_001">trace_20241222_001</option>
+                        <option value="trace_20241222_001">⭐ trace_20241222_001</option>
                         <option value="trace_20241222_002">trace_20241222_002</option>
                         <option value="trace_20241222_003">trace_20241222_003</option>
                     </select>
@@ -17605,9 +17730,16 @@
                     </div>
                 </div>
                 <div class="skill-step3-creating" id="rightStep3CreatingState">
-                    <div class="creating-spinner"></div>
-                    <span class="creating-text">Skill创建中</span>
-                    <button class="btn-cancel-create" onclick="cancelRightSkillGeneration()">取消创建</button>
+                    <div style="padding:10px 16px;background:#FFF7E6;border:1px solid #FFD591;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px;color:#D46B08;width:100%;box-sizing:border-box;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D46B08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>创建Skill的时间可能需要若干分钟，您可先收起弹窗等待，创建任务将保留且不会丢失。</span>
+                    </div>
+                    <div style="display:flex;flex-direction:row;align-items:center;gap:12px;">
+                        <div class="creating-spinner"></div>
+                        <span class="creating-text">Skill创建中</span>
+                        <button class="btn-cancel-create" onclick="cancelRightSkillGeneration()">取消创建</button>
+                        <button class="btn-cancel-create" style="background:#7F46FF;color:#fff;border-color:#7F46FF;" onclick="minimizeRightCreateSkillFlow()">收起弹窗保留任务</button>
+                    </div>
                 </div>
             </div>
             <!-- 步骤3内容：启用Skill -->
@@ -17672,11 +17804,11 @@
             </div>
             <!-- 步骤1内容：确认初版Prompt -->
             <div class="skill-stepper-content" id="stepContent1">
-                <div class="skill-stepper-hint">
-                    <span class="hint-label">初版Prompt：</span>提供给Skill作为任务背景解释的初版简单提示词，仅要求将操作步骤描述完整
-                    <a href="#" class="hint-link" onclick="return false;">案例</a>
+                <div style="padding:10px 14px;background:#F0EAFF;border:1px solid #D9C8FF;border-radius:8px;display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#5B3AAF;line-height:1.6;margin-bottom:12px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7F46FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:3px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span><span style="font-weight:500;">初版Prompt：</span>将作为初版辅助提示词上传到Skill作为背景描述来完善轨迹的点击和键盘操作，编写要求是将每个操作写完整，但是不用写的非常具体。本Prompt来源于调试页面的输入内容，请确认后进行下一步。 <a href="#" style="color:#7F46FF;text-decoration:none;margin-left:4px;" onclick="return false;">案例</a></span>
                 </div>
-                <textarea class="skill-stepper-textarea" id="stepperPromptTextarea" placeholder="1.步骤一&#10;2.步骤二&#10;3.步骤三" oninput="validateStep1Input()"></textarea>
+                <textarea class="skill-stepper-textarea" id="stepperPromptTextarea" placeholder="1.步骤一&#10;2.步骤二&#10;3.步骤三" oninput="validateStep1Input()" readonly></textarea>
                 <div class="skill-stepper-footer">
                     <span class="footer-hint">初版Prompt内容拷贝于调试页面编辑框</span>
                     <div class="footer-actions">
@@ -17730,7 +17862,7 @@
             <div class="skill-stepper-content" id="stepContent3" style="display:none;">
                 <!-- 确认沙箱状态 -->
                 <div class="skill-step3-confirm" id="step3ConfirmState">
-                    <div class="confirm-text" style="text-align:left;width:100%;margin-left:60px;margin-top:10px;"><div style="font-weight:bold;margin-bottom:12px;">规则确认：</div>1.GUI Skill仅支持使用“CNGUI沙箱”类型，创建Skill将默认使用该沙箱<br><br>2.新Skill创建后将直接覆盖旧版本</div>
+                    <div class="confirm-text" style="text-align:left;width:100%;margin-left:60px;margin-top:10px;"><div style="font-weight:bold;margin-bottom:12px;">规则确认：</div>1.GUI Skill仅支持使用“菜鸟GUI沙箱”类型，创建Skill将默认使用该沙箱<br><br>2.新Skill创建后将直接覆盖旧版本</div>
                     <div class="skill-stepper-footer" style="margin-top:auto;width:100%;">
                         <span class="footer-hint"></span>
                         <div class="footer-actions">
@@ -17741,15 +17873,36 @@
                 </div>
                 <!-- 创建中状态 -->
                 <div class="skill-step3-creating" id="step3CreatingState">
-                    <div class="creating-spinner"></div>
-                    <span class="creating-text">Skill创建中</span>
-                    <button class="btn-cancel-create" onclick="cancelSkillGeneration()">取消创建</button>
+                    <div style="padding:10px 16px;background:#FFF7E6;border:1px solid #FFD591;border-radius:8px;display:flex;align-items:center;gap:8px;font-size:13px;color:#D46B08;width:100%;box-sizing:border-box;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#D46B08" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        <span>创建Skill的时间可能需要若干分钟，您可先收起弹窗等待，创建任务将保留且不会丢失。</span>
+                    </div>
+                    <div style="display:flex;flex-direction:row;align-items:center;gap:12px;">
+                        <div class="creating-spinner"></div>
+                        <span class="creating-text">Skill创建中</span>
+                        <button class="btn-cancel-create" onclick="cancelSkillGeneration()">取消创建</button>
+                        <button class="btn-cancel-create" style="background:#7F46FF;color:#fff;border-color:#7F46FF;" onclick="minimizeLeftCreateSkillFlow()">收起弹窗保留任务</button>
+                    </div>
+                </div>
+                <!-- 创建失败状态 -->
+                <div class="skill-step3-creating" id="step3FailState" style="display:none;">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="color:#FF4D4F;font-size:20px;font-weight:bold;">✖</span>
+                            <span style="color:#FF4D4F;font-size:18px;font-weight:600;">创建Skill失败</span>
+                        </div>
+                        <div style="font-size:14px;color:#666;">关联轨迹文件：<span style="color:#333;font-weight:500;" id="step3FailTraceFile">recording_trace_001.json</span></div>
+                        <div style="display:flex;flex-direction:row;align-items:center;gap:16px;margin-top:8px;">
+                            <button style="padding:8px 20px;border:1px solid #7F46FF;color:#7F46FF;background:#fff;border-radius:6px;font-size:14px;cursor:pointer;" onclick="step3RetryUpload()">重新上传文件</button>
+                            <button style="padding:8px 20px;border:none;color:#fff;background:linear-gradient(135deg,#9B7FFF,#7F46FF);border-radius:6px;font-size:14px;cursor:pointer;" onclick="step3RetryCreate()">重新创建Skill</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- 步骤4内容：启用Skill -->
             <div class="skill-stepper-content" id="stepContent4" style="display:none;">
-                <div class="skill-step4-enable">
-                    <div class="skill-step4-card">
+                <div class="skill-step4-enable" style="display:flex;flex-direction:column;flex:1;">
+                    <div class="skill-step4-card" style="flex:1;display:flex;flex-direction:column;align-items:center;padding-top:10px;">
                         <div class="skill-step4-success">
                             <span class="success-icon">&#10004;</span>
                             <span class="success-text">创建Skill成功！</span>
@@ -17768,9 +17921,16 @@
                                 <span class="trace-file">recording_trace_001.json</span>
                             </div>
                         </div>
-                        <div class="skill-step4-actions">
-                            <button class="btn-skip" onclick="closeLeftCreateSkillFlowDirect()">暂不启用Skill</button>
-                            <button class="btn-enable" onclick="enableCreatedSkill('left'); closeLeftCreateSkillFlowDirect();">启用Skill</button>
+                        <div style="margin-top:20px;padding:8px 14px;background:#F6F6F6;border-radius:6px;font-size:12px;color:#888;display:flex;align-items:center;gap:6px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                            <span>Skill启用后将在【调试】操作和workunit中一起执行。</span>
+                        </div>
+                    </div>
+                    <div class="skill-stepper-footer" style="margin-top:auto;width:100%;">
+                        <span class="footer-hint"></span>
+                        <div class="footer-actions">
+                            <button class="btn-cancel" onclick="closeLeftCreateSkillFlowDirect()">暂不启用Skill</button>
+                            <button class="btn-next" onclick="enableCreatedSkill('left'); closeLeftCreateSkillFlowDirect();">启用Skill</button>
                         </div>
                     </div>
                 </div>
