@@ -5264,7 +5264,7 @@
             color: #fff;
         }
 
-        /* 新增版本按钮 */
+        /* 版本克隆按钮 */
         .version-add-btn {
             display: flex;
             align-items: center;
@@ -10956,7 +10956,7 @@
                 var activateBtnHtml = (!isActive && !currentDebugReadOnly) ? '<span class="version-set-active-btn" onclick="event.stopPropagation();showActivateConfirm('+item.id+', this)">设为生效</span>' : '';
                 return '<div class="'+cls+'" onclick="selectVersion('+item.id+')"><div class="version-item-info"><span class="'+tagCls+'">'+tagLabel+'</span><div class="version-item-meta"><div class="version-item-meta-row"><span class="version-item-id">版本Id: '+item.id+'</span>'+'<span class="version-item-actions">'+deleteBtnHtml+activateBtnHtml+'</span></div><span class="version-item-editor">编辑人：'+(item.editor||'小王')+'</span><span class="version-item-time">更新时间：'+item.updateTime+'</span></div></div></div>';
             }).join('');
-            var addBtnHtml = currentDebugReadOnly ? '' : '<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>新增版本</span></div>';
+            var addBtnHtml = currentDebugReadOnly ? '' : '<div class="version-add-btn" onclick="addNewVersion()"><span>+</span><span>版本克隆</span></div>';
             d.innerHTML='<div class="version-dropdown-list">'+itemsHtml+'</div>'+addBtnHtml;
         }
         function updateVersionTrigger(){
@@ -11080,7 +11080,7 @@
         function selectVersion(id){var c=versionData.find(function(v){return v.id===id;});versionData.forEach(function(v){v.selected=(v.id===id);});renderVersionDropdown();updateVersionTrigger();toggleVersionDropdown(false);if(c){var label=c.id===activeVersionId?'生效中':(c.status==='线上'?'使用中':c.status);showToast('已切换到 '+label+': '+c.version);setSandboxType(c.sandbox||'browser');var textarea=document.getElementById('debugPromptTextarea');if(textarea){textarea.textContent=c.prompt||'';}renderDebugVariableTags(c.variables);updateDebugEditability(c.status,currentDebugReadOnly);}}
         function addNewVersion(){
             if (currentDebugReadOnly) {
-                showToast('当前为只读模式，无法新增版本');
+                showToast('当前为只读模式，无法版本克隆');
                 return;
             }
             var current = versionData.find(function(v){return v.selected;});
