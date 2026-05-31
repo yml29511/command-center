@@ -636,6 +636,67 @@
             display: block;
         }
 
+        /* Version tag simple - 简化版本标签 */
+        .version-tag-simple {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--primary);
+            background: rgba(101, 61, 214, 0.08);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+            position: relative;
+            flex-shrink: 0;
+            user-select: none;
+        }
+        .version-tag-simple:hover {
+            background: rgba(101, 61, 214, 0.14);
+        }
+        .version-tag-simple .version-dot {
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #EF4444;
+            border: 2px solid #FFFFFF;
+            display: none;
+            box-shadow: 0 1px 3px rgba(239,68,68,0.4);
+        }
+        .version-tag-simple .version-dot.visible {
+            display: block;
+        }
+
+        /* Command actions row - 操作按钮行 */
+        .cmd-actions-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .cmd-actions-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Auto update toggle - 自动更新开关 */
+        .auto-update-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .auto-update-label {
+            font-size: 13px;
+            color: var(--text-2);
+        }
+
         /* Version dropdown - 弹窗样式 */
         .version-dropdown {
             position: absolute;
@@ -1442,12 +1503,11 @@
                     <span class="section-icon">📝</span>
                     指令名称
                 </div>
-                <div class="cmd-name-row">
+                <div class="cmd-name-row" style="margin-bottom: 12px;">
                     <a class="cmd-name-link" href="javascript:void(0)">禁止合作商家-risk演示用</a>
-                                        <span class="skill-badge">Skill</span>
                     <div class="version-selector" id="versionSelector" style="position: relative;">
-                        <span class="version-tag" id="versionTag" onclick="toggleVersionDropdown()">
-                            Version: 2，升级最新
+                        <span class="version-tag-simple" id="versionTag" onclick="toggleVersionDropdown()">
+                            版本V3
                             <span class="version-dot visible" id="versionDot"></span>
                         </span>
                         <div class="version-dropdown" id="versionDropdown">
@@ -1457,6 +1517,13 @@
                                     <label class="version-mode-option-new" id="modeAutoOption">
                                         <input type="radio" name="versionMode" value="auto" checked onchange="onVersionModeChange('auto')">
                                         <span class="version-mode-option-label">始终使用最新</span>
+                                        <span class="info-icon" id="autoVersionInfoIcon" style="margin-left: 4px; font-size: 13px;">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                            </svg>
+                                        </span>
                                     </label>
                                     <label class="version-mode-option-new" id="modeManualOption">
                                         <input type="radio" name="versionMode" value="manual" onchange="onVersionModeChange('manual')">
@@ -1473,9 +1540,24 @@
                         </div>
                     </div>
                 </div>
-                <div class="cmd-actions">
-                    <span class="cmd-action" style="display:none">🔄 刷新指令内容</span>
-                    <span class="cmd-action">🔀 更换指令</span>
+                <div class="cmd-actions-row">
+                    <div class="cmd-actions-left">
+                        <span class="cmd-action" style="display:none">🔄 刷新指令</span>
+                        <span class="cmd-action">🔀 更换指令</span>
+                    </div>
+                    <div class="auto-update-toggle">
+                        <div class="toggle-switch active" id="autoUpdateSwitch" onclick="toggleAutoUpdate()">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="auto-update-label">自动更新版本</span>
+                        <span class="info-icon" id="autoUpdateInfoIcon" style="margin-left: 4px; font-size: 13px;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -1514,7 +1596,7 @@
                     <span class="section-icon">🚀</span>
                     执行模式
                 </div>
-                <div class="exec-mode-value">沙箱类型：CNGUI</div>
+                <div class="exec-mode-value">沙箱类型：菜鸟GUI</div>
 
 
                 <!-- 同/异步执行标题 -->
@@ -1974,9 +2056,72 @@
     // 页面加载时初始化
     window.addEventListener('DOMContentLoaded', function() {
         initTooltip();
+        initAutoVersionTooltip();
+        initAutoUpdateTooltip();
         // 初始化版本标签
         updateVersionTag();
     });
+
+    // 自动更新版本开关切换
+    function toggleAutoUpdate() {
+        const switchEl = document.getElementById('autoUpdateSwitch');
+        switchEl.classList.toggle('active');
+        
+        // 同步更新版本弹窗中的单选按钮
+        const isActive = switchEl.classList.contains('active');
+        const autoRadio = document.querySelector('input[name="versionMode"][value="auto"]');
+        const manualRadio = document.querySelector('input[name="versionMode"][value="manual"]');
+        
+        if (autoRadio && manualRadio) {
+            if (isActive) {
+                autoRadio.checked = true;
+                manualRadio.checked = false;
+                versionMode = 'auto';
+            } else {
+                autoRadio.checked = false;
+                manualRadio.checked = true;
+                versionMode = 'manual';
+            }
+        }
+        
+        console.log('自动更新版本:', isActive ? '开启' : '关闭');
+    }
+
+    // 初始化自动更新版本提示气泡
+    function initAutoUpdateTooltip() {
+        var icon = document.getElementById('autoUpdateInfoIcon');
+        if (!icon) return;
+        
+        var tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = '开启后，该节点将始终启用最新版提示词。';
+        icon.appendChild(tooltip);
+        
+        // 鼠标悬浮时动态计算位置
+        icon.addEventListener('mouseenter', function() {
+            var rect = icon.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 + 'px';
+            tooltip.style.top = rect.top + 'px';
+        });
+    }
+
+    // 初始化自动更新版本提示气泡
+    function initAutoVersionTooltip() {
+        var icon = document.getElementById('autoVersionInfoIcon');
+        if (!icon) return;
+        
+        var tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = '开启后，该节点将始终启用最新版提示词。';
+        icon.appendChild(tooltip);
+        
+        // 鼠标悬浮时动态计算位置
+        icon.addEventListener('mouseenter', function() {
+            var rect = icon.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 + 'px';
+            tooltip.style.top = rect.top + 'px';
+        });
+    }
 </script>
 </body>
 </html>
