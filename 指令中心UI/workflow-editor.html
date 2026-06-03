@@ -803,7 +803,7 @@
             background: #F9FAFB;
         }
         .version-item-new.selected {
-            background: #EBF5FF;
+            background: #F0E6FF;
         }
         .version-item-new.disabled {
             cursor: not-allowed;
@@ -859,14 +859,14 @@
             border-color: #FFE7BA;
         }
         .version-item-status-new.online {
-            background: #F6FFED;
-            color: #52C41A;
-            border-color: #B7EB8F;
+            background: #F9F0FF;
+            color: #7F46FF;
+            border-color: #D3ADF7;
         }
         .version-item-status-new.history {
-            background: #F5F5F5;
-            color: #8C8C8C;
-            border-color: #D9D9D9;
+            background: #EBF5FF;
+            color: #1890FF;
+            border-color: #91D5FF;
         }
 
         .version-dropdown-list {
@@ -1851,10 +1851,10 @@
 
     // 版本数据
     var versionData = [
-        { id: 4, version: 'v4', status: '草稿', editor: '余梦玲' },
-        { id: 3, version: 'v3', status: '线上', editor: '余梦玲' },
-        { id: 2, version: 'v2', status: '线上', editor: '余梦玲' },
-        { id: 1, version: 'v1', status: '线上', editor: '余梦玲' }
+        { id: 4, version: 'V4', status: '线上', editor: '梦玲' },
+        { id: 3, version: 'V3', status: '已发布', editor: '梦玲' },
+        { id: 2, version: 'V2', status: '已发布', editor: '梦玲' },
+        { id: 1, version: 'V1', status: '已发布', editor: '梦玲' }
     ];
 
     var skillVersionData = [
@@ -1871,11 +1871,11 @@
     var tempVersionId = currentVersionId; // 临时选中的版本ID（用于弹窗内操作）
     var tempVersionMode = versionMode; // 临时选中的模式（用于弹窗内操作）
 
-    // 按版本号倒序排序（v4 > v3 > v2 > v1）
+    // 按版本号倒序排序（V4 > V3 > V2 > V1）
     function sortVersionsByNumber(versions) {
         return versions.slice().sort(function(a, b) {
-            var numA = parseInt(a.version.replace('v', ''), 10);
-            var numB = parseInt(b.version.replace('v', ''), 10);
+            var numA = parseInt(a.version.replace('V', '').replace('v', ''), 10);
+            var numB = parseInt(b.version.replace('V', '').replace('v', ''), 10);
             return numB - numA; // 倒序
         });
     }
@@ -1903,7 +1903,7 @@
             
             return '<div class="version-item-new' + (isSelected ? ' selected' : '') + '" onclick="selectVersionSimple(' + version.id + ')" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-radius: 6px; margin-bottom: 2px;">'
                 + '<div style="display: flex; align-items: center; gap: 8px;">'
-                + (isSelected ? '<svg style="width: 14px; height: 14px; color: #1890FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
+                + (isSelected ? '<svg style="width: 14px; height: 14px; color: #7F46FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
                 + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>'
                 + '</div>'
                 + '<div style="display: flex; align-items: center; gap: 6px;">'
