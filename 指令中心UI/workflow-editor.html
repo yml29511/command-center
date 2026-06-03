@@ -657,6 +657,15 @@
         .version-tag-simple:hover {
             background: rgba(101, 61, 214, 0.14);
         }
+        /* Skill版本标签样式 */
+        .version-tag-simple.skill-tag {
+            border-color: #10B981;
+            background: rgba(16, 185, 129, 0.08);
+            color: #10B981;
+        }
+        .version-tag-simple.skill-tag:hover {
+            background: rgba(16, 185, 129, 0.14);
+        }
         .version-tag-simple .version-dot {
             position: absolute;
             top: -3px;
@@ -760,6 +769,25 @@
         }
         .version-list-section.active {
             display: block;
+        }
+
+        /* Skill版本弹窗样式 */
+        .version-list-new {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+        .version-auto-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-top: 1px solid var(--border-light);
+            background: var(--bg-light);
+        }
+        .auto-switch-label {
+            font-size: 13px;
+            color: var(--text-2);
         }
 
         .version-item-new {
@@ -1504,36 +1532,36 @@
                 </div>
                 <div class="cmd-name-row" style="margin-bottom: 12px;">
                     <a class="cmd-name-link" href="javascript:void(0)">禁止合作商家-risk演示用</a>
-                    <div class="version-selector" id="versionSelector" style="position: relative;">
-                        <span class="version-tag-simple" id="versionTag" onclick="toggleVersionDropdown()">
-                            版本V3
-                            <span class="version-dot visible" id="versionDot"></span>
-                        </span>
-                        <div class="version-dropdown" id="versionDropdown">
-                            <!-- 版本模式选择 -->
-                            <div class="version-mode-section">
-                                <div class="version-mode-options">
-                                    <label class="version-mode-option-new" id="modeAutoOption">
-                                        <input type="radio" name="versionMode" value="auto" checked onchange="onVersionModeChange('auto')">
-                                        <span class="version-mode-option-label">始终使用最新</span>
-                                        <span class="info-icon" id="autoVersionInfoIcon" style="margin-left: 4px; font-size: 13px;">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10"></circle>
-                                                <line x1="12" y1="16" x2="12" y2="12"></line>
-                                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                                            </svg>
-                                        </span>
-                                    </label>
-                                    <label class="version-mode-option-new" id="modeManualOption">
-                                        <input type="radio" name="versionMode" value="manual" onchange="onVersionModeChange('manual')">
-                                        <span class="version-mode-option-label">手动选择版本</span>
-                                    </label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <!-- Skill版本标签 -->
+                        <div class="version-selector" id="skillVersionSelector" style="position: relative;">
+                            <span class="version-tag-simple skill-tag" id="skillVersionTag" onclick="toggleSkillVersionDropdown()">
+                                Skill_V4
+                                <span class="version-dot" id="skillVersionDot"></span>
+                            </span>
+                            <div class="version-dropdown" id="skillVersionDropdown">
+                                <div class="version-list-new" id="skillVersionListContainer"></div>
+                                <div class="version-auto-switch">
+                                    <div class="toggle-switch active" id="autoSkillVersionSwitch" onclick="toggleAutoSkillVersionFromDropdown()">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                    <span class="auto-switch-label">始终使用最新版</span>
                                 </div>
                             </div>
-                            <!-- 版本列表 -->
-                            <div class="version-list-section" id="versionListSection">
-                                <div id="versionListContainer">
-                                    <!-- 版本列表动态生成 -->
+                        </div>
+                        <!-- 指令版本标签 -->
+                        <div class="version-selector" id="versionSelector" style="position: relative;">
+                            <span class="version-tag-simple" id="versionTag" onclick="toggleVersionDropdown()">
+                                版本V4
+                                <span class="version-dot" id="versionDot"></span>
+                            </span>
+                            <div class="version-dropdown" id="versionDropdown">
+                                <div class="version-list-new" id="versionListContainer"></div>
+                                <div class="version-auto-switch">
+                                    <div class="toggle-switch active" id="autoVersionSwitch" onclick="toggleAutoVersionFromDropdown()">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                    <span class="auto-switch-label">始终使用最新版</span>
                                 </div>
                             </div>
                         </div>
@@ -1830,8 +1858,17 @@
         { id: 1, version: 'v1', status: '线上', editor: '余梦玲' }
     ];
 
-    var currentVersionId = 2; // 当前选中的版本ID
-    var versionMode = 'auto'; // 'auto' = 自动模式，'manual' = 手动模式
+    var skillVersionData = [
+        { id: 4, version: 'V4', status: '线上', editor: '梦玲' },
+        { id: 3, version: 'V3', status: '已发布', editor: '梦玲' },
+        { id: 2, version: 'V2', status: '已发布', editor: '梦玲' },
+        { id: 1, version: 'V1', status: '已发布', editor: '梦玲' }
+    ];
+
+    var currentVersionId = 4; // 当前选中的版本ID（默认最新）
+    var isAutoVersion = true; // 是否自动使用最新版本
+    var currentSkillVersionId = 4; // 当前选中的Skill版本ID
+    var isAutoSkillVersion = true; // 是否自动使用最新Skill版本
     var tempVersionId = currentVersionId; // 临时选中的版本ID（用于弹窗内操作）
     var tempVersionMode = versionMode; // 临时选中的模式（用于弹窗内操作）
 
@@ -1850,43 +1887,29 @@
         if (!listEl) return;
 
         var sortedVersions = sortVersionsByNumber(versionData);
-        
-        // 找到最新线上版本
-        var onlineVersions = versionData.filter(function(v) {
-            return v.status === '线上';
-        });
-        var sortedOnlineVersions = sortVersionsByNumber(onlineVersions);
-        var latestOnlineVersion = sortedOnlineVersions.length > 0 ? sortedOnlineVersions[0] : null;
+        var latestOnlineVersion = sortedVersions.length > 0 ? sortedVersions[0] : null;
 
-        // 渲染版本列表
         var html = sortedVersions.map(function(version) {
-            var isSelected = version.id === tempVersionId;
-            var isDraft = version.status === '草稿';
+            var isSelected = version.id === currentVersionId;
+            var isLatest = version.id === (latestOnlineVersion ? latestOnlineVersion.id : -1);
             
-            // 判断显示标签
             var displayLabel, statusClass;
-            if (isDraft) {
-                displayLabel = '草稿';
-                statusClass = 'draft';
-            } else if (version.id === (latestOnlineVersion ? latestOnlineVersion.id : -1)) {
-                // 最新线上版本显示为"最新发布"
+            if (isLatest) {
                 displayLabel = '最新发布';
                 statusClass = 'online';
             } else {
-                // 旧线上版本显示为"历史版本"
                 displayLabel = '历史版本';
                 statusClass = 'history';
             }
             
-            return '<div class="version-item-new' + (isSelected ? ' selected' : '') + (isDraft ? ' disabled' : '') + '" ' +
-                (isDraft ? '' : 'onclick="selectTempVersion(' + version.id + ')"') + '>'
-                + '<div class="version-item-left-new">'
-                + (isSelected ? '<svg class="version-item-check-new" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
-                + '<span class="version-item-name-new">' + version.version + '</span>'
+            return '<div class="version-item-new' + (isSelected ? ' selected' : '') + '" onclick="selectVersionSimple(' + version.id + ')" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-radius: 6px; margin-bottom: 2px;">'
+                + '<div style="display: flex; align-items: center; gap: 8px;">'
+                + (isSelected ? '<svg style="width: 14px; height: 14px; color: #1890FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
+                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>'
                 + '</div>'
-                + '<div class="version-item-right-new">'
-                + '<span class="version-item-editor-new">' + version.editor + '</span>'
-                + '<span class="version-item-status-new ' + statusClass + '">' + displayLabel + '</span>'
+                + '<div style="display: flex; align-items: center; gap: 6px;">'
+                + '<span style="font-size: 11px; color: var(--text-3);">' + version.editor + '</span>'
+                + (displayLabel ? '<span class="version-item-status-new ' + statusClass + '">' + displayLabel + '</span>' : '')
                 + '</div>'
                 + '</div>';
         }).join('');
@@ -1894,24 +1917,41 @@
         listEl.innerHTML = html;
     }
 
+    // 选择版本（简洁模式）
+    function selectVersionSimple(versionId) {
+        if (isAutoVersion) return;
+        currentVersionId = versionId;
+        updateVersionTag();
+        renderVersionDropdown();
+    }
+
+    // 切换自动版本开关
+    function toggleAutoVersionFromDropdown() {
+        isAutoVersion = !isAutoVersion;
+        if (isAutoVersion) {
+            var sortedVersions = sortVersionsByNumber(versionData);
+            if (sortedVersions.length > 0) {
+                currentVersionId = sortedVersions[0].id;
+            }
+        }
+        updateVersionTag();
+        renderVersionDropdown();
+    }
+
     // 更新版本标签显示
     function updateVersionTag() {
         var tagEl = document.getElementById('versionTag');
         var dotEl = document.getElementById('versionDot');
+        var switchEl = document.getElementById('autoVersionSwitch');
         var currentVersion = versionData.find(function(v) { return v.id === currentVersionId; });
         
         if (currentVersion) {
-            // 找到最新线上版本
-            var onlineVersions = versionData.filter(function(v) {
-                return v.status === '线上';
-            });
-            var sortedOnlineVersions = sortVersionsByNumber(onlineVersions);
-            var latestOnlineVersion = sortedOnlineVersions.length > 0 ? sortedOnlineVersions[0] : null;
+            var sortedVersions = sortVersionsByNumber(versionData);
+            var latestOnlineVersion = sortedVersions.length > 0 ? sortedVersions[0] : null;
             
-            // 更新文本节点，保留红点元素
             var textNode = tagEl.firstChild;
             var isLatest = currentVersion.id === (latestOnlineVersion ? latestOnlineVersion.id : -1);
-            var newText = 'Version: ' + currentVersion.version.replace('v', '') + (isLatest ? '，已是最新' : '，升级最新');
+            var newText = '版本V' + currentVersion.version.replace('v', '').replace('V', '');
             
             if (textNode && textNode.nodeType === 3) {
                 textNode.textContent = newText;
@@ -1919,8 +1959,102 @@
                 tagEl.insertBefore(document.createTextNode(newText), tagEl.firstChild);
             }
             
-            // 显示/隐藏红点
-            showVersionDot(!isLatest);
+            if (dotEl) dotEl.classList.toggle('visible', !isLatest);
+            if (switchEl) switchEl.classList.toggle('active', isAutoVersion);
+        }
+    }
+
+    // 切换Skill版本弹窗显示
+    function toggleSkillVersionDropdown() {
+        var dropdown = document.getElementById('skillVersionDropdown');
+        if (!dropdown) return;
+        
+        var isShowing = dropdown.classList.contains('show');
+        
+        if (isShowing) {
+            dropdown.classList.remove('show');
+        } else {
+            renderSkillVersionDropdown();
+            dropdown.classList.add('show');
+        }
+    }
+
+    // 渲染Skill版本弹窗
+    function renderSkillVersionDropdown() {
+        var listEl = document.getElementById('skillVersionListContainer');
+        if (!listEl) return;
+
+        var sortedVersions = sortVersionsByNumber(skillVersionData);
+        var latestOnlineVersion = sortedVersions.length > 0 ? sortedVersions[0] : null;
+
+        var html = sortedVersions.map(function(version) {
+            var isSelected = version.id === currentSkillVersionId;
+            var isLatest = version.id === (latestOnlineVersion ? latestOnlineVersion.id : -1);
+            
+            var displayLabel, statusClass;
+            if (isLatest) {
+                displayLabel = '最新发布';
+                statusClass = 'online';
+            } else {
+                displayLabel = '';
+                statusClass = '';
+            }
+            
+            return '<div class="version-item-new' + (isSelected ? ' selected' : '') + '" onclick="selectSkillVersion(' + version.id + ')" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-radius: 6px; margin-bottom: 2px;">'
+                + '<div style="display: flex; align-items: center; gap: 8px;">'
+                + (isSelected ? '<svg style="width: 14px; height: 14px; color: #1890FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
+                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>'
+                + '</div>'
+                + '<div style="display: flex; align-items: center; gap: 6px;">'
+                + '<span style="font-size: 11px; color: var(--text-3);">' + version.editor + '</span>'
+                + (displayLabel ? '<span class="version-item-status-new ' + statusClass + '">' + displayLabel + '</span>' : '')
+                + '</div>'
+                + '</div>';
+        }).join('');
+
+        listEl.innerHTML = html;
+    }
+
+    // 选择Skill版本
+    function selectSkillVersion(versionId) {
+        if (isAutoSkillVersion) return;
+        currentSkillVersionId = versionId;
+        updateSkillVersionTag();
+        renderSkillVersionDropdown();
+    }
+
+    // 切换Skill自动版本开关
+    function toggleAutoSkillVersionFromDropdown() {
+        isAutoSkillVersion = !isAutoSkillVersion;
+        if (isAutoSkillVersion) {
+            var sortedVersions = sortVersionsByNumber(skillVersionData);
+            if (sortedVersions.length > 0) {
+                currentSkillVersionId = sortedVersions[0].id;
+            }
+        }
+        updateSkillVersionTag();
+        renderSkillVersionDropdown();
+    }
+
+    // 更新Skill版本标签
+    function updateSkillVersionTag() {
+        var tagEl = document.getElementById('skillVersionTag');
+        var dotEl = document.getElementById('skillVersionDot');
+        var switchEl = document.getElementById('autoSkillVersionSwitch');
+        var currentVersion = skillVersionData.find(function(v) { return v.id === currentSkillVersionId; });
+        
+        if (currentVersion) {
+            var textNode = tagEl.firstChild;
+            var newText = 'Skill_V' + currentVersion.version.replace('V', '');
+            
+            if (textNode && textNode.nodeType === 3) {
+                textNode.textContent = newText;
+            } else {
+                tagEl.insertBefore(document.createTextNode(newText), tagEl.firstChild);
+            }
+            
+            if (dotEl) dotEl.classList.remove('visible');
+            if (switchEl) switchEl.classList.toggle('active', isAutoSkillVersion);
         }
     }
 
@@ -1934,44 +2068,12 @@
         if (isShowing) {
             dropdown.classList.remove('show');
         } else {
-            // 初始化临时变量
-            tempVersionId = currentVersionId;
-            tempVersionMode = versionMode;
-            
-            // 渲染并显示版本弹窗
             renderVersionDropdown();
-            
-            // 根据模式显示/隐藏版本列表
-            var listSection = document.getElementById('versionListSection');
-            if (versionMode === 'manual') {
-                listSection.classList.add('active');
-            } else {
-                listSection.classList.remove('active');
-            }
-            
             dropdown.classList.add('show');
         }
     }
-
-    // 版本模式切换
-    function onVersionModeChange(mode) {
-        tempVersionMode = mode;
-        var listSection = document.getElementById('versionListSection');
-        
-        if (mode === 'manual') {
-            listSection.classList.add('active');
-        } else {
-            listSection.classList.remove('active');
-        }
-    }
-
-    // 临时选择版本（弹窗内操作）
-    function selectTempVersion(versionId) {
-        tempVersionId = versionId;
-        renderVersionDropdown();
-    }
-
-    // 取消版本选择
+    
+    // 确认版本选择
     function cancelVersionSelect() {
         var dropdown = document.getElementById('versionDropdown');
         if (dropdown) {
