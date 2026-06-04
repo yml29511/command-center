@@ -2166,20 +2166,16 @@
         document.addEventListener('click', function(e) {
             var skillDropdown = document.getElementById('skillVersionDropdown');
             var versionDropdown = document.getElementById('versionDropdown');
-            var skillSelector = document.getElementById('skillVersionSelector');
-            var versionSelector = document.getElementById('versionSelector');
             
             // 关闭Skill版本弹窗
             if (skillDropdown && skillDropdown.classList.contains('show')) {
-                var skillTag = document.getElementById('skillVersionTag');
-                if (skillSelector && !skillSelector.contains(e.target) && (!skillTag || !skillTag.contains(e.target))) {
+                if (!skillDropdown.contains(e.target)) {
                     skillDropdown.classList.remove('show');
                 }
             }
             // 关闭指令版本弹窗
             if (versionDropdown && versionDropdown.classList.contains('show')) {
-                var versionTag = document.getElementById('versionTag');
-                if (versionSelector && !versionSelector.contains(e.target) && (!versionTag || !versionTag.contains(e.target))) {
+                if (!versionDropdown.contains(e.target)) {
                     versionDropdown.classList.remove('show');
                 }
             }
