@@ -2161,6 +2161,25 @@
         // 初始化刷新提示条
         var hintEl = document.getElementById('refreshHint');
         if (hintEl) hintEl.style.display = isAutoVersion ? 'block' : 'none';
+        
+        // 点击空白处关闭版本下拉弹窗
+        document.addEventListener('click', function(e) {
+            var skillDropdown = document.getElementById('skillVersionDropdown');
+            var versionDropdown = document.getElementById('versionDropdown');
+            var skillSelector = document.getElementById('skillVersionSelector');
+            var versionSelector = document.getElementById('versionSelector');
+            
+            if (skillDropdown && skillDropdown.classList.contains('show')) {
+                if (skillSelector && !skillSelector.contains(e.target)) {
+                    skillDropdown.classList.remove('show');
+                }
+            }
+            if (versionDropdown && versionDropdown.classList.contains('show')) {
+                if (versionSelector && !versionSelector.contains(e.target)) {
+                    versionDropdown.classList.remove('show');
+                }
+            }
+        });
     });
 
     // 自动更新版本开关切换
