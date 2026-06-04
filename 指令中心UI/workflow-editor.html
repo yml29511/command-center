@@ -2169,13 +2169,17 @@
             var skillSelector = document.getElementById('skillVersionSelector');
             var versionSelector = document.getElementById('versionSelector');
             
+            // 关闭Skill版本弹窗
             if (skillDropdown && skillDropdown.classList.contains('show')) {
-                if (skillSelector && !skillSelector.contains(e.target)) {
+                var skillTag = document.getElementById('skillVersionTag');
+                if (skillSelector && !skillSelector.contains(e.target) && (!skillTag || !skillTag.contains(e.target))) {
                     skillDropdown.classList.remove('show');
                 }
             }
+            // 关闭指令版本弹窗
             if (versionDropdown && versionDropdown.classList.contains('show')) {
-                if (versionSelector && !versionSelector.contains(e.target)) {
+                var versionTag = document.getElementById('versionTag');
+                if (versionSelector && !versionSelector.contains(e.target) && (!versionTag || !versionTag.contains(e.target))) {
                     versionDropdown.classList.remove('show');
                 }
             }
