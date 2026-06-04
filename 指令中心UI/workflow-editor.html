@@ -1535,7 +1535,7 @@
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <!-- Skill版本标签 -->
                         <div class="version-selector" id="skillVersionSelector" style="position: relative;">
-                            <span class="version-tag-simple skill-tag" id="skillVersionTag" onclick="toggleSkillVersionDropdown()">
+                            <span class="version-tag-simple skill-tag" id="skillVersionTag" onclick="toggleSkillVersionDropdown(event)">
                                 Skill_V4
                                 <span class="version-dot" id="skillVersionDot"></span>
                             </span>
@@ -1552,7 +1552,7 @@
                         </div>
                         <!-- 指令版本标签 -->
                         <div class="version-selector" id="versionSelector" style="position: relative;">
-                            <span class="version-tag-simple" id="versionTag" onclick="toggleVersionDropdown()">
+                            <span class="version-tag-simple" id="versionTag" onclick="toggleVersionDropdown(event)">
                                 版本V4
                                 <span class="version-dot" id="versionDot"></span>
                             </span>
@@ -1961,7 +1961,8 @@
     }
 
     // 切换Skill版本弹窗显示
-    function toggleSkillVersionDropdown() {
+    function toggleSkillVersionDropdown(e) {
+        if (e) e.stopPropagation();
         var dropdown = document.getElementById('skillVersionDropdown');
         if (!dropdown) return;
         
@@ -2055,7 +2056,8 @@
     }
 
     // 切换版本弹窗显示
-    function toggleVersionDropdown() {
+    function toggleVersionDropdown(e) {
+        if (e) e.stopPropagation();
         var dropdown = document.getElementById('versionDropdown');
         if (!dropdown) return;
         
