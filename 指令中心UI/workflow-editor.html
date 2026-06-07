@@ -2175,13 +2175,31 @@
             
             // 关闭Skill版本弹窗
             if (skillDropdown && skillDropdown.classList.contains('show')) {
-                if (!skillDropdown.contains(e.target)) {
+                var skillRect = skillDropdown.getBoundingClientRect();
+                var skillTag = document.getElementById('skillVersionTag');
+                var tagRect = skillTag ? skillTag.getBoundingClientRect() : null;
+                
+                var inDropdown = e.clientX >= skillRect.left && e.clientX <= skillRect.right && 
+                                 e.clientY >= skillRect.top && e.clientY <= skillRect.bottom;
+                var inTag = tagRect && e.clientX >= tagRect.left && e.clientX <= tagRect.right && 
+                            e.clientY >= tagRect.top && e.clientY <= tagRect.bottom;
+                
+                if (!inDropdown && !inTag) {
                     skillDropdown.classList.remove('show');
                 }
             }
             // 关闭指令版本弹窗
             if (versionDropdown && versionDropdown.classList.contains('show')) {
-                if (!versionDropdown.contains(e.target)) {
+                var versionRect = versionDropdown.getBoundingClientRect();
+                var versionTag = document.getElementById('versionTag');
+                var vTagRect = versionTag ? versionTag.getBoundingClientRect() : null;
+                
+                var inDropdown = e.clientX >= versionRect.left && e.clientX <= versionRect.right && 
+                                 e.clientY >= versionRect.top && e.clientY <= versionRect.bottom;
+                var inTag = vTagRect && e.clientX >= vTagRect.left && e.clientX <= vTagRect.right && 
+                            e.clientY >= vTagRect.top && e.clientY <= vTagRect.bottom;
+                
+                if (!inDropdown && !inTag) {
                     versionDropdown.classList.remove('show');
                 }
             }
