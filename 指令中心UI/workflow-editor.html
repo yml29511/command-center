@@ -1852,10 +1852,10 @@
     ];
 
     var skillVersionData = [
-        { id: 4, version: 'V4', status: '线上', editor: '梦玲' },
-        { id: 3, version: 'V3', status: '已发布', editor: '梦玲' },
-        { id: 2, version: 'V2', status: '已发布', editor: '梦玲' },
-        { id: 1, version: 'V1', status: '已发布', editor: '梦玲' }
+        { id: 4, version: 'V4', versionCode: '2026-06-01-0ccc8d7a', status: '线上', editor: '梦玲' },
+        { id: 3, version: 'V3', versionCode: '2026-05-28-a1b2c3d4', status: '已发布', editor: '梦玲' },
+        { id: 2, version: 'V2', versionCode: '2026-05-25-e5f6g7h8', status: '已发布', editor: '梦玲' },
+        { id: 1, version: 'V1', versionCode: '2026-05-20-i9j0k1l2', status: '已发布', editor: '梦玲' }
     ];
 
     var currentVersionId = 4; // 当前选中的版本ID（默认最新）
@@ -1898,7 +1898,7 @@
             return '<div class="version-item-new' + (isSelected ? ' selected' : '') + '" onclick="selectVersionSimple(' + version.id + ')" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-radius: 6px; margin-bottom: 2px;">'
                 + '<div style="display: flex; align-items: center; gap: 8px;">'
                 + (isSelected ? '<svg style="width: 14px; height: 14px; color: #7F46FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
-                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>'
+                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>' + '<span style="font-size: 11px; color: #9CA3AF;">' + (version.versionCode || '') + '</span>'
                 + '</div>'
                 + '<div style="display: flex; align-items: center; gap: 6px;">'
                 + '<span style="font-size: 11px; color: var(--text-3);">' + version.editor + '</span>'
@@ -2002,7 +2002,7 @@
             return '<div class="version-item-new' + (isSelected ? ' selected' : '') + '" onclick="selectSkillVersion(' + version.id + ')" style="padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; border-radius: 6px; margin-bottom: 2px;">'
                 + '<div style="display: flex; align-items: center; gap: 8px;">'
                 + (isSelected ? '<svg style="width: 14px; height: 14px; color: #1890FF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '')
-                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>'
+                + '<span style="font-size: 13px; font-weight: 500;">' + version.version + '</span>' + '<span style="font-size: 11px; color: #9CA3AF;">' + (version.versionCode || '') + '</span>'
                 + '</div>'
                 + '<div style="display: flex; align-items: center; gap: 6px;">'
                 + '<span style="font-size: 11px; color: var(--text-3);">' + version.editor + '</span>'
