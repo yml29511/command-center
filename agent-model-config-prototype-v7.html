@@ -43,7 +43,7 @@
                     线上：V11
                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <button id="publishBtn" disabled class="px-4 py-1.5 rounded-md text-sm bg-gray-300 text-white cursor-not-allowed transition-colors">发布</button>
+                <button id="publishBtn" class="px-4 py-1.5 rounded-md text-sm bg-blue-600 text-white hover:bg-blue-700 transition-colors">发布</button>
                 <button class="px-4 py-1.5 rounded-md text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">版本克隆</button>
             </div>
         </div>
@@ -95,6 +95,21 @@
                                 <span>2</span>
                             </div>
                         </div>
+
+                        <div class="border-t border-gray-100 pt-4 mt-2">
+                            <h4 class="text-xs font-medium text-gray-500 mb-3">连接配置</h4>
+                            <div class="space-y-3">
+                                <div class="space-y-1.5">
+                                    <label class="text-xs text-gray-500">模型网关</label>
+                                    <input type="text" value="https://api.modelgateway.example.com/v1" readonly class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-500 cursor-not-allowed">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-xs text-gray-500">Access Key (AK)</label>
+                                    <input type="password" value="sk-qwen3max-xxxxxxxxxxxxxxxx" readonly class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-500 cursor-not-allowed">
+                                </div>
+                                <p class="text-xs text-gray-400">由接口返回，不可修改</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,9 +155,9 @@
                         <button onclick="switchTab('skills')" id="tab-skills" class="tab-active text-sm font-medium pb-3 -mb-px">Skills <span class="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded">0</span></button>
                         <button onclick="switchTab('mcp')" id="tab-mcp" class="tab-inactive text-sm font-medium pb-3 -mb-px">MCP <span class="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded">0</span></button>
                         <button onclick="switchTab('plugin')" id="tab-plugin" class="tab-inactive text-sm font-medium pb-3 -mb-px">Plugin <span class="ml-1 text-xs bg-gray-100 px-1.5 py-0.5 rounded">0</span></button>
-                        <button onclick="switchTab('connection')" id="tab-connection" class="tab-inactive tab-pending text-sm font-medium pb-3 -mb-px flex items-center gap-1.5">
+                        <button onclick="switchTab('connection')" id="tab-connection" class="tab-inactive text-sm font-medium pb-3 -mb-px flex items-center gap-1.5">
                             连接配置
-                            <span id="connectionBadge" class="text-xs px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">待配置</span>
+                            <span id="connectionBadge" class="text-xs px-1.5 py-0.5 bg-green-50 text-green-600 rounded">已配置</span>
                         </button>
                     </div>
                 </div>
@@ -183,27 +198,13 @@
                 </div>
 
                 <!-- Connection Config Panel -->
-                <div id="panel-connection" class="flex-1 p-6 overflow-auto">
-                    <div class="max-w-[600px] space-y-6">
-                        <div>
-                            <h2 class="text-base font-medium text-gray-800">连接配置</h2>
-                            <p class="text-sm text-gray-500 mt-1">配置 Agent 调用的模型服务网关和访问密钥</p>
-                        </div>
-
-                        <div class="space-y-5">
-                            <div class="space-y-2">
-                                <label class="text-sm text-gray-700">模型网关 <span class="text-red-500">*</span></label>
-                                <input id="gatewayInput" type="text" placeholder="https://api.example.com/v1" oninput="validate()" class="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 transition-colors">
-                            </div>
-
-                            <div class="space-y-2">
-                                <label class="text-sm text-gray-700">Access Key (AK) <span class="text-red-500">*</span></label>
-                                <input id="akInput" type="password" placeholder="sk-xxxxxxxxxxxxxxxx" oninput="validate()" class="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 transition-colors">
-                            </div>
-
-                            <div class="flex gap-3 pt-2">
-                                <button onclick="saveConnectionConfig()" id="saveBtn" disabled class="px-5 h-9 bg-gray-300 text-white text-sm rounded-md cursor-not-allowed transition-colors">保存配置</button>
-                                <button onclick="testConnection()" id="testBtn" disabled class="px-5 h-9 bg-white border border-gray-200 text-gray-400 text-sm rounded-md cursor-not-allowed transition-colors">测试连接</button>
+                <div id="panel-connection" class="hidden flex-1 p-6 overflow-auto">
+                    <div class="max-w-[600px]">
+                        <div class="flex items-start gap-3 bg-green-50 border border-green-100 rounded-xl p-4">
+                            <svg class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <div>
+                                <h2 class="text-sm font-medium text-green-800">连接已预配置</h2>
+                                <p class="text-sm text-green-700 mt-1">模型网关与访问密钥已由接口默认返回，无需手动填写。如需变更，请联系管理员。</p>
                             </div>
                         </div>
                     </div>
@@ -221,12 +222,7 @@
                 </div>
 
                 <div class="bg-white rounded-2xl shadow-sm p-5 space-y-4">
-                    <div id="previewDisabled" class="bg-amber-50 border border-amber-100 rounded-lg p-3 text-sm text-amber-700 flex items-start gap-2">
-                        <svg class="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        <span>完成连接配置中的网关和 AK 后，即可开始预览调试</span>
-                    </div>
-
-                    <div id="previewContent" class="opacity-40 pointer-events-none transition-opacity">
+                    <div id="previewContent" class="transition-opacity">
                         <h1 class="text-2xl font-semibold text-blue-600">你好，余梦玲！</h1>
                         <p class="text-sm text-gray-600 leading-relaxed mt-3">今天是<strong>2026年08月19日</strong>，新的一天，新的开始，愿你工作顺利，保持积极心态，遇到挑战迎难而上。</p>
 
@@ -246,13 +242,12 @@
     </div>
 
     <script>
-        let isConfigured = false;
+        // Connection config is pre-populated from API defaults
+        let isConfigured = true;
 
-        // On first load, if not configured, switch to connection tab
         window.onload = function() {
-            if (!isConfigured) {
-                switchTab('connection');
-            }
+            // Default to skills tab since connection is already configured
+            switchTab('skills');
         };
 
         function switchTab(tab) {
@@ -295,67 +290,6 @@
             }
         });
 
-        function validate() {
-            const gateway = document.getElementById('gatewayInput').value.trim();
-            const ak = document.getElementById('akInput').value.trim();
-            const saveBtn = document.getElementById('saveBtn');
-            const testBtn = document.getElementById('testBtn');
-
-            if (gateway && ak) {
-                saveBtn.disabled = false;
-                saveBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-                saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-                testBtn.disabled = false;
-                testBtn.classList.remove('text-gray-400', 'cursor-not-allowed');
-                testBtn.classList.add('text-gray-700', 'hover:text-blue-600', 'hover:border-blue-300');
-            } else {
-                saveBtn.disabled = true;
-                saveBtn.classList.add('bg-gray-300', 'cursor-not-allowed');
-                saveBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-                testBtn.disabled = true;
-                testBtn.classList.add('text-gray-400', 'cursor-not-allowed');
-                testBtn.classList.remove('text-gray-700', 'hover:text-blue-600', 'hover:border-blue-300');
-            }
-        }
-
-        function saveConnectionConfig() {
-            isConfigured = true;
-            const tabConnection = document.getElementById('tab-connection');
-            tabConnection.classList.remove('tab-pending');
-            tabConnection.classList.add('group');
-            tabConnection.innerHTML = `
-                连接配置
-                <span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded group-hover:bg-gray-200 group-hover:text-gray-700 transition-colors">修改</span>
-            `;
-
-            const publishBtn = document.getElementById('publishBtn');
-            publishBtn.disabled = false;
-            publishBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-            publishBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-
-            const previewDisabled = document.getElementById('previewDisabled');
-            const previewContent = document.getElementById('previewContent');
-            previewDisabled.classList.add('hidden');
-            previewContent.classList.remove('opacity-40', 'pointer-events-none');
-
-            // Auto switch back to skills after save
-            setTimeout(() => {
-                switchTab('skills');
-            }, 400);
-        }
-
-        function testConnection() {
-            const btn = document.getElementById('testBtn');
-            btn.textContent = '连接中...';
-            setTimeout(() => {
-                btn.textContent = '连接成功';
-                btn.classList.add('text-green-600', 'border-green-300');
-                setTimeout(() => {
-                    btn.textContent = '测试连接';
-                    btn.classList.remove('text-green-600', 'border-green-300');
-                }, 1500);
-            }, 800);
-        }
     </script>
 </body>
 </html>
