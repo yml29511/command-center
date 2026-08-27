@@ -90,6 +90,10 @@
                             模型配置
                             <span id="modelBadge" class="text-xs px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded">待配置</span>
                         </button>
+                        <div id="currentModelIndicator" class="ml-auto pb-3 text-xs text-gray-500 flex items-center gap-1.5 opacity-0 transition-opacity">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                            <span id="currentModelName">—</span>
+                        </div>
                     </div>
                 </div>
 
@@ -143,7 +147,7 @@
                                         模型选择
                                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                     </label>
-                                    <select class="w-full h-10 px-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-blue-400 transition-colors">
+                                    <select id="modelSelect" onchange="updateCurrentModel()" class="w-full h-10 px-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-blue-400 transition-colors">
                                         <option>Qwen3 Max</option>
                                         <option>Qwen3 Plus</option>
                                         <option>GPT-4o</option>
@@ -245,10 +249,19 @@
 
         // On first load, if not configured, switch to model tab
         window.onload = function() {
+            updateCurrentModel();
             if (!isConfigured) {
                 switchTab('model');
             }
         };
+
+        function updateCurrentModel() {
+            const modelName = document.getElementById('modelSelect').value;
+            const indicator = document.getElementById('currentModelIndicator');
+            const nameEl = document.getElementById('currentModelName');
+            nameEl.textContent = modelName;
+            indicator.classList.remove('opacity-0');
+        }
 
         function switchTab(tab) {
             ['model', 'skills', 'mcp', 'plugin'].forEach(t => {
