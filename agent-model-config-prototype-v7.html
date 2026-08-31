@@ -63,7 +63,7 @@
             <h2 class="font-medium text-gray-800">应用配置</h2>
             <div class="ml-auto flex items-center gap-2 text-sm text-gray-500">
                 <span>当前模型</span>
-                <span id="modelSelected" class="font-medium text-gray-800">Qwen3 Max</span>
+                <span id="modelSelected" class="font-medium text-gray-400">暂未配置</span>
             </div>
         </div>
 
@@ -265,7 +265,10 @@
         function saveConnectionConfig() {
             isConfigured = true;
             const modelName = document.getElementById('modelNameInput').value.trim();
-            document.getElementById('modelSelected').textContent = modelName;
+            const modelEl = document.getElementById('modelSelected');
+            modelEl.textContent = modelName;
+            modelEl.classList.remove('text-gray-400');
+            modelEl.classList.add('text-gray-800');
 
             const tabConnection = document.getElementById('tab-connection');
             tabConnection.classList.remove('tab-pending');
