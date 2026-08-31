@@ -48,55 +48,12 @@
             </div>
         </div>
 
-        <!-- Sub-header: App config + model selector -->
+        <!-- Sub-header: App config + current model display -->
         <div class="h-14 border-b border-gray-100 flex items-center px-5">
             <h2 class="font-medium text-gray-800">应用配置</h2>
-            <div class="relative ml-auto">
-                <button id="modelSelectBtn" onclick="toggleModelPanel()" class="h-8 pl-3 pr-2 bg-white border border-gray-200 rounded-md text-xs text-gray-700 hover:border-gray-300 focus:outline-none focus:border-blue-400 transition-colors flex items-center gap-2">
-                    <span id="modelSelected">Qwen3 Max</span>
-                    <svg id="modelPanelChevron" class="w-3.5 h-3.5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-                </button>
-                <div id="modelPanel" class="hidden absolute right-0 top-full mt-2 w-[320px] bg-white border border-gray-200 rounded-xl shadow-xl p-5 z-20">
-                    <h3 class="text-sm font-medium text-gray-800 mb-4">模型配置</h3>
-                    <div class="space-y-4">
-                        <div class="space-y-2">
-                            <label class="text-xs text-gray-700 flex items-center gap-1">
-                                模型选择
-                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </label>
-                            <select id="panelModelSelect" onchange="updateModelFromPanel()" class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 focus:outline-none focus:border-blue-400 transition-colors">
-                                <option>Qwen3 Max</option>
-                                <option>Qwen3 Plus</option>
-                                <option>GPT-4o</option>
-                                <option>Claude 3.5 Sonnet</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs text-gray-700">默认模型</label>
-                            <select class="w-full h-9 px-3 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700 focus:outline-none focus:border-blue-400 transition-colors">
-                                <option>Qwen3 Max</option>
-                                <option>Qwen3 Plus</option>
-                                <option>GPT-4o</option>
-                                <option>Claude 3.5 Sonnet</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs text-gray-700 flex items-center gap-1">
-                                温度系数
-                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            </label>
-                            <input type="range" min="0" max="2" step="0.1" value="0.5" class="w-full" oninput="document.getElementById('panelTempValue').textContent = this.value">
-                            <div class="flex justify-between text-xs text-gray-400 px-1">
-                                <span>0</span>
-                                <span>0.5</span>
-                                <span>1</span>
-                                <span>1.5</span>
-                                <span id="panelTempValue" class="text-blue-600 font-medium">0.5</span>
-                                <span>2</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="ml-auto flex items-center gap-2 text-sm text-gray-500">
+                <span>当前模型</span>
+                <span id="modelSelected" class="font-medium text-gray-800">Qwen3 Max</span>
             </div>
         </div>
 
@@ -192,6 +149,11 @@
 
                         <div class="space-y-5">
                             <div class="space-y-2">
+                                <label class="text-sm text-gray-700">模型名称 <span class="text-red-500">*</span></label>
+                                <input id="modelNameInput" type="text" placeholder="例如 Qwen3 Max" oninput="validate()" class="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 transition-colors">
+                            </div>
+
+                            <div class="space-y-2">
                                 <label class="text-sm text-gray-700">模型网关 <span class="text-red-500">*</span></label>
                                 <input id="gatewayInput" type="text" placeholder="https://api.example.com/v1" oninput="validate()" class="w-full h-10 px-3 bg-white border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 transition-colors">
                             </div>
@@ -266,42 +228,14 @@
             document.getElementById('tab-' + tab).classList.add('tab-active');
         }
 
-        function updateModelHeader() {
-            // Model selection is now visible in the sub-header at all times
-        }
-
-        function toggleModelPanel() {
-            const panel = document.getElementById('modelPanel');
-            const chevron = document.getElementById('modelPanelChevron');
-            panel.classList.toggle('hidden');
-            if (panel.classList.contains('hidden')) {
-                chevron.classList.remove('rotate-180');
-            } else {
-                chevron.classList.add('rotate-180');
-            }
-        }
-
-        function updateModelFromPanel() {
-            const model = document.getElementById('panelModelSelect').value;
-            document.getElementById('modelSelected').textContent = model;
-        }
-
-        // Close model panel when clicking outside
-        document.addEventListener('click', function(e) {
-            const wrapper = document.getElementById('modelSelectBtn').parentElement;
-            if (!wrapper.contains(e.target)) {
-                document.getElementById('modelPanel').classList.add('hidden');
-                document.getElementById('modelPanelChevron').classList.remove('rotate-180');
-            }
-        });
-
         function validate() {
+            const modelName = document.getElementById('modelNameInput').value.trim();
             const gateway = document.getElementById('gatewayInput').value.trim();
             const ak = document.getElementById('akInput').value.trim();
             const saveBtn = document.getElementById('saveBtn');
             const testBtn = document.getElementById('testBtn');
 
-            if (gateway && ak) {
+            if (modelName && gateway && ak) {
                 saveBtn.disabled = false;
                 saveBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
                 saveBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
@@ -320,6 +254,9 @@
 
         function saveConnectionConfig() {
             isConfigured = true;
+            const modelName = document.getElementById('modelNameInput').value.trim();
+            document.getElementById('modelSelected').textContent = modelName;
+
             const tabConnection = document.getElementById('tab-connection');
             tabConnection.classList.remove('tab-pending');
             tabConnection.classList.add('group');
