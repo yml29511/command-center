@@ -14,6 +14,8 @@
         .tab-pending { color: #d97706; }
         input[type="range"] { -webkit-appearance: none; height: 4px; border-radius: 2px; background: #e5e7eb; outline: none; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #2563eb; cursor: pointer; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        @keyframes fade-in { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        .animate-fade-in { animation: fade-in 0.2s ease-out; }
     </style>
 </head>
 <body class="min-h-screen p-6">
@@ -43,9 +45,17 @@
                     线上：V11
                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                 </button>
-                <button id="publishBtn" disabled class="px-4 py-1.5 rounded-md text-sm bg-gray-300 text-white cursor-not-allowed transition-colors">发布</button>
-                <button class="px-4 py-1.5 rounded-md text-sm border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">版本克隆</button>
+                <button onclick="publishApp()" id="publishBtn" class="px-4 py-1.5 rounded-md text-sm bg-blue-600 text-white hover:bg-blue-700 transition-colors">发布</button>
             </div>
+        </div>
+
+        <!-- Publish Error Toast -->
+        <div id="publishError" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-50 border border-red-200 rounded-lg px-4 py-3 shadow-lg flex items-center gap-3 animate-fade-in">
+            <svg class="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <span id="publishErrorMsg" class="text-sm text-red-700">请先完成模型配置</span>
+            <button onclick="hidePublishError()" class="text-red-400 hover:text-red-600">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
         <!-- Sub-header: App config + current model display -->
@@ -265,11 +275,6 @@
                 <span class="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded group-hover:bg-gray-200 group-hover:text-gray-700 transition-colors">修改</span>
             `;
 
-            const publishBtn = document.getElementById('publishBtn');
-            publishBtn.disabled = false;
-            publishBtn.classList.remove('bg-gray-300', 'cursor-not-allowed');
-            publishBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-
             const previewDisabled = document.getElementById('previewDisabled');
             const previewContent = document.getElementById('previewContent');
             previewDisabled.classList.add('hidden');
@@ -279,6 +284,31 @@
             setTimeout(() => {
                 switchTab('skills');
             }, 400);
+        }
+
+        function publishApp() {
+            if (!isConfigured) {
+                showPublishError('请先完成模型配置（模型名称、网关、AK）后再发布');
+                // Auto switch to connection tab
+                switchTab('connection');
+                return;
+            }
+            // Success case - show success message
+            alert('发布成功！');
+        }
+
+        function showPublishError(msg) {
+            const errorDiv = document.getElementById('publishError');
+            document.getElementById('publishErrorMsg').textContent = msg;
+            errorDiv.classList.remove('hidden');
+            // Auto hide after 4 seconds
+            setTimeout(() => {
+                hidePublishError();
+            }, 4000);
+        }
+
+        function hidePublishError() {
+            document.getElementById('publishError').classList.add('hidden');
         }
 
         function testConnection() {
